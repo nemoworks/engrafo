@@ -7,9 +7,7 @@ import { renderRoutes } from "react-router-config";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>{renderRoutes(routes)}</BrowserRouter>
-  </React.StrictMode>,
+  <BrowserRouter>{renderRoutes(routes)}</BrowserRouter>,
   document.getElementById("root")
 );
 

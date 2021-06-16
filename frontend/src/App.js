@@ -1,9 +1,21 @@
-import './App.css';
+import "./App.css";
+import { Link } from "react-router-dom";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/outgoinglist">List</Link>
+          </li>
+          <li>
+            <Link to="/outgoing">Item</Link>
+          </li>
+        </ul>
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
