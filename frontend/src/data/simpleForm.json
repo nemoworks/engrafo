@@ -1,26 +1,33 @@
 {
+  "schema": {
+    "title": "Outgoing Service",
+    "description": "Log each service.",
     "type": "object",
     "properties": {
-      "title": {
-        "title": "Title",
-        "type": "string",
-        "minLength": 10,
-        "maxLength": 140
+      "_id": {
+        "title": "",
+        "type": "object",
+        "properties": {
+          "$oid": {
+            "title": "service id",
+            "type": "string"
+          }
+        }
       },
-      "slug": {
-        "title": "Slug",
+      "saler": {
+        "title": "saler name",
         "type": "string",
-        "pattern": "^[a-z0-9-]+$"
+        "enum": ["朱鸣", "许万羽", "苏井", "李倍铭", "周坚", "钱昊"]
       },
-      "published": {
-        "title": "Published",
-        "type": "string",
-        "format": "date-time"
-      },
-      "content": {
-        "title": "Content",
+      "feedback": {
+        "title": "service feedback",
         "type": "string"
       }
-    },
-    "required": ["title", "slug", "published", "content"]
+    }
+  },
+  "uischema": {
+    "feedback": {
+      "ui:widget": "textarea"
+    }
   }
+}

@@ -24,7 +24,7 @@ import Dialog from "@material-ui/core/Dialog";
 import { red } from "@material-ui/core/colors";
 import { observer } from "mobx-react";
 import Editor from "@monaco-editor/react";
-import Form from '@rjsf/material-ui';
+import Form from "@rjsf/material-ui";
 // Generate Order Data
 function createData(id, date, name, shipTo, paymentMethod, amount) {
   return { id, date, name, shipTo, paymentMethod, amount };
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
   },
   stickRight: {
     marginRight: theme.spacing(0),
-  }
+  },
 }));
 
 export default observer(function FSList({ schemalist }) {
@@ -72,6 +72,13 @@ export default observer(function FSList({ schemalist }) {
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const [open, setOpen] = React.useState(false);
   const [schema, setSchema] = React.useState({});
+  const [uischema, setUischema] = React.useState({});
+  const [preview, setPreview] = React.useState({
+    show: false,
+    schema: {},
+    uischema: {},
+  });
+  const [entry, setEntry] = React.useState({ toSave: false});
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -82,6 +89,7 @@ export default observer(function FSList({ schemalist }) {
   };
 
   const editorRef = React.useRef(null);
+  const uiEditorRef = React.useRef(null);
 
   return (
     <>
@@ -94,18 +102,18 @@ export default observer(function FSList({ schemalist }) {
               <Table size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Id</TableCell>
+                    <TableCell style={{ width: "10%" }}>Id</TableCell>
                     <TableCell>Name</TableCell>
-                    <TableCell>Comment</TableCell>
+                    <TableCell style={{ width: "30%" }}>Comment</TableCell>
                     <TableCell align="center">Operation</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {rows.map((row) => (
-                    <TableRow key={row.id}>
-                      <TableCell>{row.id}</TableCell>
-                      <TableCell>{row.name}</TableCell>
-                      <TableCell>{row.comment}</TableCell>
+                    <TableRow key={row._id["$oid"]}>
+                      <TableCell>{row._id["$oid"]}</TableCell>
+                      <TableCell>{row.saler}</TableCell>
+                      <TableCell>{row.feedback}</TableCell>
                       <TableCell align="center">
                         <IconButton
                           aria-label="edit"
@@ -118,6 +126,14 @@ export default observer(function FSList({ schemalist }) {
                           aria-label="delete"
                           color="secondary"
                           className={classes.margin}
+                          onClick={() => {
+                            schemalist.delete(row._id["$oid"]);
+                            if (
+                              preview.formData._id["$oid"] === row._id["$oid"]
+                            ) {
+                              setPreview({ show: false });
+                            }
+                          }}
                         >
                           <DeleteIcon fontSize="small" />
                         </IconButton>
@@ -125,6 +141,18 @@ export default observer(function FSList({ schemalist }) {
                           aria-label="preview"
                           color="primary"
                           className={classes.margin}
+                          onClick={() => {
+                            setPreview({
+                              schema: row.schema ? row.schema : {},
+                              uischema: row.uischema ? row.uischema : {},
+                              formData: {
+                                _id: row._id,
+                                saler: row.saler,
+                                feedback: row.feedback,
+                              },
+                              show: true,
+                            });
+                          }}
                         >
                           <VisibilityIcon fontSize="small" />
                         </IconButton>
@@ -152,6 +180,14 @@ export default observer(function FSList({ schemalist }) {
           <Paper className={fixedHeightPaper}>
             <React.Fragment>
               <Title>Preview</Title>
+              {preview.show ? (
+                <Form
+                  onSubmit={({ formData }) => aflert(JSON.stringify(formData))}
+                  schema={preview.schema}
+                  uiSchema={preview.uischema}
+                  formData={preview.formData}
+                />
+              ) : null}
             </React.Fragment>
           </Paper>
         </Grid>
@@ -170,7 +206,22 @@ export default observer(function FSList({ schemalist }) {
             <Typography variant="h6" className={classes.title}>
               SchemaFormEditor
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
+            <Button
+              autoFocus
+              color="inherit"
+              onClick={() => {
+                if (entry.toSave) {
+                  schemalist.add({
+                    ...entry.formData,
+                    schema: entry.schema,
+                    uischema: entry.uischema
+                  });
+                } else {
+                  alert("no form data submitted");
+                }
+                handleClose();
+              }}
+            >
               save
             </Button>
           </Toolbar>
@@ -180,7 +231,9 @@ export default observer(function FSList({ schemalist }) {
             <Paper className={fixedHeightPaper}>
               <React.Fragment>
                 <Title>SchemaEditor</Title>
+                <p>schema</p>
                 <Editor
+                  title="Schema"
                   defaultLanguage="json"
                   defaultValue={JSON.stringify(schema, null, "\t")}
                   onMount={(editor, monaco) => {
@@ -188,10 +241,26 @@ export default observer(function FSList({ schemalist }) {
                   }}
                   onChange={(value, event) => console.log(value)}
                 />
+                <p>ui:schema</p>
+                <Editor
+                  defaultLanguage="json"
+                  defaultValue={JSON.stringify(uischema, null, "\t")}
+                  onMount={(editor, monaco) => {
+                    uiEditorRef.current = editor;
+                  }}
+                  onChange={(value, event) => console.log(value)}
+                />
                 <div>
-                <Button className={classes.stickRight} color="primary" onClick={()=>setSchema(JSON.parse(editorRef.current.getValue()))}>
+                  <Button
+                    className={classes.stickRight}
+                    color="primary"
+                    onClick={() => {
+                      setSchema(JSON.parse(editorRef.current.getValue()));
+                      setUischema(JSON.parse(uiEditorRef.current.getValue()));
+                    }}
+                  >
                     apply
-                </Button>
+                  </Button>
                 </div>
               </React.Fragment>
             </Paper>
@@ -200,7 +269,26 @@ export default observer(function FSList({ schemalist }) {
             <Paper className={fixedHeightPaper}>
               <React.Fragment>
                 <Title>SchemaForm</Title>
-                <Form onSubmit={({formData}) => alert(JSON.stringify(formData))} schema={schema} />
+                <Form
+                  onSubmit={({ formData }) => {
+                    alert(
+                      JSON.stringify({
+                        ...formData,
+                        schema: schema,
+                        uischema: uischema,
+                      })
+                    );
+                    setEntry({
+                      formData: formData,
+                      schema: schema,
+                      uischema: uischema,
+                      toSave: true,
+                    });
+                  }}
+                  schema={schema}
+                  uiSchema={uischema}
+                  formData={entry.formData?entry.formData:{}}
+                />
               </React.Fragment>
             </Paper>
           </Grid>
