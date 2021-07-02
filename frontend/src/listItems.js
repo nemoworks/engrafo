@@ -16,11 +16,11 @@ function ListItemLink(props) {
 
 export const mainListItems = (
   <div>
-    <ListItemLink href="/formschema">
+    <ListItemLink href="/flow">
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
-      <ListItemText primary="FormSchema" />
+      <ListItemText primary="Flow" />
     </ListItemLink>
     <ListItemLink href="/fslist">
       <ListItemIcon>

@@ -17,7 +17,7 @@
       "saler": {
         "title": "saler name",
         "type": "string",
-        "enum": ["朱鸣", "许万羽", "苏井", "李倍铭", "周坚", "钱昊"]
+        "enum": ["sam", "amily", "fragile"]
       },
       "feedback": {
         "title": "service feedback",

@@ -11,7 +11,7 @@ const routes = {
   "/": () => <HomePage />,
   "/formschema/:id": (id) => <FormSchema id={id} />,
   "/fslist": () => <FSList schemalist={schemalist}/>,
-  "/flow/:id": ({ id }) => <Flow id={id} />,
+  "/flow": () => <Flow />,
   "/flowlist": () => <FlowList />,
 };
 
