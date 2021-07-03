@@ -5,11 +5,9 @@ import Form from "@rjsf/material-ui";
 import Button from "@material-ui/core/Button";
 import React from "react";
 import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from "@material-ui/core/MenuItem";
 const graphOptions = {
-  physics: {
-
-  },
+  physics: {},
   interaction: {
     zoomView: false,
     dragNodes: false,
@@ -34,7 +32,7 @@ const schema = {
     saler: {
       title: "saler name",
       type: "string",
-      enum: ["朱鸣", "许万羽", "苏井", "李倍铭", "周坚", "钱昊"],
+      enum: ["sam", "amily", "fragile"],
     },
     feedback: {
       title: "service feedback",
@@ -96,7 +94,7 @@ export default function Flow() {
         schema={schema}
         uiSchema={uischema}
       />
-      <div style={{ height: "400px", width: "400px", marginTop:'20px' }}>
+      <div style={{ height: "400px", width: "400px", marginTop: "20px" }}>
         <h2>progress</h2>
         <div>
           <Button
@@ -165,7 +163,11 @@ export default function Flow() {
             Go
           </Button>
         </div>
-        <Graph identifier={"customed-flow-graph-demo"} graph={graph} options={graphOptions} />
+        <Graph
+          identifier={"customed-flow-graph-demo"}
+          graph={graph}
+          options={graphOptions}
+        />
       </div>
     </div>
   );

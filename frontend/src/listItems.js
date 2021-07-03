@@ -28,7 +28,7 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="FSList" />
     </ListItemLink>
-    <ListItemLink>
+    {/* <ListItemLink>
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
@@ -45,14 +45,14 @@ export const mainListItems = (
         <LayersIcon />
       </ListItemIcon>
       <ListItemText primary="Integrations" />
-    </ListItemLink>
+    </ListItemLink> */}
   </div>
 );
 
 export const secondaryListItems = (
   <div>
-    <ListSubheader inset>Saved reports</ListSubheader>
-    <ListItemLink>
+    {/* <ListSubheader inset>Saved reports</ListSubheader> */}
+    {/* <ListItemLink>
       <ListItemIcon>
         <AssignmentIcon />
       </ListItemIcon>
@@ -69,6 +69,6 @@ export const secondaryListItems = (
         <AssignmentIcon />
       </ListItemIcon>
       <ListItemText primary="Year-end sale" />
-    </ListItemLink>
+    </ListItemLink> */}
   </div>
 );

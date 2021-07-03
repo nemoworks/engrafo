@@ -22,9 +22,11 @@ import CloseIcon from "@material-ui/icons/Close";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import Dialog from "@material-ui/core/Dialog";
 import { red } from "@material-ui/core/colors";
+//引入mobx注册方法observer
 import { observer } from "mobx-react";
 import Editor from "@monaco-editor/react";
 import Form from "@rjsf/material-ui";
+//引入流程图组件Graph
 import Graph from "../components/Graph.js";
 import Select from "@material-ui/core/Select";
 import startdata from "../data/startdata.json";
@@ -41,11 +43,12 @@ const graphOptions = {
   },
 };
 
-
+//点击see more order时调用，未来分页时需修改
 function preventDefault(event) {
   event.preventDefault();
 }
 
+//JSS格式样式表，使用makeStyle
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
@@ -78,10 +81,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+//通过Observer将schemalist传入FSList
 export default observer(function FSList({ schemalist }) {
   const rows = schemalist.data;
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  // 通过react hook定义state变量和set函数
   const [open, setOpen] = React.useState(false);
   const [schema, setSchema] = React.useState({});
   const [uischema, setUischema] = React.useState({});
@@ -96,6 +101,7 @@ export default observer(function FSList({ schemalist }) {
   const [current, setCurrent] = React.useState(null);
   const [nexts, setNexts] = React.useState(null);
 
+  //通过react hook对Graph进行更新
   React.useEffect(() => {
     if (!current) {
       return;
@@ -129,17 +135,21 @@ export default observer(function FSList({ schemalist }) {
     setOpen(false);
   };
 
+  //monaco editor需要绑定ref
   const editorRef = React.useRef(null);
   const uiEditorRef = React.useRef(null);
 
   return (
     <>
+    {/* MaterialUI中布局采用Grid组件 */}
       <Grid container spacing={3}>
-        {/* Recent Orders */}
         <Grid item xs={8}>
+        {/* MaterialUI中的基本卡片组件为Paper */}
+        {/* FSList页面左侧卡片 */}
           <Paper className={fixedHeightPaper}>
             <React.Fragment>
               <Title>All Schemas</Title>
+              {/* MaterialUI表格组件 */}
               <Table size="small">
                 <TableHead>
                   <TableRow>
@@ -273,6 +283,7 @@ export default observer(function FSList({ schemalist }) {
               <React.Fragment>
                 <Title>SchemaEditor</Title>
                 <p>schema</p>
+                {/* monaco editor的onchange函数不够灵活，此处在创建时onMount中绑定到ref，以便后续查询editor中的value */}
                 <Editor
                   title="Schema"
                   defaultLanguage="json"
@@ -292,6 +303,7 @@ export default observer(function FSList({ schemalist }) {
                   onChange={(value, event) => console.log(value)}
                 />
                 <div>
+                {/* 点击apply将schema与uischema传入state，通过editor的ref读取编辑器中的内容 */}
                   <Button
                     className={classes.stickRight}
                     color="primary"
@@ -306,6 +318,7 @@ export default observer(function FSList({ schemalist }) {
               </React.Fragment>
             </Paper>
           </Grid>
+          {/* FSList页面右侧卡片 */}
           <Grid item xs={6}>
             <Paper className={fixedHeightPaper}>
               <React.Fragment>
@@ -335,6 +348,7 @@ export default observer(function FSList({ schemalist }) {
                 >
                   <h2>progress</h2>
                   <div>
+                  {/* 点击start向后台8080端口请求流程图数据，保存到组件state */}
                     <Button
                       color="inherit"
                       onClick={() => {
@@ -360,6 +374,7 @@ export default observer(function FSList({ schemalist }) {
                     >
                       Start
                     </Button>
+                    {/* 读取state中的nexts，提供流程图下一步的可选项，通过Select选中的值存入state中的next */}
                     <Select
                       style={{ marginLeft: "50px" }}
                       labelId="select-label"
@@ -377,6 +392,7 @@ export default observer(function FSList({ schemalist }) {
                           ))
                         : null}
                     </Select>
+                    {/* 点击Go向后台8080端口发送post请求，请求前往Select中选中的步骤next，并请求新的流程图数据，更新到state */}
                     <Button
                       color="inherit"
                       onClick={() => {
@@ -403,6 +419,7 @@ export default observer(function FSList({ schemalist }) {
                       Go
                     </Button>
                   </div>
+                  {/* Graph绑定到组件的state中的graph数据 */}
                   <Graph
                     identifier={"customed-flow-graph-demo"}
                     graph={graph}
