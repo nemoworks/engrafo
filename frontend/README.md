@@ -1,25 +1,118 @@
-# Create React App example
+# udo-jieshixin-demo
 
-## How to use
+## entity
+- user
+    - manager
+        - username
+        - password
+    - saler
+    - engineer
 
-Download the example [or clone the repo](https://github.com/mui-org/material-ui):
+- outgoing
+    - id
+    - timestamp
+    - manager
+    - saler
+    - engineer
+    - task
+    - feedback
 
-```sh
-curl https://codeload.github.com/mui-org/material-ui/tar.gz/master | tar -xz --strip=2 material-ui-master/examples/create-react-app
-cd create-react-app
-```
+- process
+    - users[user]
+    - nodes
+        - node{start,end,node}
+            - task
+                - status[(action, action*){wait, finished}]
+                - [(action,action*)]
+                    - auth
+                    - description
+                    - rewardToken
+            - forward:
+                - requiredToken
+            - backward(node): 
+                - strategy{0,1,2}
+                - requiredToken
+                - target(1)
+                - targets(2)
+                - vote(2)
+                    - auth
+## process(a one-direction chain)
+- users
 
-Install it and run:
+- nodes
+    - start
+        - action:
+            - auth: manager 
+            - description: assign a saler
+            - rewardToken: 1
+        - forward:
+            - requiredToken: 1
+    - assignment1
+        - action:
+            - auth: saler
+            - description: saler describe the task, send message to all engineer
+            - rewardToken: 1
+        - forward:
+            - requiredToken: 1
+        - backward:
+            - strategy: 0
+            - requiredToken: 0
+            - target: null
+    - assignment3
+        - action:
+            - auth: engineer(any)
+            - description: engineer who first accept the task get the access to the process
+            - rewardToken: 1
+        - forward:
+            - requiredToken: 1
+        - backward:
+            - strategy: 0
+            - requiredToken: 0
+            - target: null
+    - service
+        - action: 
+            - auth: engineer
+            - description: provide service, fill the feedback
+            - rewardToken: 1
+        - forward:
+            - requiredToken: 1
+        - backward:
+            - strategy: 0
+            - requiredToken: 0
+            - target: null
+    - approval
+        - action*:
+            - auth: manager
+            - description: manager approve the process, yes/no
+            - rewardToken: 1/0
+        - action*:
+            - auth: saler
+            - description: saler approve the process, yes/no
+            - rewardToken: 1/0
+        - forward:
+            - requiredToken: 2
+        - backward:
+            - strategy: 1
+            - requiredToken: 0
+            - target: service
+    - end
 
-```sh
-npm install
-npm start
-```
+### action-hooks
+- pre-hook:
+    - message all authed user the task
 
-or:
+- post-hook:
+    - adjusting auth of process
+    - adjusting Token
+    - mark action as finished
 
-[![Edit on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/mui-org/material-ui/tree/master/examples/create-react-app)
+### forward-hooks
+- pre-hook: check if all node actions finished
+    - true: check if current token satiesfy the propagation constraints
+        - true: propagate to next
+        - false: check if satiesfy the backward constraints
+            - true: target decision
+            - false: restart source actions
+    - false: wait for timeout
 
-## The idea behind the example
-
-This example demonstrates how you can use [Create React App](https://github.com/facebookincubator/create-react-app).
+- post-hook: consume tokens
