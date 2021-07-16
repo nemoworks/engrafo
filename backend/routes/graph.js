@@ -1,17 +1,26 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
-/* GET graph data */
-router.get('/graph', function(req, res, next) {
-  res.render('index', { title: 'graph' });
+/* GraphList */
+router.get("/graphapis/graphs", function (req, res, next) {
+  res.send([]);
 });
 
-/* GET graph current node */
-router.get('/graph/current', function(req, res, next) {
-  res.render('index', { title: 'nodes' });
-})
+/* Graph */
+router.get("/graph/:id", function (req, res, next) {
+  res.send("graph fetched with" + req.params.id);
+});
 
-/* GET graph 
+router.post("/graph", function (req, res, next) {
+  res.send("graph created with" + JSON.stringify(req.body));
+});
 
+router.put("/graph", function (req, res, next) {
+  res.send("graph updated with" + JSON.stringify(req.body));
+});
+
+router.delete("/graph/:id", function (req, res, next) {
+  res.send("graph deleted with" + req.params.id);
+});
 
 module.exports = router;
