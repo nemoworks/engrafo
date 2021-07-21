@@ -10,7 +10,7 @@
     }
  */
 
-export default {
+module.exports = {
   /**
         @param graph {nodes:[],edges[]}
         @param id String
@@ -39,7 +39,7 @@ export default {
     let visited = new Set();
     visited.add(id);
     let res = [];
-    while (queue.size > 0) {
+    while (queue.length > 0) {
       v = queue.pop();
       if (!adj[v]) {
         continue;

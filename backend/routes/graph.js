@@ -1,26 +1,35 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const graph = require("../data-structure/Graph");
+const router = express.Router();
 
 /* GraphList */
-router.get("/graphapis/graphs", function (req, res, next) {
+router.get("/list", function (req, res, next) {
   res.send([]);
 });
 
 /* Graph */
-router.get("/graph/:id", function (req, res, next) {
-  res.send("graph fetched with" + req.params.id);
+router.get("/:id", function (req, res, next) {
+  res.send("graph fetched with " + req.params.id);
 });
 
-router.post("/graph", function (req, res, next) {
-  res.send("graph created with" + JSON.stringify(req.body));
+router.post("/:type", function (req, res, next) {
+  switch (req.params.type) {
+    case "string":
+      res.send("graph created by string " + JSON.stringify(req.body));
+      break;
+
+    default:
+      res.send("graph created by JSON " + JSON.stringify(req.body));
+      break;
+  }
 });
 
-router.put("/graph", function (req, res, next) {
-  res.send("graph updated with" + JSON.stringify(req.body));
+router.put("/", function (req, res, next) {
+  res.send("graph updated with " + JSON.stringify(req.body));
 });
 
-router.delete("/graph/:id", function (req, res, next) {
-  res.send("graph deleted with" + req.params.id);
+router.delete("/:id", function (req, res, next) {
+  res.send("graph deleted with " + req.params.id);
 });
 
 module.exports = router;
