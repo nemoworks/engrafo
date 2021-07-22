@@ -1,6 +1,6 @@
 const express = require("express");
 const graph = require("../data-structure/Graph");
-const router = express.Router();
+var router = express.Router();
 
 /* GraphList */
 router.get("/list", function (req, res, next) {
