@@ -1,6 +1,8 @@
 const express = require("express");
 const graph = require("../data-structure/Graph");
 var router = express.Router();
+var pgp = require('pg-promise')(/* options */)
+var db = pgp('postgres://jieshixin:jieshixin,.#@127.0.0.1:31080/database')
 
 /* GraphList */
 router.get("/list", function (req, res, next) {
@@ -12,16 +14,8 @@ router.get("/:id", function (req, res, next) {
   res.send("graph fetched with " + req.params.id);
 });
 
-router.post("/:type", function (req, res, next) {
-  switch (req.params.type) {
-    case "string":
-      res.send("graph created by string " + JSON.stringify(req.body));
-      break;
-
-    default:
-      res.send("graph created by JSON " + JSON.stringify(req.body));
-      break;
-  }
+router.post("/", function (req, res, next) {
+  
 });
 
 router.put("/", function (req, res, next) {
