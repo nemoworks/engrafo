@@ -18,29 +18,44 @@ var db = pgp(cn)
 
 /* GraphList */
 router.get("/list", async function (req, res) {
-  res.send([]);
+  db.any(graphs.findAll).then(
+    data => res.send(data)
+  ).catch(
+    err => console.log(err)
+  )
 });
 
 /* Graph */
 router.get("/:id", async function (req, res) {
-  res.send("graph fetched with " + req.params.id);
-});
-
-router.post("/", async function (req, res) {
-  console.log('data:', JSON.stringify(req.body))
-  db.one(graphs.insert, JSON.stringify(req.body)).then(
-    (data) => res.send(data)
+  db.one(graphs.find, req.params.id).then(
+    data => res.send(data)
   ).catch(
-    (err) => console.error(err)
+    err => console.error(err)
   )
 });
 
-router.put("/", async function (req, res) {
-  res.send("graph updated with " + JSON.stringify(req.body));
+router.post("/", async function (req, res) {
+  db.one(graphs.insert, JSON.stringify(req.body)).then(
+    data => res.send(data)
+  ).catch(
+    err => console.error(err)
+  )
+});
+
+router.put("/:id", async function (req, res) {
+  db.result(graphs.update, [req.params.id, JSON.stringify(req.body)]).then(
+    data => res.send(data)
+  ).catch(
+    err => console.error(err)
+  )
 });
 
 router.delete("/:id", async function (req, res) {
-  res.send("graph deleted with " + req.params.id);
+  db.result(graphs.delete, req.params.id).then(
+    data => res.send(data)
+  ).catch(
+    err => console.log(err)
+  )
 });
 
 module.exports = router;
