@@ -34,6 +34,27 @@ module.exports = {
         update: sql('graphs/update.sql'),
         find: sql('graphs/find.sql'),
         findAll: sql('graphs/findAll.sql')
+    },
+    process: {
+        insert: sql('process/insert.sql'),
+        delete: sql('process/delete.sql'),
+        update: sql('process/update.sql'),
+        find: sql('process/find.sql'),
+        findAll: sql('process/findAll.sql')
+    },
+    outgoing: {
+        insert: sql('outgoing/insert.sql'),
+        delete: sql('outgoing/delete.sql'),
+        update: sql('outgoing/update.sql'),
+        find: sql('outgoing/find.sql'),
+        findAll: sql('outgoing/findAll.sql')
+    },
+    user: {
+        insert: sql('user/insert.sql'),
+        delete: sql('user/delete.sql'),
+        update: sql('user/update.sql'),
+        find: sql('user/find.sql'),
+        findAll: sql('user/findAll.sql')
     }
 };
 
