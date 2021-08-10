@@ -1,0 +1,3 @@
+INSERT INTO graph(info)
+VALUES($1)
+RETURNING *
