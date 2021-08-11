@@ -4,7 +4,6 @@ import startdata from "../data/startdata.json";
 import Form from "@rjsf/material-ui";
 import Button from "@material-ui/core/Button";
 import React from "react";
-import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 const graphOptions = {
   physics: {},

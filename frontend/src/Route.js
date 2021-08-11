@@ -1,16 +1,18 @@
 import { useRoutes } from "hookrouter";
-import NotFoundPage from "./pages/NotFoundPage.js";
-import FormSchema from "./pages/FormSchema.js";
-import FSList from "./pages/FSList.js";
-import Flow from "./pages/Flow.js";
-import FlowList from "./pages/FlowList.js";
-import HomePage from "./pages/HomePage.js";
-import schemalist from './data/SchemaList.js'
+import NotFoundPage from "./pages/NotFoundPage";
+import FormSchema from "./pages/FormSchema";
+import FSList from "./pages/FSList";
+import Flow from "./pages/Flow";
+import FlowList from "./pages/FlowList";
+import HomePage from "./pages/HomePage";
+import GraphList from "./pages/GraphList"
+import schemalist from "./data/SchemaList";
+import React from 'react';
 
 const routes = {
-  "/": () => <HomePage />,
+  "/": () => <GraphList />,
   "/formschema/:id": (id) => <FormSchema id={id} />,
-  "/fslist": () => <FSList schemalist={schemalist}/>,
+  "/fslist": () => <FSList schemalist={schemalist} />,
   "/flow": () => <Flow />,
   "/flowlist": () => <FlowList />,
 };
