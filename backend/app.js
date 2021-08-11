@@ -5,11 +5,10 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
 var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
 var graphRouter = require("./routes/graph");
 var processRouter = require("./routes/process");
 var outgoingRouter = require("./routes/outgoing");
-var userRouter = require("./routes/user");
+var accountRouter = require("./routes/account");
 var app = express();
 
 // view engine setup
@@ -23,11 +22,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
-app.use("/api/users", usersRouter);
 app.use("/api/graph", graphRouter);
 app.use("/api/process", processRouter);
 app.use("/api/outgoing", outgoingRouter);
-app.use("/api/user", userRouter);
+app.use("/api/account", accountRouter);
 app.use("/swagger-ui", express.static("./swagger-ui"));
 
 

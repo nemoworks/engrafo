@@ -1,3 +1,3 @@
-INSERT INTO process(formschema, graph, roles)
-VALUES($1, $2, $3)
+INSERT INTO process(formschema, enkrinograph, roles, constraints)
+VALUES($1, $2, $3, $4)
 RETURNING *

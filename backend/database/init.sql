@@ -29,8 +29,9 @@ CREATE SEQUENCE process_id_seq INCREMENT 1 MINVALUE 1000 MAXVALUE 2147483647 CAC
 CREATE TABLE "public"."process" (
     "id" integer DEFAULT nextval('process_id_seq') NOT NULL,
     "formschema" jsonb NOT NULL,
-    "graph" jsonb NOT NULL,
+    "enkrinograph" jsonb NOT NULL,
     "roles" jsonb NOT NULL,
+    "constraints" jsonb NOT NULL,
     CONSTRAINT "process_pkey" PRIMARY KEY ("id")
 ) WITH (oids = false);
 
