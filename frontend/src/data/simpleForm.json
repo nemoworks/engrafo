@@ -1,33 +1,30 @@
 {
-  "schema": {
-    "title": "Outgoing Service",
-    "description": "Log each service.",
-    "type": "object",
-    "properties": {
-      "_id": {
-        "title": "",
-        "type": "object",
-        "properties": {
-          "$oid": {
-            "title": "service id",
-            "type": "string"
-          }
-        }
-      },
-      "saler": {
-        "title": "saler name",
+  "title": "外派单",
+  "description": "外派单记录",
+  "type": "object",
+  "properties": {
+    "manager": {
+        "title": "管理员",
         "type": "string",
-        "enum": ["sam", "amily", "fragile"]
-      },
-      "feedback": {
-        "title": "service feedback",
-        "type": "string"
-      }
-    }
-  },
-  "uischema": {
+        "enum": ["张三", "李四", "吴九"]
+    },
+    "saler": {
+      "title": "销售员",
+      "type": "string",
+      "enum": ["田七", "谢八", "周廿"]
+    },
+    "engineer": {
+      "title": "工程师",
+      "type": "string",
+      "enum": ["赵五", "郑六", "庞十"]
+    },
+    "status": {
+      "title": "工程师接单",
+      "type": "boolean"
+    },
     "feedback": {
-      "ui:widget": "textarea"
+      "title": "客户反馈",
+      "type": "string"
     }
   }
 }

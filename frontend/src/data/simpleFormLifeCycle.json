@@ -1,0 +1,214 @@
+{
+    "status": "finished",
+    "schema": {
+        "fieldschema": {
+            "title": "外派单",
+            "description": "外派单记录",
+            "type": "object",
+            "properties": {
+                "manager": {
+                    "title": "管理员",
+                    "type": "string",
+                    "enum": [
+                        "张三",
+                        "李四",
+                        "吴九"
+                    ]
+                },
+                "saler": {
+                    "title": "销售员",
+                    "type": "string",
+                    "enum": [
+                        "田七",
+                        "谢八",
+                        "周廿"
+                    ]
+                },
+                "engineer": {
+                    "title": "工程师",
+                    "type": "string",
+                    "enum": [
+                        "赵五",
+                        "郑六",
+                        "庞十"
+                    ]
+                },
+                "status": {
+                    "title": "工程师接单",
+                    "type": "boolean"
+                },
+                "feedback": {
+                    "title": "客户反馈",
+                    "type": "string"
+                }
+            }
+        },
+        "uischema": {
+            "feedback": {
+                "ui:widget": "textarea"
+            }
+        }
+    },
+    "enkrino": {
+        "start": "4fd27190-a751-415e-9dbd-8c9188860656",
+        "current": "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2",
+        "graph": {
+            "nodes": [
+                {
+                    "id": "4fd27190-a751-415e-9dbd-8c9188860656",
+                    "name": "选定销售员",
+                    "backward": 0
+                },
+                {
+                    "id": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b",
+                    "name": "选定工程师",
+                    "backward": 0
+                },
+                {
+                    "id": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9",
+                    "name": "工程师接单",
+                    "backward": 1
+                },
+                {
+                    "id": "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb",
+                    "name": "填写客户反馈",
+                    "backward": 0
+                },
+                {
+                    "id": "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2",
+                    "name": "管理员审核",
+                    "backward": 2
+                }
+            ],
+            "edges": [
+                {
+                    "from": "4fd27190-a751-415e-9dbd-8c9188860656",
+                    "to": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b",
+                    "spec": {
+                        "temporary": false
+                    }
+                },
+                {
+                    "from": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b",
+                    "to": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9",
+                    "spec": {
+                        "temporary": false
+                    }
+                },
+                {
+                    "from": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9",
+                    "to": "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb",
+                    "spec": {
+                        "token": 0,
+                        "temporary": false
+                    }
+                },
+                {
+                    "from": "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb",
+                    "to": "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2",
+                    "spec": {
+                        "token": 0,
+                        "temporary": false
+                    }
+                }
+            ]
+        },
+        "mirror": {
+            "nodes": [
+                {
+                    "id": "4fd27190-a751-415e-9dbd-8c9188860656",
+                    "name": "选定销售员",
+                    "backward": 0
+                },
+                {
+                    "id": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b",
+                    "name": "选定工程师",
+                    "backward": 0
+                },
+                {
+                    "id": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9",
+                    "name": "工程师接单",
+                    "backward": 1
+                },
+                {
+                    "id": "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb",
+                    "name": "填写客户反馈",
+                    "backward": 0
+                },
+                {
+                    "id": "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2",
+                    "name": "管理员审核",
+                    "backward": 2
+                }
+            ],
+            "edges": [
+                {
+                    "from": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b",
+                    "to": "4fd27190-a751-415e-9dbd-8c9188860656"
+                },
+                {
+                    "from": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9",
+                    "to": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b"
+                },
+                {
+                    "from": "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb",
+                    "to": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9"
+                },
+                {
+                    "from": "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2",
+                    "to": "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb"
+                }
+            ]
+        },
+        "constraints": {
+            "steps": {
+                "4fd27190-a751-415e-9dbd-8c9188860656": {
+                    "auth": "@manager",
+                    "disable": [
+                        "manager",
+                        "engineer",
+                        "status",
+                        "feedback"
+                    ]
+                },
+                "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b": {
+                    "auth": "@saler",
+                    "disable": [
+                        "manager",
+                        "saler",
+                        "status",
+                        "feedback"
+                    ]
+                },
+                "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9": {
+                    "auth": "@engineer",
+                    "disable": [
+                        "manager",
+                        "saler",
+                        "engineer",
+                        "feedback"
+                    ]
+                },
+                "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb": {
+                    "auth": "@engineer",
+                    "disable": [
+                        "manager",
+                        "saler",
+                        "engineer",
+                        "status"
+                    ]
+                },
+                "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2": {
+                    "auth": "@manager",
+                    "disable": [
+                        "manager",
+                        "saler",
+                        "engineer",
+                        "status",
+                        "feedback"
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -1,5 +1,6 @@
 const express = require("express");
-const { outgoing, db } = require("../database");
+const { outgoing, process, db } = require("../database");
+const engine = require("../engine")
 var router = express.Router();
 
 router.get("/list", async function (req, res) {
@@ -17,6 +18,28 @@ router.get("/:id", async function (req, res) {
     err => {console.error(err); res.send({message: err.toString()})}
   )
 });
+
+router.get("/nexts/:id", async function (req, res) {
+  db.one(outgoing.find, req.params.id).then(
+    data => {
+      let {process, graphmirror, progress} = data
+      db.one(process.find, process).then(
+        (enkrinograph) => {
+          const {nodes} = enkrinograph
+          const current = nodes.find(element => element.id === progress)
+          
+        }
+      ).catch(
+        err => {console.error("in finding process", err); res.send({message: err.toString()})}
+      )
+      res.send({
+        
+      })
+    }
+  ).catch(
+    err => {console.error("in finding outgoing", err); res.send({message: err.toString()})}
+  )
+})
 
 router.post("/", async function (req, res) {
   const { formdata, process } = req.body
