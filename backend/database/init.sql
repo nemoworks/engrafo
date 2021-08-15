@@ -1,10 +1,10 @@
 -- Adminer 4.8.1 PostgreSQL 13.3 (Debian 13.3-1.pgdg100+1) dump
 
 \connect "ticflow";
-
+CREATE TYPE role AS ENUM ('manager', 'engineer', 'saler');
 DROP TABLE IF EXISTS "LCtemplates";
 DROP SEQUENCE IF EXISTS "LCtemplates_id_seq";
-CREATE SEQUENCE "LCtemplates_id_seq" INCREMENT 1 MINVALUE 1000 MAXVALUE 2147483647 CACHE 1;
+CREATE SEQUENCE "LCtemplates_id_seq" INCREMENT 1 MINVALUE 1001 MAXVALUE 2147483647 CACHE 1;
 
 CREATE TABLE "public"."LCtemplates" (
     "id" integer DEFAULT nextval('"LCtemplates_id_seq"') NOT NULL,
@@ -17,7 +17,7 @@ INSERT INTO "LCtemplates" ("id", "lifecycle") VALUES
 
 DROP TABLE IF EXISTS "account";
 DROP SEQUENCE IF EXISTS account_id_seq;
-CREATE SEQUENCE account_id_seq INCREMENT 1 MINVALUE 1000 MAXVALUE 2147483647 CACHE 1;
+CREATE SEQUENCE account_id_seq INCREMENT 1 MINVALUE 1001 MAXVALUE 2147483647 CACHE 1;
 
 CREATE TABLE "public"."account" (
     "id" integer DEFAULT nextval('account_id_seq') NOT NULL,
@@ -41,7 +41,7 @@ INSERT INTO "account" ("id", "username", "password", "role") VALUES
 
 DROP TABLE IF EXISTS "outgoing";
 DROP SEQUENCE IF EXISTS outgoing_id_seq;
-CREATE SEQUENCE outgoing_id_seq INCREMENT 1 MINVALUE 1000 MAXVALUE 2147483647 CACHE 1;
+CREATE SEQUENCE outgoing_id_seq INCREMENT 1 MINVALUE 1001 MAXVALUE 2147483647 CACHE 1;
 
 CREATE TABLE "public"."outgoing" (
     "id" integer DEFAULT nextval('outgoing_id_seq') NOT NULL,
