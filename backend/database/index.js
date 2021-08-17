@@ -1,5 +1,5 @@
-const {QueryFile} = require('pg-promise');
-const {join: joinPath} = require('path');
+const { QueryFile } = require('pg-promise');
+const { join: joinPath } = require('path');
 var pgp = require('pg-promise')(/* options */)
 function sql(file) {
 
@@ -27,40 +27,27 @@ function sql(file) {
 }
 
 const cn = {
-  host: 'localhost',
-  port: 28432,
-  database: 'ticflow',
-  user: 'jieshixin',
-  password: 'jieshixin,.#',
-  max: 30 // use up to 30 connections
+    host: 'localhost',
+    port: 28432,
+    database: 'ticflow',
+    user: 'jieshixin',
+    password: 'jieshixin,.#',
+    max: 30 // use up to 30 connections
 
-  // "types" - in case you want to set custom type parsers on the pool level
+    // "types" - in case you want to set custom type parsers on the pool level
 };
 
 var db = pgp(cn)
 
 module.exports = {
     db: db,
-    graph: {
-        insert: sql('sql/graph/insert.sql'),
-        delete: sql('sql/graph/delete.sql'),
-        update: sql('sql/graph/update.sql'),
-        find: sql('sql/graph/find.sql'),
-        findAll: sql('sql/graph/findAll.sql')
-    },
-    process: {
-        insert: sql('sql/process/insert.sql'),
-        delete: sql('sql/process/delete.sql'),
-        update: sql('sql/process/update.sql'),
-        find: sql('sql/process/find.sql'),
-        findAll: sql('sql/process/findAll.sql')
-    },
     outgoing: {
         insert: sql('sql/outgoing/insert.sql'),
         delete: sql('sql/outgoing/delete.sql'),
         update: sql('sql/outgoing/update.sql'),
         find: sql('sql/outgoing/find.sql'),
-        findAll: sql('sql/outgoing/findAll.sql')
+        findAll: sql('sql/outgoing/findAll.sql'),
+        findData: sql('sql/outgoing/findData.sql')
     },
     account: {
         insert: sql('sql/account/insert.sql'),
@@ -68,6 +55,13 @@ module.exports = {
         update: sql('sql/account/update.sql'),
         find: sql('sql/account/find.sql'),
         findAll: sql('sql/account/findAll.sql')
+    },
+    LCtemplates: {
+        insert: sql('sql/LCtemplates/insert.sql'),
+        delete: sql('sql/LCtemplates/delete.sql'),
+        update: sql('sql/LCtemplates/update.sql'),
+        find: sql('sql/LCtemplates/find.sql'),
+        findAll: sql('sql/LCtemplates/findAll.sql')
     }
 };
 
