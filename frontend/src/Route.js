@@ -8,6 +8,7 @@ import HomePage from "./pages/HomePage";
 import GraphList from "./pages/GraphList"
 import schemalist from "./data/SchemaList";
 import React from 'react';
+import FSInfo from "./pages/FSInfo";
 
 const routes = {
   "/": () => <GraphList />,
@@ -15,6 +16,7 @@ const routes = {
   "/fslist": () => <FSList schemalist={schemalist} />,
   "/flow": () => <Flow />,
   "/flowlist": () => <FlowList />,
+  "/fsinfo/:id": ({id}) => <FSInfo id={id}/>,
 };
 
 const Route = () => {

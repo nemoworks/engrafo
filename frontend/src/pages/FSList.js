@@ -207,6 +207,7 @@ export default observer(function FSList({ schemalist }) {
                     <TableCell>{row.formdata.engineer}</TableCell>
                     <TableCell>{row.formdata.feedback}</TableCell>
                     <TableCell align="center">
+                    <Link color="inherit" href={"/fsinfo/"+row.id}>
                       <IconButton
                         aria-label="edit"
                         color="primary"
@@ -215,6 +216,7 @@ export default observer(function FSList({ schemalist }) {
                         {/* {编辑按钮，需要添加跳转详情页} */}
                         <EditIcon fontSize="small" />
                       </IconButton>
+                      </Link>
                       <IconButton
                         aria-label="delete"
                         color="secondary"
