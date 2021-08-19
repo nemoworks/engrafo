@@ -1,5 +1,13 @@
-import jsf from 'json-schema-faker'
+const _ = require('lodash')
+const jsf =require( 'json-schema-faker')
 const delimiter = '#'
+const keys =  [
+    "manager",
+    "engineer",
+    "status",
+    "feedback"
+]
+
 
 const obj2keys = (source) => {
     let res = []
@@ -37,4 +45,10 @@ const keys2disabled = (keys) => {
     return res
 }
 
-export { obj2keys, schema2entry, keys2disabled }
+const uischema = {
+    "feedback":{
+        "ui:widget": "textarea"
+    }
+}
+
+console.log(_.merge(keys2disabled(keys),uischema))
