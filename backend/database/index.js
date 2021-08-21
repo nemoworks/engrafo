@@ -47,7 +47,9 @@ module.exports = {
         update: sql('sql/outgoing/update.sql'),
         find: sql('sql/outgoing/find.sql'),
         findAll: sql('sql/outgoing/findAll.sql'),
-        findData: sql('sql/outgoing/findData.sql')
+        findData: sql('sql/outgoing/findData.sql'),
+        findAllData: sql('sql/outgoing/findAllData.sql'),
+        updateData: sql('sql/outgoing/updateData.sql')
     },
     account: {
         insert: sql('sql/account/insert.sql'),

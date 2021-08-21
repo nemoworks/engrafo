@@ -93,6 +93,30 @@ router.put("/:id", async function (req, res) {
   )
 });
 
+router.get("/formdata/list", async function (req, res) {
+  db.any(outgoing.findAllData).then(
+    data => res.send(data)
+  ).catch(
+    err => { console.error(err); res.send({ message: err.toString() }) }
+  )
+})
+
+router.get("/formdata/:id", async function (req, res) {
+  db.one(outgoing.findData, req.params.id).then(
+    data => res.send(data)
+  ).catch(
+    err => { console.error(err); res.send({ message: err.toString() }) }
+  )
+})
+
+router.put("/formdata/:id", async function (req, res) {
+  db.one(outgoing.updateData, [req.params.id, JSON.stringify(req.body)]).then(
+    data => res.send(data)
+  ).catch(
+    err => { console.error(err); res.send({ message: err.toString() }) }
+  )
+});
+
 router.delete("/:id", async function (req, res) {
   db.result(outgoing.delete, req.params.id).then(
     data => res.send(data)

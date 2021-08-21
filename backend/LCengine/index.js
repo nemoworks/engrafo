@@ -146,9 +146,8 @@ module.exports = {
   },
   nexts: (lc) => {
     const { enkrino } = lc;
-    let current = enkrino.current;
+    let current = enkrino.current?enkrino.current:enkrino.start;
     let forwards = successors(enkrino.graph, current);
-    console.log("forwards", forwards);
     let backwards = [];
     switch (enkrino.graph.nodes.find((e) => e.id === current).backward) {
       case 0:
