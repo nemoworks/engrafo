@@ -82,39 +82,40 @@ export default observer(function FSList({ schemalist }) {
   const [graph, setGraph] = React.useState({ nodes: [], edges: [] });
   const [current, setCurrent] = React.useState(null);
   const [nexts, setNexts] = React.useState(null);
-  const [rows, setRows] = React.useState([])
+  const [rows, setRows] = React.useState([]);
   //通过react hook对Graph进行更新，页面加载时执行一次
-  React.useEffect(()=>{
-    OutgoingReq.getDataList().then(res => setRows(res));
+  React.useEffect(() => {
+    OutgoingReq.getList().then((res) => setRows(res));
     (async () =>
-    //1000为id
-    fetch("http://localhost:8080/api/outgoing/1000")
-      .then((res) => res.json())
-      .then((res) => {
-        //获取图数据
-        let next = res.lifecycle.enkrino.graph;
-        //把流程引擎的current节点标记为红色
-        const currentid = res.lifecycle.enkrino.current?res.lifecycle.enkrino.current:res.lifecycle.enkrino.start
-        next.nodes = next.nodes.map((item) =>
-          item.id === currentid
-            ? { ...item, label: item.name, color: "red" }
-            : { ...item, label: item.name, color: "#CCFFFF" }
-        );
-        //把流程图中的边添加箭头
-        next.edges = next.edges.map((item) => {
-          return {
-            from: item.from,
-            to: item.to,
-            arrows: "to",
-          };
-        });
-        //把graph数据设置到state
-        setGraph(next);
-        //setCurrent(res.lifecycle.enkrino.current) 更新current
-      })
-      // .then(()=>fetch("")) 执行get nexts接口，更新nexts
-      )();
-  },[])
+      //1000为id
+      fetch("http://localhost:8080/api/outgoing/1000")
+        .then((res) => res.json())
+        .then((res) => {
+          //获取图数据
+          let next = res.lifecycle.enkrino.graph;
+          //把流程引擎的current节点标记为红色
+          const currentid = res.lifecycle.enkrino.current
+            ? res.lifecycle.enkrino.current
+            : res.lifecycle.enkrino.start;
+          next.nodes = next.nodes.map((item) =>
+            item.id === currentid
+              ? { ...item, label: item.name, color: "red" }
+              : { ...item, label: item.name, color: "#CCFFFF" }
+          );
+          //把流程图中的边添加箭头
+          next.edges = next.edges.map((item) => {
+            return {
+              from: item.from,
+              to: item.to,
+              arrows: "to",
+            };
+          });
+          //把graph数据设置到state
+          setGraph(next);
+          //setCurrent(res.lifecycle.enkrino.current) 更新current
+        }))();
+    // .then(()=>fetch("")) 执行get nexts接口，更新nexts
+  }, []);
 
   //这个不需要写
   React.useEffect(() => {
@@ -171,8 +172,12 @@ export default observer(function FSList({ schemalist }) {
                   <TableCell style={{ width: "12%" }}>经理</TableCell>
                   <TableCell style={{ width: "12%" }}>销售员</TableCell>
                   <TableCell style={{ width: "12%" }}>工程师</TableCell>
-                  <TableCell style={{ width: "30%" }} align="center">反馈</TableCell>
-                  <TableCell style={{ width: "24%" }} align="center">操作</TableCell>
+                  <TableCell style={{ width: "30%" }} align="center">
+                    反馈
+                  </TableCell>
+                  <TableCell style={{ width: "24%" }} align="center">
+                    操作
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -184,27 +189,25 @@ export default observer(function FSList({ schemalist }) {
                     <TableCell>{row.formdata.engineer}</TableCell>
                     <TableCell>{row.formdata.feedback}</TableCell>
                     <TableCell align="center">
-                    <Link color="inherit" href={"/fsinfo/"+row.id}>
-                      <IconButton
-                        aria-label="edit"
-                        color="primary"
-                        className={classes.margin}
-                      >
-                        {/* {编辑按钮，需要添加跳转详情页} */}
-                        <EditIcon fontSize="small" />
-                      </IconButton>
+                      <Link color="inherit" href={"/fsinfo/" + row.id}>
+                        <IconButton
+                          aria-label="edit"
+                          color="primary"
+                          className={classes.margin}
+                        >
+                          {/* {编辑按钮，需要添加跳转详情页} */}
+                          <EditIcon fontSize="small" />
+                        </IconButton>
                       </Link>
                       <IconButton
                         aria-label="delete"
                         color="secondary"
                         className={classes.margin}
                         onClick={() => {
-                          schemalist.delete(row._id["$oid"]);
-                          if (
-                            preview.formData._id["$oid"] === row._id["$oid"]
-                          ) {
-                            setPreview({ show: false });
-                          }
+                          OutgoingReq.delete(row.id).then(() =>
+                            OutgoingReq.getList().then((res) => setRows(res))
+                          );
+                          setPreview({ show: false });
                         }}
                       >
                         <DeleteIcon fontSize="small" />
@@ -392,7 +395,7 @@ export default observer(function FSList({ schemalist }) {
                     id="demo-simple-select"
                     value={next ? next : undefined}
                     onChange={(e) => {
-                      setNext(e.target.value);//更新 Next
+                      setNext(e.target.value); //更新 Next
                     }}
                   >
                     {nexts
@@ -407,12 +410,10 @@ export default observer(function FSList({ schemalist }) {
                     onClick={() => {
                       (async () => {
                         // 访问Go Next接口 解析过程和start一致，更新graph， nexts和current
-                        fetch(
-                          `localhost:8080/api/outgoing/next/1000/${next}`,
-                          {
-                            method: "POST"
-                          }
-                        ).then((res) => res.json())
+                        fetch(`localhost:8080/api/outgoing/next/1000/${next}`, {
+                          method: "POST",
+                        })
+                          .then((res) => res.json())
                           .then((res) => {
                             setCurrent(res.lifecycle.enkrino.current);
                             // get Nexts数据解析
