@@ -19,4 +19,8 @@ export default{
         const {data} = await axios.post(api+'next/'+id+'/'+next)
         return data
     },
+    async getDataList(){
+        const {data} = await axios.get(api+'formdata/list')
+        return data
+    }
 }

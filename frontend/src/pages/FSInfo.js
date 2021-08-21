@@ -55,7 +55,7 @@ export default function FSInfo({id}) {
         }
 
       }
-    },[currentAccount,constraints,current,uiSchema])
+    },[currentAccount,constraints,current])
 
     React.useEffect(()=>{
           OutgoingReq.get(id).then(data=>{

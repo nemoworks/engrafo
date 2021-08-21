@@ -26,10 +26,9 @@ import Form from "@rjsf/material-ui";
 //引入流程图组件Graph
 import Graph from "../components/Graph.js";
 import Select from "@material-ui/core/Select";
-import startdata from "../data/startdata.json";
 import MenuItem from "@material-ui/core/MenuItem";
 import FixedHeightContainer from "../components/FixedHeightContainer";
-import lc from "../data/simpleFormLifeCycle.json";
+import { OutgoingReq } from "../requests";
 const graphOptions = {
   physics: {},
   interaction: {
@@ -68,30 +67,6 @@ const useStyles = makeStyles((theme) => ({
 
 //通过Observer将schemalist传入FSList
 export default observer(function FSList({ schemalist }) {
-  const rows = [
-    {
-      id: "1000",
-      formdata: {
-        saler: "谢八",
-        status: true,
-        manager: "张三",
-        engineer: "郑六",
-        feedback: "windows系统无法安装office，已修复",
-      },
-      lifecycle: lc,
-    },
-    {
-      id: "1001",
-      formdata: {
-        saler: "周廿",
-        status: true,
-        manager: "吴九",
-        engineer: "赵五",
-        feedback: "已装好GPU工作站",
-      },
-      lifecycle: lc,
-    },
-  ];
   const classes = useStyles();
   // 通过react hook定义state变量和set函数
   const [open, setOpen] = React.useState(false);
@@ -107,9 +82,10 @@ export default observer(function FSList({ schemalist }) {
   const [graph, setGraph] = React.useState({ nodes: [], edges: [] });
   const [current, setCurrent] = React.useState(null);
   const [nexts, setNexts] = React.useState(null);
-
+  const [rows, setRows] = React.useState([])
   //通过react hook对Graph进行更新，页面加载时执行一次
   React.useEffect(()=>{
+    OutgoingReq.getDataList().then(res => setRows(res));
     (async () =>
     //1000为id
     fetch("http://localhost:8080/api/outgoing/1000")
@@ -192,10 +168,11 @@ export default observer(function FSList({ schemalist }) {
               <TableHead>
                 <TableRow>
                   <TableCell style={{ width: "10%" }}>单号</TableCell>
-                  <TableCell>经理</TableCell>
-                  <TableCell>销售员</TableCell>
-                  <TableCell>工程师</TableCell>
-                  <TableCell align="center">反馈</TableCell>
+                  <TableCell style={{ width: "12%" }}>经理</TableCell>
+                  <TableCell style={{ width: "12%" }}>销售员</TableCell>
+                  <TableCell style={{ width: "12%" }}>工程师</TableCell>
+                  <TableCell style={{ width: "30%" }} align="center">反馈</TableCell>
+                  <TableCell style={{ width: "24%" }} align="center">操作</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
