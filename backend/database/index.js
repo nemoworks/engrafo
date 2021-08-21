@@ -64,6 +64,13 @@ module.exports = {
         update: sql('sql/LCtemplates/update.sql'),
         find: sql('sql/LCtemplates/find.sql'),
         findAll: sql('sql/LCtemplates/findAll.sql')
-    }
+    },
+    FStemplates: {
+        insert: sql('sql/FStemplates/insert.sql'),
+        delete: sql('sql/FStemplates/delete.sql'),
+        update: sql('sql/FStemplates/update.sql'),
+        find: sql('sql/FStemplates/find.sql'),
+        findAll: sql('sql/FStemplates/findAll.sql')
+    },
 };
 

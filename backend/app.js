@@ -8,6 +8,7 @@ var indexRouter = require("./routes/index");
 var outgoingRouter = require("./routes/outgoing");
 var accountRouter = require("./routes/account");
 var LCtemplates = require("./routes/LCtemplates");
+var FStemplates = require("./routes/FStemplates");
 var app = express();
 
 // view engine setup
@@ -32,6 +33,7 @@ app.use("/", indexRouter);
 app.use("/api/outgoing", outgoingRouter);
 app.use("/api/account", accountRouter);
 app.use("/api/LCtemplates", LCtemplates);
+app.use("/api/FStemplates", FStemplates);
 app.use("/swagger-ui", express.static("./swagger-ui"));
 
 
