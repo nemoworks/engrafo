@@ -6,7 +6,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Title from "../components/Title";
+import Title from "../../components/Title";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Grid from "@material-ui/core/Grid";
@@ -24,12 +24,12 @@ import { observer } from "mobx-react";
 import Editor from "@monaco-editor/react";
 import Form from "@rjsf/material-ui";
 //引入流程图组件Graph
-import Graph from "../components/Graph.js";
+import Graph from "../../components/Graph.js";
 import Select from "@material-ui/core/Select";
-import startdata from "../data/startdata.json";
+import startdata from "../../data/startdata.json";
 import MenuItem from "@material-ui/core/MenuItem";
-import FixedHeightContainer from "../components/FixedHeightContainer";
-import lc from "../data/simpleFormLifeCycle.json";
+import FixedHeightContainer from "../../components/FixedHeightContainer";
+import lc from "../../data/simpleFormLifeCycle.json";
 const graphOptions = {
   physics: {},
   interaction: {
@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 //通过Observer将schemalist传入FSList
-export default observer(function FSList({ schemalist }) {
+export default observer(function Outgoing({ schemalist }) {
   const rows = [
     {
       id: "1000",

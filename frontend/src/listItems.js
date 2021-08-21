@@ -16,18 +16,19 @@ function ListItemLink(props) {
 
 export const mainListItems = (
   <div>
-    <ListItemLink href="/flow">
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Flow" />
-    </ListItemLink>
-    <ListItemLink href="/fslist">
+    <ListItemLink href="/dmlist">
       <ListItemIcon>
         <ShoppingCartIcon />
       </ListItemIcon>
-      <ListItemText primary="FSList" />
+      <ListItemText primary="数据模型" />
     </ListItemLink>
+    <ListItemLink href="/fmlist">
+      <ListItemIcon>
+        <DashboardIcon />
+      </ListItemIcon>
+      <ListItemText primary="流程模型" />
+    </ListItemLink>
+    
     {/* <ListItemLink>
       <ListItemIcon>
         <PeopleIcon />
