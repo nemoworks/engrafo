@@ -18,6 +18,12 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import Route from './Route';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import { AccountReq } from './requests';
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -115,12 +121,38 @@ const useStyles = makeStyles((theme) => ({
 export default function Dashboard() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [accounts,setAccounts]=React.useState([]);
+
+  const [currentAccount,setCurrentAccount]=React.useState({})
+
+    React.useEffect(()=>{
+      const sessionStorage=window.sessionStorage.getItem("currentAccount")
+      setCurrentAccount(JSON.parse(sessionStorage?sessionStorage:'{}'))
+    },[])
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleSelect = (account) => {
+    setAnchorEl(null);
+    window.sessionStorage.setItem('currentAccount', JSON.stringify(account));
+    setCurrentAccount(account)
+  };
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  
+  React.useEffect(()=>{
+    AccountReq.getAll().then(data=>{
+      setAccounts(data)
+    })
+  },[])
 
   return (
     <div className={classes.root}>
@@ -144,6 +176,34 @@ export default function Dashboard() {
               <NotificationsIcon />
             </Badge>
           </IconButton>
+          
+          <IconButton
+            color="inherit"
+            onClick={handleMenu}
+          >
+            <AccountCircle />
+            {currentAccount.username?currentAccount.username:'未登录'}
+          </IconButton>
+          
+          <Menu
+                id="account"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={()=>setAnchorEl(null)}
+              >
+                {accounts.map(account=>{
+                  return(
+                    <Link color="inherit" href={"/"}>
+                    <MenuItem key={account.id+1000} 
+                      onClick={()=>handleSelect(account)}
+                    >
+                      {account.username}
+                    </MenuItem>
+                    </Link>
+                  )
+                })}
+              </Menu>
         </Toolbar>
       </AppBar>
       <Drawer

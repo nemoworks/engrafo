@@ -7,6 +7,8 @@ import Select from "@material-ui/core/Select";
 import Graph from "../components/Graph.js";
 import { OutgoingReq } from "../requests";
 import MenuItem from "@material-ui/core/MenuItem";
+import { keys2disabled } from "../utils/schema";
+var _ = require('lodash');
 
 const graphOptions = {
     physics: {},
@@ -27,8 +29,36 @@ export default function FSInfo({id}) {
     const [graph, setGraph] = React.useState({ nodes: [], edges: [] });
     const [current, setCurrent] = React.useState(null);
 
+    const [currentAccount,setCurrentAccount]=React.useState({})
+    const [constraints,setConstraints]=React.useState({})
+
     React.useEffect(()=>{
-        OutgoingReq.get(id).then(data=>{
+      const sessionStorage=window.sessionStorage.getItem("currentAccount")
+      setCurrentAccount(JSON.parse(sessionStorage?sessionStorage:'{}'))
+    },[])
+
+    React.useEffect(()=>{
+      if(currentAccount.role&&constraints.steps&&current){
+        const {steps}=constraints
+        if(steps[current].auth!='@'+currentAccount.role){
+          const keys =  [
+            "manager",
+            "engineer",
+            "status",
+            "feedback",
+            "saler"
+          ]
+          setUiSchema(_.merge(keys2disabled(keys),uiSchema))
+        }else{
+          const keys=[...steps[current].disable]
+          setUiSchema(_.merge(keys2disabled(keys),uiSchema))
+        }
+
+      }
+    },[currentAccount,constraints,current,uiSchema])
+
+    React.useEffect(()=>{
+          OutgoingReq.get(id).then(data=>{
             const {
                 formdata:formData,
                 lifecycle:{
@@ -39,14 +69,18 @@ export default function FSInfo({id}) {
                     enkrino:{
                         current,
                         start,
+                        constraints
                     }
                 }}=data
             setSchema(schema)
             setUiSchema(uiSchema)
             setEntry({...entry,schema,uiSchema,formData})
+            setConstraints(constraints)
+            
 
             let graph=data.lifecycle.enkrino.graph;
             const currentId=current?current:start
+            setCurrent(currentId)
             graph.nodes = graph.nodes.map((item) =>
                 item.id === currentId
                     ? { ...item, label: item.name, color: "red" }
@@ -105,24 +139,24 @@ export default function FSInfo({id}) {
         <FixedHeightContainer height={800}>
             <Title>SchemaForm</Title>
             <Form
-                onSubmit={({schema,uiSchema,formData}) => {
-                    alert(
-                        JSON.stringify(formData)+`\n`+
-                        JSON.stringify(schema)+`\n`+
-                        JSON.stringify(uiSchema)
-                      );
+            onSubmit={({schema,uiSchema,formData}) => {
+                alert(
+                    JSON.stringify(formData)+`\n`+
+                    JSON.stringify(schema)+`\n`+
+                    JSON.stringify(uiSchema)
+                  );
 
-                    setEntry({
-                        formData,
-                        schema,
-                        uiSchema,
-                        toSave: true,
-                    });
-                }}
-                schema={schema}
-                uiSchema={uiSchema}
-                formData={entry.formData ? entry.formData : {}}
-            />
+                setEntry({
+                    formData,
+                    schema,
+                    uiSchema,
+                    toSave: true,
+                });
+            }}
+            schema={schema}
+            uiSchema={uiSchema}
+            formData={entry.formData ? entry.formData : {}}
+        />
             <div
                 style={{ height: "400px", width: "400px", marginTop: "20px" }}
             >
