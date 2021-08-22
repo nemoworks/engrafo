@@ -1,10 +1,10 @@
 const express = require("express");
-const { LCtemplates, db } = require("../database");
+const { FStemplates, db } = require("../database");
 var router = express.Router();
 
-/* LCtemplatesList */
+/* FStemplatesList */
 router.get("/list", async function (_, res) {
-  db.any(LCtemplates.findAll)
+  db.any(FStemplates.findAll)
     .then((data) => res.send(data))
     .catch((err) => {
       console.error(err);
@@ -12,9 +12,9 @@ router.get("/list", async function (_, res) {
     });
 });
 
-/* LCtemplates */
+/* FStemplates */
 router.get("/:id", async function (req, res) {
-  db.one(LCtemplates.find, req.params.id)
+  db.one(FStemplates.find, req.params.id)
     .then((data) => res.send(data))
     .catch((err) => {
       console.error(err);
@@ -23,7 +23,7 @@ router.get("/:id", async function (req, res) {
 });
 
 router.post("/", async function (req, res) {
-  db.one(LCtemplates.insert, JSON.stringify(req.body.lifecycle))
+  db.one(FStemplates.insert, JSON.stringify(req.body.formschema))
     .then((data) => res.send(data))
     .catch((err) => {
       console.error(err);
@@ -32,7 +32,7 @@ router.post("/", async function (req, res) {
 });
 
 router.put("/:id", async function (req, res) {
-  db.result(LCtemplates.update, [req.params.id, JSON.stringify(req.body)])
+  db.result(FStemplates.update, [req.params.id, JSON.stringify(req.body)])
     .then((data) => res.send(data))
     .catch((err) => {
       console.error(err);
@@ -41,7 +41,7 @@ router.put("/:id", async function (req, res) {
 });
 
 router.delete("/:id", async function (req, res) {
-  db.result(LCtemplates.delete, req.params.id)
+  db.result(FStemplates.delete, req.params.id)
     .then((data) => res.send(data))
     .catch((err) => {
       console.error(err);

@@ -1,2 +1,2 @@
-DELETE FROM LCtemplates
+DELETE FROM "LCtemplates"
 WHERE id = $1;
