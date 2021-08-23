@@ -69,7 +69,8 @@ export default function FSInfo({id}) {
                     enkrino:{
                         current,
                         start,
-                        constraints
+                        constraints,
+                        graph:{nodes}
                     }
                 }}=data
             setSchema(schema)
@@ -94,11 +95,28 @@ export default function FSInfo({id}) {
                 };
               });
             setGraph(graph)
+            OutgoingReq.nexts(id).then(data=>{
+              const {forwards,backwards}=data
+              const edges=[...forwards,...backwards]
+              let newEdges=[]
+              newEdges=edges.map(e=>{
+                for(let n of nodes){
+                  if(e==n.id){
+                    return {
+                      id:e,
+                      name:n.name
+                    }
+                  }
+                }
+                return{
+                  id:e,
+                  name:e
+                }
+              })
+              setNexts(newEdges)
+          })
         })
-        OutgoingReq.nexts(id).then(res=>{
-            const {forwards,backwards}=res
-            setNexts([...forwards,...backwards])
-        })
+
     },[])
     
 
@@ -110,6 +128,7 @@ export default function FSInfo({id}) {
                     enkrino:{
                         current:currentid,
                         start,
+                        graph:{nodes}
                     }
                 }}=res
             let newGraph=res.lifecycle.enkrino.graph;
@@ -127,10 +146,26 @@ export default function FSInfo({id}) {
                 };
               });
             setGraph(newGraph)
-        })
-        OutgoingReq.nexts(id).then(res=>{
-            const {forwards,backwards}=res
-            setNexts([...forwards,...backwards])
+            OutgoingReq.nexts(id).then(data=>{
+              const {forwards,backwards}=data
+              const edges=[...forwards,...backwards]
+              let newEdges=[]
+              newEdges=edges.map(e=>{
+                for(let n of nodes){
+                  if(e==n.id){
+                    return {
+                      id:e,
+                      name:n.name
+                    }
+                  }
+                }
+                return{
+                  id:e,
+                  name:e
+                }
+              })
+              setNexts(newEdges)
+          })
         })
     }
 
@@ -182,12 +217,13 @@ export default function FSInfo({id}) {
                     id="demo-simple-select"
                     value={next ? next : undefined}
                     onChange={(e) => {
-                      setNext(e.target.value);//更新 Next
+                      const {id}=e.target.value
+                      setNext(id);//更新 Next
                     }}
                   >
                     {nexts
                       ? nexts.map((item) => (
-                          <MenuItem value={item}>{item}</MenuItem>
+                          <MenuItem value={item}>{item.name}</MenuItem>
                         ))
                       : null}
                   </Select>

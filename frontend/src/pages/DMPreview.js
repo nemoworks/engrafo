@@ -1,55 +1,34 @@
 import React from "react";
-import Title from "../../components/Title";
+import Title from "../components/Title";
 import Grid from "@material-ui/core/Grid";
 import Editor from "@monaco-editor/react";
 import Form from "@rjsf/material-ui";
-import FixedHeightContainer from "../../components/FixedHeightContainer";
+import FixedHeightContainer from "../components/FixedHeightContainer";
+import FStemplates from "../requests/FStemplates";
+import { keys2disabled } from "../utils/schema";
+var _ = require('lodash');
 
-  const outgoingSchema={
-    schema:{
-      "title": "外派单",
-      "description": "外派单记录",
-      "type": "object",
-      "properties": {
-        "manager": {
-            "title": "管理员",
-            "type": "string",
-            "enum": ["张三", "李四", "吴九"]
-        },
-        "saler": {
-          "title": "销售员",
-          "type": "string",
-          "enum": ["田七", "谢八", "周廿"]
-        },
-        "engineer": {
-          "title": "工程师",
-          "type": "string",
-          "enum": ["赵五", "郑六", "庞十"]
-        },
-        "status": {
-          "title": "工程师接单",
-          "type": "boolean"
-        },
-        "feedback": {
-          "title": "客户反馈",
-          "type": "string"
-        }
-      }
-    },
-    uiSchema:{
-      "feedback":{
-          "ui:widget": "textarea"
-      }
-  }
-  }
+export default function Preview({id}){
 
-export default function Preview(){
     const [schema, setSchema] = React.useState({});
     const [uiSchema, setUiSchema] = React.useState({});
 
   React.useEffect(()=>{
-    setSchema(outgoingSchema.schema)
-    setUiSchema(outgoingSchema.uiSchema)
+    FStemplates.get(id).then(data=>{
+      const {formschema:{fieldschema:schema,uischema:uiSchema}}=data
+      setSchema(schema)
+      setUiSchema(uiSchema)
+
+      // const keys =  [
+      //   "manager",
+      //   "engineer",
+      //   "status",
+      //   "feedback",
+      //   "saler"
+      // ]
+      // setUiSchema(_.merge(keys2disabled(keys),uiSchema))
+    })
+    
   },[])
 
     return (
@@ -63,11 +42,13 @@ export default function Preview(){
                 title="Schema"
                 defaultLanguage="json"
                 defaultValue={JSON.stringify(schema, null, "\t")}
+                options={{readOnly:true}}
               />
               <p>ui:schema</p>
               <Editor
                 defaultLanguage="json"
                 defaultValue={JSON.stringify(uiSchema, null, "\t")}
+                options={{readOnly:true}}
               />
             </FixedHeightContainer>
           </Grid>

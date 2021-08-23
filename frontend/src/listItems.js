@@ -22,6 +22,12 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="数据模型" />
     </ListItemLink>
+    <ListItemLink href="/businesslist">
+      <ListItemIcon>
+        <ShoppingCartIcon />
+      </ListItemIcon>
+      <ListItemText primary="业务表" />
+    </ListItemLink>
     <ListItemLink href="/fmlist">
       <ListItemIcon>
         <DashboardIcon />

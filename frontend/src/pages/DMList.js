@@ -22,6 +22,7 @@ import FixedHeightContainer from "../components/FixedHeightContainer";
 import Title from "../components/Title";
 import Editor from "@monaco-editor/react";
 import Form from "@rjsf/material-ui";
+import FStemplates from "../requests/FStemplates";
 
 //JSS格式样式表，使用makeStyle
 const useStyles = makeStyles((theme) => ({
@@ -46,30 +47,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-  const rows = [
-    {
-      id: "1000",
-      name:"外派单",
-      link:"/outgoing",
-    },
-    {
-      id: "1001",
-      name:"请假单",
-      link:"/vacation",
-    },
-  ];
+  // const rows = [
+  //   {
+  //     id: "1000",
+  //     name:"外派单",
+  //     link:"/outgoing",
+  //   },
+  //   {
+  //     id: "1001",
+  //     name:"请假单",
+  //     link:"/vacation",
+  //   },
+  // ];
 
 export default function  DMList(){
   const [open, setOpen] = React.useState(false);
   const [schema, setSchema] = React.useState({});
-  const [uischema, setUischema] = React.useState({});
-  const [entry, setEntry] = React.useState({ toSave: false });
+  const [uiSchema, setUiSchema] = React.useState({});
+
   //monaco editor需要绑定ref
   const editorRef = React.useRef(null);
   const uiEditorRef = React.useRef(null);
+
+  const [rows,setRows]=React.useState([])
   
   const classes = useStyles();
-    
+  
+  React.useEffect(()=>{
+    FStemplates.getAll().then(data=>{
+      setRows(data)
+    })
+  },[])
 
     const handleClickOpen = () => {
       setOpen(true);
@@ -94,19 +102,9 @@ export default function  DMList(){
                 {rows.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell align="center">{row.id}</TableCell>
-                    <TableCell align="center">{row.name}</TableCell>
+                    <TableCell align="center">{row.formschema.fieldschema.title}</TableCell>
                     <TableCell align="center">
-                      <Link color="inherit" href={"/dmlist"+row.link}>
-                      <IconButton
-                        aria-label="edit"
-                        color="primary"
-                        className={classes.margin}
-                      >
-                        {/* {编辑按钮，需要添加跳转详情页} */}
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                      </Link>
-                      <Link color="inherit" href={"/dmlist"+row.link+"/preview"}>
+                      <Link color="inherit" href={"/dmlist/preview/"+row.id}>
                       <IconButton
                         aria-label="preview"
                         color="primary"
@@ -123,7 +121,9 @@ export default function  DMList(){
                         color="secondary"
                         className={classes.margin}
                         onClick={() => {
-                          console.log('delete',row)
+                          FStemplates.delete(row.id).then(data=>{
+                            console.log(data)
+                          })
                         }}
                       >
                         <DeleteIcon fontSize="small" />
@@ -159,15 +159,9 @@ export default function  DMList(){
               autoFocus
               color="inherit"
               onClick={() => {
-                if (entry.toSave) {
-                  schemalist.add({
-                    ...entry.formData,
-                    schema: entry.schema,
-                    uischema: entry.uischema,
-                  });
-                } else {
-                  alert("no form data submitted");
-                }
+                FStemplates.create({formschema:{fieldschema:schema,uischema:uiSchema}}).then(data=>{
+                  console.log(data)
+                })
                 handleClose();
               }}
             >
@@ -188,16 +182,16 @@ export default function  DMList(){
                 onMount={(editor, monaco) => {
                   editorRef.current = editor;
                 }}
-                onChange={(value, event) => console.log(value)}
+                onChange={(value, event) => {}}
               />
               <p>ui:schema</p>
               <Editor
                 defaultLanguage="json"
-                defaultValue={JSON.stringify(uischema, null, "\t")}
+                defaultValue={JSON.stringify(uiSchema, null, "\t")}
                 onMount={(editor, monaco) => {
                   uiEditorRef.current = editor;
                 }}
-                onChange={(value, event) => console.log(value)}
+                onChange={(value, event) => {}}
               />
               <div>
                 {/* 点击apply将schema与uischema传入state，通过editor的ref读取编辑器中的内容 */}
@@ -206,7 +200,7 @@ export default function  DMList(){
                   color="primary"
                   onClick={() => {
                     setSchema(JSON.parse(editorRef.current.getValue()));
-                    setUischema(JSON.parse(uiEditorRef.current.getValue()));
+                    setUiSchema(JSON.parse(uiEditorRef.current.getValue()));
                   }}
                 >
                   apply
@@ -224,19 +218,12 @@ export default function  DMList(){
                     JSON.stringify({
                       ...formData,
                       schema: schema,
-                      uischema: uischema,
+                      uischema: uiSchema,
                     })
                   );
-                  setEntry({
-                    formData: formData,
-                    schema: schema,
-                    uischema: uischema,
-                    toSave: true,
-                  });
                 }}
                 schema={schema}
-                uiSchema={uischema}
-                formData={entry.formData ? entry.formData : {}}
+                uiSchema={uiSchema}
               />
               
             </FixedHeightContainer>
