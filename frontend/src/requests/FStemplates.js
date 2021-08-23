@@ -13,18 +13,17 @@ export default{
   },
   async create(formschema){
     console.log(formschema)
-      const response = await fetch(api,{
-        method:'POST',
-        body:JSON.stringify(formschema),
-        headers:{
-          'Content-Type': 'application/json'
-        }
-      })
-      if(response.ok){
-        const data = await response.json()
-        return data
+    const res = axios.request({
+      url:api,
+      method:'POST',
+      data:{
+        formschema
+      },
+      headers:{
+        'Content-Type': 'application/json'
       }
-      return "error"
+    })
+    return res
   },
   async delete(id){
     const {data}=await axios.delete(api+id)
