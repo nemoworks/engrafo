@@ -17,7 +17,7 @@ export default{
         method:'POST',
         body:JSON.stringify(formschema),
         headers:{
-          'content-type': 'application/json'
+          'Content-Type': 'application/json'
         }
       })
       if(response.ok){

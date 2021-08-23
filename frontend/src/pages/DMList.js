@@ -86,7 +86,6 @@ export default function  DMList(){
     const handleClose = () => {
       setOpen(false);
     };
-
     return(
       <>
         <FixedHeightContainer height={800}>
