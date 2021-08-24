@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const HOST=process.env.NODE_ENV==="production"?'app':'localhost'
+const HOST=process.env.NODE_ENV==="production"?'localhost:21081':'localhost:8080'
 
-const api=`http://${HOST}:8080/api/FStemplates/`
+const api=`http://${HOST}/api/FStemplates/`
 
 export default{
   async getAll(){

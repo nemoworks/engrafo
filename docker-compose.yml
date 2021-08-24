@@ -24,7 +24,7 @@ services:
     image: enhydrawgc/sddm-backend
     restart: unless-stopped
     ports:
-      - 8080:8080
+      - 21081:8080
 
   ui:
     image: nginx:1.21.1-alpine
@@ -33,4 +33,4 @@ services:
       - ./frontend/build:/var/www
     restart: unless-stopped
     ports:
-      - 3000:80
+      - 21080:80
