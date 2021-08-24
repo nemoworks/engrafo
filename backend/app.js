@@ -4,7 +4,6 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
-var indexRouter = require("./routes/index");
 var outgoingRouter = require("./routes/outgoing");
 var accountRouter = require("./routes/account");
 var LCtemplates = require("./routes/LCtemplates");
@@ -27,9 +26,14 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "../frontend/build", "index.html")));
 
-app.use("/", indexRouter);
+// app.use("/", (req, res) => {
+//   // res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
+//   res.send({
+//     message: "express"
+//   })
+// })
 app.use("/api/outgoing", outgoingRouter);
 app.use("/api/account", accountRouter);
 app.use("/api/LCtemplates", LCtemplates);
@@ -50,7 +54,9 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render("error");
+  res.send({
+    message: "error"
+  });
 });
 
 module.exports = app;
