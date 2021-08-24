@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "PORT=8080 node ./bin/www",
+    "proc": "PORT=8080 DBHOST=db DBPORT=5432 node ./bin/www",
     "dev": "PORT=8080 node-dev ./bin/www"
   },
   "dependencies": {

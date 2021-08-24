@@ -26,9 +26,13 @@ function sql(file) {
     return qf;
 }
 
+var dbhost = process.env.DBHOST || 'localhost';
+
+var dbport = process.env.DBPORT || 28432
+
 const cn = {
-    host: 'localhost',
-    port: 28432,
+    host: dbhost,
+    port: dbport,
     database: 'ticflow',
     user: 'jieshixin',
     password: 'jieshixin,.#',

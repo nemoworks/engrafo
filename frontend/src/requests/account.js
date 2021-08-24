@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const api='http://localhost:8080/api/account/'
+const HOST=process.env.NODE_ENV==="production"?'app':'localhost'
+
+const api=`http://${HOST}:8080/api/account/`
 
 export default{
     async get(id){

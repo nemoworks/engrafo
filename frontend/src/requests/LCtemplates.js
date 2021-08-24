@@ -1,7 +1,8 @@
 import axios from "axios";
-import { create } from "lodash";
 
-const api='http://localhost:8080/api/LCtemplates/'
+const HOST=process.env.NODE_ENV==="production"?'app':'localhost'
+
+const api=`http://${HOST}:8080/api/LCtemplates/`
 
 export default{
   async getAll(){

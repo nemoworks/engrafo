@@ -38,7 +38,7 @@ app.use("/api/outgoing", outgoingRouter);
 app.use("/api/account", accountRouter);
 app.use("/api/LCtemplates", LCtemplates);
 app.use("/api/FStemplates", FStemplates);
-app.use("/swagger-ui", express.static("./swagger-ui"));
+// app.use("/swagger-ui", express.static("../swagger-ui"));
 
 
 // catch 404 and forward to error handler
