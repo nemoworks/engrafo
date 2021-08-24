@@ -18,8 +18,6 @@ const graphOptions = {
     },
   };
 
-
-
 export default function FSInfo({id}) {
     const [schema, setSchema] = React.useState({});
     const [uiSchema, setUiSchema] = React.useState({});
@@ -53,7 +51,15 @@ export default function FSInfo({id}) {
           const keys=[...steps[current].disable]
           setUiSchema(_.merge(keys2disabled(keys),uiSchema))
         }
-
+      }else if(currentAccount.role==undefined&&current){
+        const keys =  [
+          "manager",
+          "engineer",
+          "status",
+          "feedback",
+          "saler"
+        ]
+        setUiSchema(_.merge(keys2disabled(keys),uiSchema))
       }
     },[currentAccount,constraints,current])
 
@@ -97,7 +103,8 @@ export default function FSInfo({id}) {
             setGraph(graph)
             OutgoingReq.nexts(id).then(data=>{
               const {forwards,backwards}=data
-              const edges=[...forwards,...backwards]
+
+              const edges=[...forwards?forwards:[],...backwards?backwards:[]]
               let newEdges=[]
               newEdges=edges.map(e=>{
                 for(let n of nodes){
@@ -231,10 +238,13 @@ export default function FSInfo({id}) {
                   <Button
                     color="inherit"
                     onClick={() => {
+                      if(next){
                         OutgoingReq.next(id,next).then(data=>{
-                            setCurrent(data.lifecycle.enkrino.current)
-                            handleStatusChange()
-                      })
+                          setCurrent(data.lifecycle.enkrino.current)
+                          handleStatusChange()
+                          setNext(null)
+                        })
+                      }
                     }}
                   >
                     Go

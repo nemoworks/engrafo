@@ -24,7 +24,6 @@ router.get("/:id", async function (req, res) {
 });
 
 router.post("/", async function (req, res) {
-  console.log(req.body)
   db.one(FStemplates.insert, JSON.stringify(req.body.formschema))
     .then((data) => res.send(data))
     .catch((err) => {
