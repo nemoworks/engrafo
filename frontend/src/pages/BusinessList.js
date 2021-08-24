@@ -9,19 +9,8 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import AddIcon from "@material-ui/icons/Add";
-import Dialog from "@material-ui/core/Dialog";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Grid from "@material-ui/core/Grid";
-import CloseIcon from "@material-ui/icons/Close";
-import Typography from "@material-ui/core/Typography";
 import FixedHeightContainer from "../components/FixedHeightContainer";
-import Title from "../components/Title";
-import Editor from "@monaco-editor/react";
-import Form from "@rjsf/material-ui";
-import FStemplates from "../requests/FStemplates";
+import ListIcon from '@material-ui/icons/List';
 
 //JSS格式样式表，使用makeStyle
 const useStyles = makeStyles((theme) => ({
@@ -60,13 +49,6 @@ const useStyles = makeStyles((theme) => ({
   ];
 
 export default function  BusinessList(){
-  const [open, setOpen] = React.useState(false);
-  const [schema, setSchema] = React.useState({});
-  const [uischema, setUischema] = React.useState({});
-  const [entry, setEntry] = React.useState({ toSave: false });
-  //monaco editor需要绑定ref
-  const editorRef = React.useRef(null);
-  const uiEditorRef = React.useRef(null);
 
   // const [rows,setRows]=React.useState([])
   
@@ -108,8 +90,7 @@ export default function  BusinessList(){
                         color="primary"
                         className={classes.margin}
                       >
-                        {/* {编辑按钮，需要添加跳转详情页} */}
-                        <EditIcon fontSize="small" />
+                        <ListIcon fontSize="small" />
                       </IconButton>
                       </Link>
                       <IconButton

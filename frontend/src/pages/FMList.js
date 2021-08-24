@@ -87,7 +87,6 @@ export default function  FMList(){
               <TableHead>
                 <TableRow>
                   <TableCell align="center">ID</TableCell>
-                  <TableCell align="center">模型名称</TableCell>
                   <TableCell align="center">操作</TableCell>
                 </TableRow>
               </TableHead>
@@ -95,7 +94,6 @@ export default function  FMList(){
                 {rows.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell align="center">{row.id}</TableCell>
-                    <TableCell align="center">{row.lifecycle.schema.fieldschema.title}</TableCell>
                     <TableCell align="center">
                       <Link color="inherit" href={"/fmlist/preview/"+row.id}>
                       <IconButton
@@ -112,7 +110,9 @@ export default function  FMList(){
                         color="secondary"
                         className={classes.margin}
                         onClick={() => {
-                          console.log('delete',row)
+                          LCtemplates.delete(row.id).then(data=>{
+                            setRows(rows.filter(r=>r.id!=row.id))
+                          })
                         }}
                       >
                         <DeleteIcon fontSize="small" />
@@ -148,7 +148,14 @@ export default function  FMList(){
               autoFocus
               color="inherit"
               onClick={() => {
-                handleClose();
+                console.log(graph)
+                LCtemplates.create({enkrino:{graph}}).then(data=>{
+                  handleClose();
+                  LCtemplates.getAll().then(data=>{
+                    setRows(data)
+                  })
+                })
+                
               }}
             >
               save

@@ -9,6 +9,7 @@ import PeopleIcon from "@material-ui/icons/People";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import LayersIcon from "@material-ui/icons/Layers";
 import AssignmentIcon from "@material-ui/icons/Assignment";
+import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 
 function ListItemLink(props) {
   return <ListItem button component="a" {...props} />;
@@ -24,7 +25,7 @@ export const mainListItems = (
     </ListItemLink>
     <ListItemLink href="/businesslist">
       <ListItemIcon>
-        <ShoppingCartIcon />
+        <BusinessCenterIcon />
       </ListItemIcon>
       <ListItemText primary="业务表" />
     </ListItemLink>
