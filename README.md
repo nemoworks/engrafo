@@ -1,6 +1,11 @@
 # jieshixin
 
-# deploy
+## prerequisite
+- node:v14
+- docker
+
+
+## deploy
 ```bash
 # build backend
 docker build backend -t enhydrawgc/sddm-backend
