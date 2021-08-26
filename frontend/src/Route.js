@@ -1,7 +1,7 @@
 import { useRoutes } from "hookrouter";
 import NotFoundPage from "./pages/NotFoundPage";
 import FormSchema from "./pages/FormSchema";
-import Outgoing from "./pages/business/Outgoing";
+import Outgoing from "./pages/Outgoing";
 import Flow from "./pages/Flow";
 import FlowList from "./pages/FlowList";
 import HomePage from "./pages/HomePage";
@@ -26,9 +26,10 @@ const routes = {
   "/dmlist/preview/:id": ({id}) => <DMPreview id={id}/>,
   "/fmlist": () => <FMList />,
   "/fmlist/preview/:id": ({id}) => <FMPreview id={id}/>,
-  "/businesslist": () => <BusinessList />,
-  "/businesslist/outgoing": () => <Outgoing schemalist={schemalist} />,
-  "/businesslist/vacation": () => <Vacation />,
+  "/businesslist": () => <Outgoing schemalist={schemalist} />,
+  // "/businesslist": () => <BusinessList />,
+  // "/businesslist/outgoing": () => <Outgoing schemalist={schemalist} />,
+  // "/businesslist/vacation": () => <Vacation />,
 };
 
 const Route = () => {

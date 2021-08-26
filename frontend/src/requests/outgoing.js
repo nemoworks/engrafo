@@ -1,4 +1,5 @@
 import axios from "axios";
+import { create } from "lodash";
 
 const HOST=process.env.NODE_ENV==="production"?'localhost:21081':'localhost:8080'
 
@@ -33,4 +34,15 @@ export default {
     const { data } = await axios.get(api + "formdata/list");
     return data;
   },
+  async create(business){
+    const {data} = await axios.request({
+      url:api,
+      method:'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      data:business
+    })
+    return data
+  }
 };

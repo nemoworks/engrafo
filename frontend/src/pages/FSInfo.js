@@ -8,6 +8,8 @@ import Graph from "../components/Graph.js";
 import { OutgoingReq } from "../requests";
 import MenuItem from "@material-ui/core/MenuItem";
 import { keys2disabled } from "../utils/schema";
+import Grid from '@material-ui/core/Grid';
+
 var _ = require('lodash');
 
 const graphOptions = {
@@ -29,6 +31,8 @@ export default function FSInfo({id}) {
 
     const [currentAccount,setCurrentAccount]=React.useState({})
     const [constraints,setConstraints]=React.useState({})
+
+    const [mirror,setMirror]=React.useState({ nodes: [], edges: [] })
 
     React.useEffect(()=>{
       const sessionStorage=window.sessionStorage.getItem("currentAccount")
@@ -64,117 +68,94 @@ export default function FSInfo({id}) {
     },[currentAccount,constraints,current])
 
     React.useEffect(()=>{
-          OutgoingReq.get(id).then(data=>{
-            const {
-                formdata:formData,
-                lifecycle:{
-                    schema:{
-                        fieldschema:schema,
-                        uischema:uiSchema
-                    },
-                    enkrino:{
-                        current,
-                        start,
-                        constraints,
-                        graph:{nodes}
-                    }
-                }}=data
-            setSchema(schema)
-            setUiSchema(uiSchema)
-            setEntry({...entry,schema,uiSchema,formData})
-            setConstraints(constraints)
-            
-
-            let graph=data.lifecycle.enkrino.graph;
-            const currentId=current?current:start
-            setCurrent(currentId)
-            graph.nodes = graph.nodes.map((item) =>
-                item.id === currentId
-                    ? { ...item, label: item.name, color: "red" }
-                    : { ...item, label: item.name, color: "#CCFFFF" }
-            );
-            graph.edges = graph.edges.map((item) => {
-                return {
-                    from: item.from,
-                    to: item.to,
-                    arrows: "to",
-                };
-              });
-            setGraph(graph)
-            OutgoingReq.nexts(id).then(data=>{
-              const {forwards,backwards}=data
-
-              const edges=[...forwards?forwards:[],...backwards?backwards:[]]
-              let newEdges=[]
-              newEdges=edges.map(e=>{
-                for(let n of nodes){
-                  if(e==n.id){
-                    return {
-                      id:e,
-                      name:n.name
-                    }
-                  }
+      OutgoingReq.get(id).then(data=>{
+        const {
+            formdata:formData,
+            lifecycle:{
+                schema:{
+                    fieldschema:schema,
+                    uischema:uiSchema
+                },
+                enkrino:{
+                    constraints,
+                    current,
+                    start
                 }
-                return{
-                  id:e,
-                  name:e
-                }
-              })
-              setNexts(newEdges)
-          })
-        })
+            }}=data
+        setSchema(schema)
+        setUiSchema(uiSchema)
+        setEntry({...entry,schema,uiSchema,formData})
+        setConstraints(constraints)
+        setCurrent(current?current:start)
+        handleStatusChange(data)
+      })
 
     },[])
     
 
 
-    function handleStatusChange(){
-        OutgoingReq.get(id).then(res=>{
-            const {
-                lifecycle:{
-                    enkrino:{
-                        current:currentid,
-                        start,
-                        graph:{nodes}
-                    }
-                }}=res
-            let newGraph=res.lifecycle.enkrino.graph;
-            const currentId=currentid?currentid:start
-            newGraph.nodes = newGraph.nodes.map((item) =>
-                item.id === currentId
-                    ? { ...item, label: item.name, color: "red" }
-                    : { ...item, label: item.name, color: "#CCFFFF" }
-            );
-            newGraph.edges = newGraph.edges.map((item) => {
-                return {
-                    from: item.from,
-                    to: item.to,
-                    arrows: "to",
-                };
-              });
-            setGraph(newGraph)
-            OutgoingReq.nexts(id).then(data=>{
-              const {forwards,backwards}=data
-              const edges=[...forwards,...backwards]
-              let newEdges=[]
-              newEdges=edges.map(e=>{
-                for(let n of nodes){
-                  if(e==n.id){
-                    return {
-                      id:e,
-                      name:n.name
-                    }
-                  }
-                }
-                return{
-                  id:e,
-                  name:e
-                }
-              })
-              setNexts(newEdges)
-          })
-        })
-    }
+  function handleStatusChange(res){
+    const {
+      lifecycle:{
+          enkrino:{
+              current:currentid,
+              start,
+              graph:{nodes},
+          }
+      }}=res
+    let newGraph=res.lifecycle.enkrino.graph;
+    const currentId=currentid?currentid:start
+    newGraph.nodes = newGraph.nodes.map((item) =>
+        item.id === currentId
+            ? { ...item, label: item.name, color: "red" }
+            : { ...item, label: item.name, color: "#CCFFFF" }
+    );
+    newGraph.edges = newGraph.edges.map((item) => {
+        return {
+            from: item.from,
+            to: item.to,
+            arrows: "to",
+        };
+    });
+    
+    setGraph(newGraph)
+
+    let newMirror=res.lifecycle.enkrino.mirror;
+    newMirror.nodes = newMirror.nodes.map((item) =>
+      item.id === currentId
+        ? { ...item, label: item.name, color: "red" }
+        : { ...item, label: item.name, color: "#CCFFFF" }
+      );
+      newMirror.edges = newMirror.edges.map((item) => {
+      return {
+        from: item.from,
+        to: item.to,
+        arrows: "to",
+      };
+    });
+    setMirror(newMirror)
+
+    OutgoingReq.nexts(id).then(data=>{
+      const {forwards,backwards}=data
+      const edges=[...forwards,...backwards]
+      let newEdges=[]
+      newEdges=edges.map(e=>{
+        for(let n of nodes){
+          if(e==n.id){
+            return {
+              id:e,
+              name:n.name
+            }
+          }
+        }
+        return{
+          id:e,
+          name:e
+        }
+      })
+      setNexts(newEdges)
+    })
+  }
 
 
     return (
@@ -200,7 +181,7 @@ export default function FSInfo({id}) {
             formData={entry.formData ? entry.formData : {}}
         />
             <div
-                style={{ height: "400px", width: "400px", marginTop: "20px" }}
+                style={{ height: "100px", width: "400px", marginTop: "20px" }}
             >
                 <h2>progress</h2>
                 <div>
@@ -211,7 +192,9 @@ export default function FSInfo({id}) {
                       //和页面加载时行为一致，更新 graph， nexts和current
                         OutgoingReq.start(id).then(data=>{
                             setCurrent(data.lifecycle.enkrino.current)
-                            handleStatusChange()
+                            OutgoingReq.get(id).then(res=>{
+                              handleStatusChange(res)
+                            })
                         })
                     }}
                   >
@@ -241,8 +224,10 @@ export default function FSInfo({id}) {
                       if(next){
                         OutgoingReq.next(id,next).then(data=>{
                           setCurrent(data.lifecycle.enkrino.current)
-                          handleStatusChange()
                           setNext(null)
+                          OutgoingReq.get(id).then(res=>{
+                            handleStatusChange(res)
+                          })
                         })
                       }
                     }}
@@ -251,12 +236,32 @@ export default function FSInfo({id}) {
                   </Button>
                 </div>
                 {/* Graph绑定到组件的state中的graph数据 */}
+              
+          </div>
+          <Grid container spacing={1} justify="center" alignItems="center">
+            <Grid item xs={6}>
+              <div
+                style={{ height: "300px", width: "400px", marginTop: "20px"  }}
+              >
                 <Graph
-                  identifier={"customed-flow-graph-demo"}
+                  identifier={"customed-flow-graph"}
                   graph={graph}
                   options={graphOptions}
                 />
-            </div>
+              </div>
+            </Grid>
+            <Grid item xs={6}>
+              <div
+                style={{ height: "300px", width: "400px", marginTop: "20px"  }}
+              >
+                <Graph
+                  identifier={"customed-flow-graph-mirror"}
+                  graph={mirror}
+                  options={graphOptions}
+                />
+              </div>
+            </Grid>
+          </Grid>
         </FixedHeightContainer>
   );
 }
