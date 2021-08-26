@@ -1,7 +1,7 @@
 import axios from "axios";
 import { create } from "lodash";
 
-const HOST=process.env.NODE_ENV==="production"?'localhost:21081':'localhost:8080'
+const HOST=process.env.NODE_ENV==="production"?'114.212.80.19:21081':'localhost:8080'
 
 const api=`http://${HOST}/api/outgoing/`
 
