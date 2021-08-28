@@ -76,5 +76,12 @@ module.exports = {
         find: sql('sql/FStemplates/find.sql'),
         findAll: sql('sql/FStemplates/findAll.sql')
     },
+    context: {
+        insert: sql('sql/context/insert.sql'),
+        delete: sql('sql/context/delete.sql'),
+        update: sql('sql/context/update.sql'),
+        find: sql('sql/context/find.sql'),
+        findAll: sql('sql/context/findAll.sql')
+    },
 };
 
