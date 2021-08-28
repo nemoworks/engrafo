@@ -65,4 +65,16 @@ CREATE TABLE "public"."FStemplates" (
 
 INSERT INTO "FStemplates" ("id", "formschema") VALUES
 (1000,	'{"uischema": {"feedback": {"ui:widget": "textarea"}}, "fieldschema": {"type": "object", "title": "外派单", "properties": {"saler": {"enum": ["田七", "谢八", "周廿"], "type": "string", "title": "销售员"}, "status": {"type": "boolean", "title": "工程师接单"}, "manager": {"enum": ["张三", "李四", "吴九"], "type": "string", "title": "管理员"}, "engineer": {"enum": ["赵五", "郑六", "庞十"], "type": "string", "title": "工程师"}, "feedback": {"type": "string", "title": "客户反馈"}}, "description": "外派单记录"}}');
+
+DROP TABLE IF EXISTS "context";
+DROP SEQUENCE IF EXISTS context_id_seq;
+CREATE SEQUENCE context_id_seq INCREMENT 1 MINVALUE 1001 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."context" (
+    "id" integer DEFAULT nextval('context_id_seq') NOT NULL,
+    "info" jsonb NOT NULL,
+    CONSTRAINT "context_pkey" PRIMARY KEY ("id")
+) WITH (oids = false);
+
+
 -- 2021-08-15 15:20:38.714091+00
