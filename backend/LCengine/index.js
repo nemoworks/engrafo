@@ -117,7 +117,7 @@ module.exports = {
         mirror: {
           nodes: enkrino.mirror.nodes.map((e) => e.id!==nid?e:{
             ...e,
-            stack: e.stack.push(context)
+            stack: e.stack.concat([context])
           }),
           edges: _.uniqWith(eset, (A, B) => A.from === B.from && A.to === B.to),
         },
@@ -151,7 +151,7 @@ module.exports = {
           ...enkrino.mirror,
           nodes: enkrino.mirror.nodes.map((e) => e.id!==nid?e:{
             ...e,
-            stack: e.stack.push(context)
+            stack: e.stack.concat([context])
           }),
         },
       };

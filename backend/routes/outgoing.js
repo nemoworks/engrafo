@@ -54,12 +54,17 @@ router.post("/start/:id", async function (req, res) {
     .then((data) => {
       let { lifecycle, formdata } = data;
       let contextid = "";
-      db.one(context.insert, {
-        message: "start",
-        timestamp: Date.now().toString(),
-        formdata: formdata,
-      })
-        .then((data) => (contextid = data.id))
+      db.one(
+        context.insert,
+        JSON.stringify({
+          message: "start",
+          timestamp: Date.now().toString(),
+          formdata: formdata,
+        })
+      )
+        .then((data) => {
+          contextid = data.id;
+        })
         .then(() => {
           db.one(outgoing.update, [
             req.params.id,
@@ -72,8 +77,12 @@ router.post("/start/:id", async function (req, res) {
             .then((data) => res.send(data))
             .catch((err) => {
               console.error(err);
-              res.send({ message: err.toString() });
+              res.send({ message: "updating outgoing..." + err.toString() });
             });
+        })
+        .catch((err) => {
+          console.error(err);
+          res.send({ message: "inserting context..." + err.toString() });
         });
     })
     .catch((err) => {
@@ -86,27 +95,44 @@ router.post("/next/:id/:nid", async function (req, res) {
   db.one(outgoing.find, req.params.id)
     .then((data) => {
       let { lifecycle, formdata } = data;
+      if (lifecycle.enkrino.current === req.params.nid) {
+        res.send(data);
+        return;
+      }
       let contextid = "";
-      db.one(context.insert, {
-        message: `${req.params.id}->${req.params.nid}`,
-        timestamp: Date.now().toString(),
-        formdata: formdata,
-      })
-        .then((data) => (contextid = data.id))
+      db.one(
+        context.insert,
+        JSON.stringify({
+          message: `${lifecycle.enkrino.current}->${req.params.nid}`,
+          timestamp: Date.now().toString(),
+          formdata: formdata,
+        })
+      )
+        .then((data) => {
+          contextid = data.id;
+        })
         .then(() => {
           db.one(outgoing.update, [
             req.params.id,
             JSON.stringify(formdata),
             JSON.stringify({
               ...lifecycle,
-              enkrino: LCengine.next(lifecycle.enkrino, req.params.nid),
+              enkrino: LCengine.next(
+                lifecycle.enkrino,
+                req.params.nid,
+                contextid
+              ),
             }),
           ])
             .then((data) => res.send(data))
             .catch((err) => {
               console.error(err);
-              res.send({ message: err.toString() });
+              res.send({ message: "updating outgoing..." + err.toString() });
             });
+        })
+        .catch((err) => {
+          console.error(err);
+          res.send({ message: "inserting context..." + err.toString() });
         });
     })
     .catch((err) => {
