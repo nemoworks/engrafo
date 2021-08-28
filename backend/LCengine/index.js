@@ -81,6 +81,7 @@ module.exports = {
       ...enkrino,
       status: "running",
       current: enkrino.start,
+      currentAuth: enkrino.graph.nodes.find(e=>e.id===enkrino.start).auth,
       graph: {
         ...enkrino.graph,
         edges: enkrino.graph.edges.filter((e) => e.spec.temporary === false),
@@ -112,6 +113,7 @@ module.exports = {
       newenkrino = {
         ...enkrino,
         current: nid,
+        currentAuth: enkrino.graph.nodes.find(e=>e.id===nid).auth,
         mirror: {
           nodes: enkrino.mirror.nodes.map((e) => e.id!==nid?e:{
             ...e,
@@ -134,6 +136,7 @@ module.exports = {
       newenkrino = {
         ...enkrino,
         current: nid,
+        currentAuth: enkrino.graph.nodes.find(e=>e.id===nid).auth,
         graph: {
           ...enkrino.graph,
           edges: _.uniqWith(
