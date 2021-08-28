@@ -1,3 +1,4 @@
+const e = require("express");
 const _ = require("lodash");
 const successors = (graph, id) => {
   let result = new Set();
@@ -75,7 +76,7 @@ module.exports = {
     @param graph {nodes:[],edges[]}
     @param id String
      */
-  start: (enkrino) => {
+  start: (enkrino, context) => {
     let newenkrino = {
       ...enkrino,
       status: "running",
@@ -85,14 +86,20 @@ module.exports = {
         edges: enkrino.graph.edges.filter((e) => e.spec.temporary === false),
       },
       mirror: {
-        nodes: enkrino.graph.nodes,
+        nodes: enkrino.graph.nodes.map((e) => e.id!==enkrino.start?{
+            ...e,
+            stack: [],
+          }:{
+            ...e,
+            stack: [context]
+          }),
         edges: [],
       },
     };
     return newenkrino;
   },
 
-  next: (enkrino, nid) => {
+  next: (enkrino, nid, context) => {
     let sus = successors(enkrino.graph, enkrino.current);
     let newenkrino = {};
     if (sus.includes(nid)) {
@@ -106,7 +113,10 @@ module.exports = {
         ...enkrino,
         current: nid,
         mirror: {
-          ...enkrino.mirror,
+          nodes: enkrino.mirror.nodes.map((e) => e.id!==nid?e:{
+            ...e,
+            stack: e.stack.push(context)
+          }),
           edges: _.uniqWith(eset, (A, B) => A.from === B.from && A.to === B.to),
         },
       };
@@ -133,6 +143,13 @@ module.exports = {
               A.to === B.to &&
               A.spec.temporary === B.spec.temporary
           ),
+        },
+        mirror: {
+          ...enkrino.mirror,
+          nodes: enkrino.mirror.nodes.map((e) => e.id!==nid?e:{
+            ...e,
+            stack: e.stack.push(context)
+          }),
         },
       };
     }

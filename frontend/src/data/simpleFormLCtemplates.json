@@ -86,80 +86,35 @@
                 {
                     "id": "4fd27190-a751-415e-9dbd-8c9188860656",
                     "name": "选定销售员",
-                    "backward": 0
+                    "backward": 0,
+                    "auth": "manager"
                 },
                 {
                     "id": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b",
                     "name": "选定工程师",
-                    "backward": 0
+                    "backward": 0,
+                    "auth": "saler"
                 },
                 {
                     "id": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9",
                     "name": "工程师接单",
-                    "backward": 1
+                    "backward": 1,
+                    "auth": "engineer"
                 },
                 {
                     "id": "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb",
                     "name": "填写客户反馈",
-                    "backward": 0
+                    "backward": 0,
+                    "auth": "engineer"
                 },
                 {
                     "id": "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2",
                     "name": "管理员审核",
-                    "backward": 2
+                    "backward": 2,
+                    "auth": "manager"
                 }
             ]
         },
-        "start": "4fd27190-a751-415e-9dbd-8c9188860656",
-        "constraints": {
-            "steps": {
-                "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2": {
-                    "auth": "@manager",
-                    "disable": [
-                        "manager",
-                        "saler",
-                        "engineer",
-                        "status",
-                        "feedback"
-                    ]
-                },
-                "4fd27190-a751-415e-9dbd-8c9188860656": {
-                    "auth": "@manager",
-                    "disable": [
-                        "manager",
-                        "engineer",
-                        "status",
-                        "feedback"
-                    ]
-                },
-                "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b": {
-                    "auth": "@saler",
-                    "disable": [
-                        "manager",
-                        "saler",
-                        "status",
-                        "feedback"
-                    ]
-                },
-                "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb": {
-                    "auth": "@engineer",
-                    "disable": [
-                        "manager",
-                        "saler",
-                        "engineer",
-                        "status"
-                    ]
-                },
-                "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9": {
-                    "auth": "@engineer",
-                    "disable": [
-                        "manager",
-                        "saler",
-                        "engineer",
-                        "feedback"
-                    ]
-                }
-            }
-        }
+        "start": "4fd27190-a751-415e-9dbd-8c9188860656"
     }
 }
