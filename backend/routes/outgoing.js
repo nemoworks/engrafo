@@ -12,6 +12,22 @@ router.get("/list", async function (req, res) {
     });
 });
 
+router.get("/authedlist/:auth", async function (req, res) {
+  db.any(
+    outgoing.findByJsonb,
+    JSON.stringify({
+      enkrino: {
+        currentAuth: req.auth,
+      },
+    })
+  )
+    .then((data) => res.send(data))
+    .catch((err) => {
+      console.error(err);
+      res.send({ message: err.toString() });
+    });
+});
+
 router.get("/:id", async function (req, res) {
   db.one(outgoing.find, req.params.id)
     .then((data) => res.send(data))

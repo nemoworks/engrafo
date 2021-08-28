@@ -53,6 +53,7 @@ module.exports = {
         findAll: sql('sql/outgoing/findAll.sql'),
         findData: sql('sql/outgoing/findData.sql'),
         findAllData: sql('sql/outgoing/findAllData.sql'),
+        findByJsonb: sql('sql/outgoing/findByJsonb.sql'),
         updateData: sql('sql/outgoing/updateData.sql')
     },
     account: {

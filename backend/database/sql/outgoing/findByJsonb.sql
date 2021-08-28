@@ -1,0 +1,1 @@
+SELECT * FROM "outgoing" WHERE lifecycle @> $1;
