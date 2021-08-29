@@ -46,19 +46,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-  // const rows = [
-  //   {
-  //     id: "1000",
-  //     name:"外派单",
-  //     link:"/outgoing",
-  //   },
-  //   {
-  //     id: "1001",
-  //     name:"请假单",
-  //     link:"/vacation",
-  //   },
-  // ];
-
 export default function  DMList(){
   const [open, setOpen] = React.useState(false);
   const [schema, setSchema] = React.useState({});
@@ -177,8 +164,8 @@ export default function  DMList(){
               {/* monaco editor的onchange函数不够灵活，此处在创建时onMount中绑定到ref，以便后续查询editor中的value */}
               <Editor
                 title="Schema"
-                defaultLanguage="json"
-                defaultValue={JSON.stringify(schema, null, "\t")}
+                language="json"
+                value={JSON.stringify(schema, null, "\t")}
                 onMount={(editor, monaco) => {
                   editorRef.current = editor;
                 }}
@@ -186,8 +173,8 @@ export default function  DMList(){
               />
               <p>ui:schema</p>
               <Editor
-                defaultLanguage="json"
-                defaultValue={JSON.stringify(uiSchema, null, "\t")}
+                language="json"
+                value={JSON.stringify(uiSchema, null, "\t")}
                 onMount={(editor, monaco) => {
                   uiEditorRef.current = editor;
                 }}

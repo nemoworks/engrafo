@@ -26,7 +26,7 @@ export default function FMPreview({id}){
 
   React.useEffect(()=>{
     LCtemplatesReq.get(id).then(data=>{
-      const {lifecycle:{enkrino:{graph}}}=data
+      const {lifecycle:{enkrino:{graph,start}}}=data
       let newGraph={...graph}
       newGraph.nodes = newGraph.nodes.map((item) =>({ 
         ...item, label: item.name, color: "#CCFFFF" 
@@ -37,7 +37,7 @@ export default function FMPreview({id}){
         arrows: "to",
       }));
       setGraph(newGraph)
-      setEditor(graph)
+      setEditor({graph,start})
     })
   },[])
 
@@ -49,12 +49,13 @@ export default function FMPreview({id}){
               {/* monaco editor的onchange函数不够灵活，此处在创建时onMount中绑定到ref，以便后续查询editor中的value */}
               <Editor
                 title="Schema"
-                defaultLanguage="json"
-                defaultValue={JSON.stringify(editor, null, "\t")}
+                language="json"
+                value={JSON.stringify(editor, null, "\t")}
                 onMount={(editor, monaco) => {
                   editorRef.current = editor;
                 }}
                 onChange={(value, event) => {}}
+                options={{readOnly:true}}
               />
             </FixedHeightContainer>
           </Grid>

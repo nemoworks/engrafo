@@ -18,15 +18,6 @@ export default function Preview({id}){
       const {formschema:{fieldschema:schema,uischema:uiSchema}}=data
       setSchema(schema)
       setUiSchema(uiSchema)
-
-      // const keys =  [
-      //   "manager",
-      //   "engineer",
-      //   "status",
-      //   "feedback",
-      //   "saler"
-      // ]
-      // setUiSchema(_.merge(keys2disabled(keys),uiSchema))
     })
     
   },[])
@@ -40,14 +31,14 @@ export default function Preview({id}){
               <p>schema</p>
               <Editor
                 title="Schema"
-                defaultLanguage="json"
-                defaultValue={JSON.stringify(schema, null, "\t")}
+                language="json"
+                value={JSON.stringify(schema, null, "\t")}
                 options={{readOnly:true}}
               />
               <p>ui:schema</p>
               <Editor
-                defaultLanguage="json"
-                defaultValue={JSON.stringify(uiSchema, null, "\t")}
+                language="json"
+                value={JSON.stringify(uiSchema, null, "\t")}
                 options={{readOnly:true}}
               />
             </FixedHeightContainer>

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { create } from "lodash";
+import { update } from "lodash";
 
 const HOST=process.env.NODE_ENV==="production"?'114.212.80.19:21081':'localhost:8080'
 
@@ -44,5 +44,16 @@ export default {
       data:business
     })
     return data
+  },
+  async update(id,newData){
+    const {data} = await axios.request({
+      url:api+id,
+      method:'PUT',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      data:newData
+    })
+
   }
 };

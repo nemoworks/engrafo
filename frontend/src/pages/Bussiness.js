@@ -5,7 +5,7 @@ import Form from "@rjsf/material-ui";
 import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import Graph from "../components/Graph.js";
-import { OutgoingReq } from "../requests";
+import { OutgoingReq,ContextReq } from "../requests";
 import MenuItem from "@material-ui/core/MenuItem";
 import { keys2disabled } from "../utils/schema";
 import Grid from '@material-ui/core/Grid';
@@ -23,49 +23,23 @@ const graphOptions = {
 export default function FSInfo({id}) {
     const [schema, setSchema] = React.useState({});
     const [uiSchema, setUiSchema] = React.useState({});
-    const [entry, setEntry] = React.useState({ toSave: false });
+    const [formData, setFormData] = React.useState({});
     const [next, setNext] = React.useState(null);
     const [nexts, setNexts] = React.useState(null);
     const [graph, setGraph] = React.useState({ nodes: [], edges: [] });
     const [current, setCurrent] = React.useState(null);
 
     const [currentAccount,setCurrentAccount]=React.useState({})
-    const [constraints,setConstraints]=React.useState({})
 
     const [mirror,setMirror]=React.useState({ nodes: [], edges: [] })
+
+    const [context,setContext] = React.useState(null)
 
     React.useEffect(()=>{
       const sessionStorage=window.sessionStorage.getItem("currentAccount")
       setCurrentAccount(JSON.parse(sessionStorage?sessionStorage:'{}'))
     },[])
 
-    React.useEffect(()=>{
-      if(currentAccount.role&&constraints.steps&&current){
-        const {steps}=constraints
-        if(steps[current].auth!='@'+currentAccount.role){
-          const keys =  [
-            "manager",
-            "engineer",
-            "status",
-            "feedback",
-            "saler"
-          ]
-          setUiSchema(_.merge(keys2disabled(keys),uiSchema))
-        }else{
-          const keys=[...steps[current].disable]
-          setUiSchema(_.merge(keys2disabled(keys),uiSchema))
-        }
-      }else if(currentAccount.role==undefined&&current){
-        const keys =  [
-          "manager",
-          "engineer",
-          "status",
-          "feedback",
-          "saler"
-        ]
-        setUiSchema(_.merge(keys2disabled(keys),uiSchema))
-      }
-    },[currentAccount,constraints,current])
 
     React.useEffect(()=>{
       OutgoingReq.get(id).then(data=>{
@@ -77,15 +51,13 @@ export default function FSInfo({id}) {
                     uischema:uiSchema
                 },
                 enkrino:{
-                    constraints,
                     current,
                     start
                 }
             }}=data
         setSchema(schema)
         setUiSchema(uiSchema)
-        setEntry({...entry,schema,uiSchema,formData})
-        setConstraints(constraints)
+        setFormData(formData)
         setCurrent(current?current:start)
         handleStatusChange(data)
       })
@@ -94,7 +66,7 @@ export default function FSInfo({id}) {
     
 
 
-  function handleStatusChange(res){
+  function handleStatusChange(data){
     const {
       lifecycle:{
           enkrino:{
@@ -102,8 +74,8 @@ export default function FSInfo({id}) {
               start,
               graph:{nodes},
           }
-      }}=res
-    let newGraph=res.lifecycle.enkrino.graph;
+      }}=data
+    let newGraph=data.lifecycle.enkrino.graph;
     const currentId=currentid?currentid:start
     newGraph.nodes = newGraph.nodes.map((item) =>
         item.id === currentId
@@ -117,27 +89,39 @@ export default function FSInfo({id}) {
             arrows: "to",
         };
     });
-    
     setGraph(newGraph)
 
-    let newMirror=res.lifecycle.enkrino.mirror;
-    newMirror.nodes = newMirror.nodes.map((item) =>
+    let newMirror=data.lifecycle.enkrino.mirror;
+    if(newMirror){
+      newMirror.nodes = newMirror.nodes.map((item) =>
       item.id === currentId
         ? { ...item, label: item.name, color: "red" }
         : { ...item, label: item.name, color: "#CCFFFF" }
       );
       newMirror.edges = newMirror.edges.map((item) => {
-      return {
-        from: item.from,
-        to: item.to,
-        arrows: "to",
-      };
-    });
-    setMirror(newMirror)
+        return {
+          from: item.from,
+          to: item.to,
+          arrows: "to",
+        };
+      });
+      setMirror(newMirror)
+      
+      const currentNode = data.lifecycle.enkrino.mirror.nodes.find(node=>node.id===currentId)
+      if(currentNode.stack){
+        if(currentNode.stack.length>0){
+          console.log(currentNode.stack[currentNode.stack.length-1])
+          ContextReq.get(currentNode.stack[currentNode.stack.length-1]).then(data=>{
+            setContext(data)
+            setFormData(data.info.formdata?data.info.formdata:{})
+          })
+        }
+      }
+    }
 
     OutgoingReq.nexts(id).then(data=>{
       const {forwards,backwards}=data
-      const edges=[...forwards,...backwards]
+      const edges=[...forwards?forwards:[],...backwards?backwards:[]]
       let newEdges=[]
       newEdges=edges.map(e=>{
         for(let n of nodes){
@@ -157,33 +141,27 @@ export default function FSInfo({id}) {
     })
   }
 
-
     return (
         <FixedHeightContainer height={800}>
             <Title>SchemaForm</Title>
             <Form
             onSubmit={({schema,uiSchema,formData}) => {
-                alert(
-                    JSON.stringify(formData)+`\n`+
-                    JSON.stringify(schema)+`\n`+
-                    JSON.stringify(uiSchema)
-                  );
-
-                setEntry({
-                    formData,
-                    schema,
-                    uiSchema,
-                    toSave: true,
-                });
+                OutgoingReq.get(id).then(data=>{
+                  const newData={...data,formdata:formData}
+                  OutgoingReq.update(id,newData).then(res=>{
+                    alert("更新完成")
+                  })
+                })
             }}
             schema={schema}
             uiSchema={uiSchema}
-            formData={entry.formData ? entry.formData : {}}
+            formData={formData ? formData : {}}
         />
             <div
-                style={{ height: "100px", width: "400px", marginTop: "20px" }}
+                style={{ height: "100px", width: "800px", marginTop: "20px" }}
             >
-                <h2>progress</h2>
+                <h2>progress <span style={{color:'blue'}}>{context?'timestamp:'+(new Date(parseInt(context.info.timestamp,10)).toLocaleString()):''}</span></h2>
+                
                 <div>
                   {/* 点击start向后台8080端口请求流程图数据，保存到组件state */}
                   <Button
@@ -191,7 +169,6 @@ export default function FSInfo({id}) {
                     onClick={() => {
                       //和页面加载时行为一致，更新 graph， nexts和current
                         OutgoingReq.start(id).then(data=>{
-                            setCurrent(data.lifecycle.enkrino.current)
                             OutgoingReq.get(id).then(res=>{
                               handleStatusChange(res)
                             })
@@ -213,7 +190,7 @@ export default function FSInfo({id}) {
                   >
                     {nexts
                       ? nexts.map((item) => (
-                          <MenuItem value={item}>{item.name}</MenuItem>
+                          <MenuItem value={item}>{item.name?item.name:item.id}</MenuItem>
                         ))
                       : null}
                   </Select>
@@ -223,7 +200,6 @@ export default function FSInfo({id}) {
                     onClick={() => {
                       if(next){
                         OutgoingReq.next(id,next).then(data=>{
-                          setCurrent(data.lifecycle.enkrino.current)
                           setNext(null)
                           OutgoingReq.get(id).then(res=>{
                             handleStatusChange(res)

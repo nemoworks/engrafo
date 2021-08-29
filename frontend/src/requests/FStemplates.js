@@ -14,7 +14,6 @@ export default{
     return data
   },
   async create(formschema){
-    console.log(formschema)
     const res = axios.request({
       url:api,
       method:'POST',

@@ -58,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
 export default function  FMList(){
   const [open, setOpen] = React.useState(false);
   const [graph, setGraph] = React.useState({ nodes: [], edges: [] });
+  const [graphEdit,setGraphEdit] = React.useState({graph:{ nodes: [], edges: [] },start:''});
 
   //monaco editor需要绑定ref
   const editorRef = React.useRef(null);
@@ -148,8 +149,7 @@ export default function  FMList(){
               autoFocus
               color="inherit"
               onClick={() => {
-                console.log(graph)
-                LCtemplates.create({enkrino:{graph}}).then(data=>{
+                LCtemplates.create({enkrino:graphEdit}).then(data=>{
                   handleClose();
                   LCtemplates.getAll().then(data=>{
                     setRows(data)
@@ -169,8 +169,8 @@ export default function  FMList(){
               {/* monaco editor的onchange函数不够灵活，此处在创建时onMount中绑定到ref，以便后续查询editor中的value */}
               <Editor
                 title="Schema"
-                defaultLanguage="json"
-                defaultValue={JSON.stringify(graph, null, "\t")}
+                language="json"
+                value={JSON.stringify(graphEdit, null, "\t")}
                 onMount={(editor, monaco) => {
                   editorRef.current = editor;
                 }}
@@ -182,7 +182,8 @@ export default function  FMList(){
                   className={classes.stickRight}
                   color="primary"
                   onClick={() => {
-                    let newGraph=JSON.parse(editorRef.current.getValue())
+                    setGraphEdit(JSON.parse(editorRef.current.getValue()))
+                    let newGraph=JSON.parse(editorRef.current.getValue()).graph
                     newGraph.nodes = newGraph.nodes.map((item) =>({ 
                       ...item, label: item.name, color: "#CCFFFF" 
                     }));

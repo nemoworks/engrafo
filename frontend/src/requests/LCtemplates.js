@@ -14,7 +14,6 @@ export default{
     return data
   },
   async create(lifecycle){
-    console.log(lifecycle)
     const res = axios.request({
       url:api,
       method:'POST',
