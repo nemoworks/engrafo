@@ -85,10 +85,11 @@ export default observer(function BusinessList({ schemalist }) {
   const [graphEdit,setGraphEdit]= React.useState({graph:{ nodes: [], edges: [] },start:''});
   const graphEditorRef = React.useRef(null);
 
-  //通过react hook对Graph进行更新，页面加载时执行一次
-  React.useEffect(() => {
-    OutgoingReq.getList().then((res) => setRows(res));
-  }, []);
+  const [currentAccount,setCurrentAccount]=React.useState({})
+
+  // React.useEffect(() => {
+  //   OutgoingReq.getList().then((res) => setRows(res));
+  // }, []);
 
   React.useEffect(()=>{
     FStemplatesReq.getAll().then(data=>{
@@ -102,6 +103,20 @@ export default observer(function BusinessList({ schemalist }) {
     })
   },[])
 
+  React.useEffect(()=>{
+    const sessionStorage=window.sessionStorage.getItem("currentAccount")
+    setCurrentAccount(JSON.parse(sessionStorage?sessionStorage:'{}'))
+  },[])
+
+  React.useEffect(()=>{
+    if(currentAccount.role){
+      console.log(currentAccount)
+      const {role:currentAuth}=currentAccount
+      OutgoingReq.getFromAuth(currentAuth).then(getFromAuthRes=>{
+        setRows(getFromAuthRes)
+      })
+    }
+  },[currentAccount])
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -294,10 +309,22 @@ export default observer(function BusinessList({ schemalist }) {
               color="inherit"
               onClick={() => {
                 const business={formdata:{},lifecycle:{schema:{uischema:uischema,fieldschema:schema},enkrino:graphEdit}}
-                OutgoingReq.create(business).then(data=>{
-                  OutgoingReq.getList().then(res=>{
-                    setRows(res)
-                  })
+                OutgoingReq.create(business).then(createReq=>{
+                  console.log(createReq)
+                  if(createReq.id){
+                    OutgoingReq.start(createReq.id).then(startRes=>{
+                      if(startRes.id){
+                        OutgoingReq.getList().then(res=>{
+                          setRows(res)
+                        })
+                      }else{
+                        OutgoingReq.delete(createReq.id).then(deleteRes=>{
+
+                        })
+                      }
+                    })
+                  }
+                  
                 })
                 handleClose();
               }}

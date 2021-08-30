@@ -182,7 +182,7 @@ export default function Dashboard() {
             onClick={handleMenu}
           >
             <AccountCircle />
-            {currentAccount.username?currentAccount.username:'未登录'}
+            {currentAccount.username?currentAccount.username+'('+currentAccount.role+')':'未登录'}
           </IconButton>
           
           <Menu
@@ -198,11 +198,18 @@ export default function Dashboard() {
                     <MenuItem key={account.id+1000} 
                       onClick={()=>handleSelect(account)}
                     >
-                      {account.username}
+                      {account.username+'('+account.role+')'}
                     </MenuItem>
                     </Link>
                   )
                 })}
+                <Link color="inherit" href={"/"}>
+                    <MenuItem key={'logout'} 
+                      onClick={()=>handleSelect({})}
+                    >
+                      退出
+                    </MenuItem>
+                    </Link>
               </Menu>
         </Toolbar>
       </AppBar>

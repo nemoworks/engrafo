@@ -27,18 +27,10 @@ export default function FSInfo({id}) {
     const [next, setNext] = React.useState(null);
     const [nexts, setNexts] = React.useState(null);
     const [graph, setGraph] = React.useState({ nodes: [], edges: [] });
-    const [current, setCurrent] = React.useState(null);
-
-    const [currentAccount,setCurrentAccount]=React.useState({})
 
     const [mirror,setMirror]=React.useState({ nodes: [], edges: [] })
 
     const [context,setContext] = React.useState(null)
-
-    React.useEffect(()=>{
-      const sessionStorage=window.sessionStorage.getItem("currentAccount")
-      setCurrentAccount(JSON.parse(sessionStorage?sessionStorage:'{}'))
-    },[])
 
 
     React.useEffect(()=>{
@@ -58,7 +50,6 @@ export default function FSInfo({id}) {
         setSchema(schema)
         setUiSchema(uiSchema)
         setFormData(formData)
-        setCurrent(current?current:start)
         handleStatusChange(data)
       })
 

@@ -54,6 +54,9 @@ export default {
       },
       data:newData
     })
-
+  },
+  async getFromAuth(auth){
+    const { data } = await axios.get(api + "authedlist/" + auth);
+    return data;
   }
 };
