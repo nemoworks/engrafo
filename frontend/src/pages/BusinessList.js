@@ -168,7 +168,7 @@ export default observer(function BusinessList({ schemalist }) {
                         className={classes.margin}
                         onClick={() => {
                           OutgoingReq.delete(row.id).then(() =>
-                            OutgoingReq.getList().then((res) => setRows(res))
+                            OutgoingReq.getFromAuth(currentAccount.role).then((res) => setRows(res))
                           );
                           setPreview({ show: false });
                         }}
@@ -314,7 +314,7 @@ export default observer(function BusinessList({ schemalist }) {
                   if(createReq.id){
                     OutgoingReq.start(createReq.id).then(startRes=>{
                       if(startRes.id){
-                        OutgoingReq.getList().then(res=>{
+                        OutgoingReq.getFromAuth(currentAccount.role).then(res=>{
                           setRows(res)
                         })
                       }else{
