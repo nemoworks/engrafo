@@ -101,7 +101,6 @@ export default function FSInfo({id}) {
       const currentNode = data.lifecycle.enkrino.mirror.nodes.find(node=>node.id===currentId)
       if(currentNode.stack){
         if(currentNode.stack.length>0){
-          console.log(currentNode.stack[currentNode.stack.length-1])
           ContextReq.get(currentNode.stack[currentNode.stack.length-1]).then(data=>{
             setContext(data)
             setFormData(data.info.formdata?data.info.formdata:{})
