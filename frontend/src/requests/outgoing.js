@@ -56,7 +56,6 @@ export default {
     })
   },
   async getFromAuth(auth){
-    if(!auth) return [];
     const { data } = await axios.get(api + "authedlist/" + auth);
     return data;
   }

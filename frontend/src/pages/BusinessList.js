@@ -109,14 +109,17 @@ export default observer(function BusinessList({ schemalist }) {
   },[])
 
   React.useEffect(()=>{
+    getRows()
+  },[currentAccount])
+
+  const getRows = () => {
     if(currentAccount.role){
-      console.log(currentAccount)
       const {role:currentAuth}=currentAccount
       OutgoingReq.getFromAuth(currentAuth).then(getFromAuthRes=>{
         setRows(getFromAuthRes)
       })
     }
-  },[currentAccount])
+  }
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -168,7 +171,7 @@ export default observer(function BusinessList({ schemalist }) {
                         className={classes.margin}
                         onClick={() => {
                           OutgoingReq.delete(row.id).then(() =>
-                            OutgoingReq.getFromAuth(currentAccount.role).then((res) => setRows(res))
+                            getRows()
                           );
                           setPreview({ show: false });
                         }}
@@ -310,13 +313,10 @@ export default observer(function BusinessList({ schemalist }) {
               onClick={() => {
                 const business={formdata:{},lifecycle:{schema:{uischema:uischema,fieldschema:schema},enkrino:graphEdit}}
                 OutgoingReq.create(business).then(createReq=>{
-                  console.log(createReq)
                   if(createReq.id){
                     OutgoingReq.start(createReq.id).then(startRes=>{
                       if(startRes.id){
-                        OutgoingReq.getFromAuth(currentAccount.role).then(res=>{
-                          setRows(res)
-                        })
+                        getRows()
                       }else{
                         OutgoingReq.delete(createReq.id).then(deleteRes=>{
 

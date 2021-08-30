@@ -95,7 +95,7 @@ export default function  DMList(){
                         color="primary"
                         className={classes.margin}
                         onClick={() => {
-                          console.log('preview',row)
+                          
                         }}
                       >
                         <VisibilityIcon fontSize="small" />
