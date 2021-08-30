@@ -17,7 +17,7 @@ router.get("/authedlist/:auth", async function (req, res) {
     outgoing.findByJsonb,
     JSON.stringify({
       enkrino: {
-        currentAuth: req.auth,
+        currentAuth: req.params.auth,
       },
     })
   )
