@@ -10,7 +10,7 @@ import DMPreview from "./pages/DMPreview";
 import FMPreview from "./pages/FMPreview";
 
 const routes = {
-  "/": () => <GraphList />,
+  "/": () => <DMList />,
   "/dmlist": () => <DMList />,
   "/dmlist/preview/:id": ({id}) => <DMPreview id={id}/>,
   "/fmlist": () => <FMList />,
