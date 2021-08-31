@@ -7,8 +7,8 @@ import Select from "@material-ui/core/Select";
 import Graph from "../components/Graph.js";
 import { OutgoingReq,ContextReq } from "../requests";
 import MenuItem from "@material-ui/core/MenuItem";
-import { keys2disabled } from "../utils/schema";
 import Grid from '@material-ui/core/Grid';
+import { navigate } from "hookrouter";
 
 var _ = require('lodash');
 
@@ -28,7 +28,7 @@ export default function FSInfo({id}) {
     const [nexts, setNexts] = React.useState(null);
     const [graph, setGraph] = React.useState({ nodes: [], edges: [] });
 
-    const [mirror,setMirror]=React.useState({ nodes: [], edges: [] })
+    // const [mirror,setMirror]=React.useState({ nodes: [], edges: [] })
 
     const [context,setContext] = React.useState(null)
 
@@ -84,19 +84,22 @@ export default function FSInfo({id}) {
 
     let newMirror=data.lifecycle.enkrino.mirror;
     if(newMirror){
-      newMirror.nodes = newMirror.nodes.map((item) =>
-      item.id === currentId
-        ? { ...item, label: item.name, color: "red" }
-        : { ...item, label: item.name, color: "#CCFFFF" }
-      );
+      // newMirror.nodes = newMirror.nodes.map((item) =>
+      // item.id === currentId
+      //   ? { ...item, label: item.name, color: "red" }
+      //   : { ...item, label: item.name, color: "#CCFFFF" }
+      // );
       newMirror.edges = newMirror.edges.map((item) => {
         return {
           from: item.from,
           to: item.to,
           arrows: "to",
+          color: "blue",
+          dashes: true,
+          smooth: { enabled:true,type:"continuous"},
         };
       });
-      setMirror(newMirror)
+      setGraph({nodes:[...newGraph.nodes],edges:[...newGraph.edges,...newMirror.edges]})
       
       const currentNode = data.lifecycle.enkrino.mirror.nodes.find(node=>node.id===currentId)
       if(currentNode.stack){
@@ -140,6 +143,7 @@ export default function FSInfo({id}) {
                   const newData={...data,formdata:formData}
                   OutgoingReq.update(id,newData).then(res=>{
                     alert("更新完成")
+                    navigate('/businesslist',true)
                   })
                 })
             }}
@@ -204,10 +208,8 @@ export default function FSInfo({id}) {
                 {/* Graph绑定到组件的state中的graph数据 */}
               
           </div>
-          <Grid container spacing={1} justify="center" alignItems="center">
-            <Grid item xs={6}>
-              <div
-                style={{ height: "300px", width: "400px", marginTop: "20px"  }}
+          <div
+                style={{ height: "300px", width: "800px", marginTop: "20px"  }}
               >
                 <Graph
                   identifier={"customed-flow-graph"}
@@ -215,8 +217,11 @@ export default function FSInfo({id}) {
                   options={graphOptions}
                 />
               </div>
-            </Grid>
+          <Grid container spacing={1} justify="center" alignItems="center">
             <Grid item xs={6}>
+              
+            </Grid>
+            {/* <Grid item xs={6}>
               <div
                 style={{ height: "300px", width: "400px", marginTop: "20px"  }}
               >
@@ -226,7 +231,7 @@ export default function FSInfo({id}) {
                   options={graphOptions}
                 />
               </div>
-            </Grid>
+            </Grid> */}
           </Grid>
         </FixedHeightContainer>
   );

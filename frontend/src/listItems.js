@@ -27,7 +27,7 @@ export const mainListItems = (
       <ListItemIcon>
         <BusinessCenterIcon />
       </ListItemIcon>
-      <ListItemText primary="业务表" />
+      <ListItemText primary="业务数据" />
     </ListItemLink>
     <ListItemLink href="/fmlist">
       <ListItemIcon>
