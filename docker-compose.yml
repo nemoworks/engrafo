@@ -3,10 +3,8 @@ version: '3.1'
 services:
 
   db:
-    image: postgres
+    image: enhydrawgc/sddm-database
     restart: unless-stopped
-    volumes:
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       POSTGRES_USER: jieshixin
       POSTGRES_PASSWORD: jieshixin,.#
@@ -27,10 +25,7 @@ services:
       - 21081:8080
 
   ui:
-    image: nginx:1.21.1-alpine
-    volumes:
-      - ./frontend/nginx.conf:/etc/nginx/nginx.conf
-      - ./frontend/build:/var/www
+    image: enhydrawgc/sddm-frontend
     restart: unless-stopped
     ports:
       - 21080:80
