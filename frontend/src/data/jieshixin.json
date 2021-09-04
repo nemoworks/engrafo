@@ -1,0 +1,85 @@
+{
+    "schema":{
+        "title": "新建财报",
+        "type": "object",
+        "properties": {
+            "type": {
+                "title": "类型",
+                "type": "string",
+                "enum": [
+                    "毛利",
+                    "行政管理费用",
+                    "投标保证金",
+                    "总经办支出",
+                    "现金流水",
+                    "预存记录",
+                    "未确认款项"
+                ]
+            },
+            "month": {
+                "title": "月份",
+                "type": "string"
+            },
+            "salers": {
+                "title": "销售人员",
+                "type": "string",
+                "enum": [
+                    "陆珺",
+                    "阮枫林",
+                    "钱昊",
+                    "许万羽",
+                    "苟家铭",
+                    "苏井",
+                    "王梦瀚",
+                    "王冬雨",
+                    "沈红扬",
+                    "李倍铭",
+                    "朱鸣",
+                    "周欢欢",
+                    "周坚",
+                    "刘丽君",
+                    "余文林1"
+                ]
+            },
+            "fee": {
+                "title": "项目",
+                "type": "string",
+                "enum": [
+                    "利润",
+                    "差旅费",
+                    "招待费",
+                    "投标费",
+                    "服务费",
+                    "其他"
+                ]
+            },
+            "cash": {
+                "title": "是否为现金支出",
+                "type": "string",
+                "enum": [
+                    "是",
+                    "否"
+                ]
+            },
+            "amount": {
+                "title": "金额",
+                "type": "number"
+            },
+            "appendix": {
+                "title": "备注",
+                "type": "string"
+            }
+        }
+    },
+    "uischema": {
+        "month": {
+            "ui:widget": "date"
+        },
+        "cash": {
+            "ui:widget": "radio"
+        },
+        "appendix": {
+            "ui:widget": "textarea"
+        }
+    }
+}
