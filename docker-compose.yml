@@ -18,13 +18,13 @@ services:
     ports:
       - 31080:8080
 
-  app:
+  sddm-backend:
     image: enhydrawgc/sddm-backend
     restart: unless-stopped
     ports:
       - 21081:8080
 
-  ui:
+  sddm-web:
     image: enhydrawgc/sddm-frontend
     restart: unless-stopped
     ports:
