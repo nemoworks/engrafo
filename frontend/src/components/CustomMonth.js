@@ -29,7 +29,7 @@ const months=[
 
 export default function(props){
   const classes = useStyles();
-  const {schema:{title},name,formData}=props
+  const {schema:{title},label:name,formData}=props
   const label=title?title:(name?name:'')
 
   const [value, setValue] = React.useState(formData?formData:'');

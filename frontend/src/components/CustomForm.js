@@ -17,7 +17,7 @@ import CustomFile from "./CumtomFile"
 
   uiSchema = {
 	  "currenMonth": {
-		  "ui:field": "customMonth"   （*）
+		  "ui:widget": "customMonth"   （*）
     }
   }
 
@@ -26,7 +26,7 @@ import CustomFile from "./CumtomFile"
 */}
 
 export default function(props){
-  const fields={
+  const widgets={
     "customDate":CustomDate,
     "customMonth":CustomMonth,
     "customFile":CustomFile
@@ -37,7 +37,7 @@ export default function(props){
       schema={props.schema}
       uiSchema={props.uiSchema}
       formData={props.formData}
-      fields={fields}
+      widgets={widgets}
     />
   )
 }

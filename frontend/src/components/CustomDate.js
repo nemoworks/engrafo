@@ -5,7 +5,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker'
 
 export default function(props){
-  const {schema:{title},name,formData}=props
+  const {schema:{title},label:name,formData}=props
   const label=title?title:(name?name:'')
   const [value, setValue] = React.useState(formData?new Date(formData+'-01T00:00:00'):null);
 

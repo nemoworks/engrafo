@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function(props){
-  const {schema:{title},name,formData}=props
+  const {schema:{title},label:name,formData}=props
   const label=title?title:(name?name:'')
 
   const processFile = (files) => {
