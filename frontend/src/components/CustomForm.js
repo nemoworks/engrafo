@@ -16,10 +16,12 @@ import CustomFile from "./CumtomFile"
   }
 
   uiSchema = {
-	  "uploadFile": {
-		  "ui:field": "CustomMonth"
+	  "currenMonth": {
+		  "ui:field": "customMonth"   （*）
     }
   }
+
+  customDate,customMonth,customFile唯一区别就是（*）行的区别
 
 */}
 
