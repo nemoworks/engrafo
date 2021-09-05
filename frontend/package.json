@@ -9,9 +9,13 @@
     "eject": "DISABLE_ESLINT_PLUGIN=true react-scripts eject"
   },
   "dependencies": {
-    "@material-ui/core": "latest",
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
+    "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@monaco-editor/react": "^4.2.0",
+    "@mui/lab": "^5.0.0-alpha.45",
+    "@mui/material": "^5.0.0-rc.0",
     "@rjsf/core": "^2.5.1",
     "@rjsf/material-ui": "^2.5.1",
     "axios": "^0.21.1",

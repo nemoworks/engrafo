@@ -2,11 +2,10 @@ import React from "react";
 import Title from "../components/Title";
 import Grid from "@material-ui/core/Grid";
 import Editor from "@monaco-editor/react";
-import Form from "@rjsf/material-ui";
 import FixedHeightContainer from "../components/FixedHeightContainer";
 import FStemplates from "../requests/FStemplates";
-import { keys2disabled } from "../utils/schema";
 var _ = require('lodash');
+import CustomForm from "../components/CustomForm";
 
 export default function Preview({id}){
 
@@ -46,7 +45,7 @@ export default function Preview({id}){
           <Grid item xs={6}>
             <FixedHeightContainer height={800}>
               <Title>SchemaForm</Title>
-              <Form
+              <CustomForm
                 onSubmit={({ formData }) => {
                   alert(
                     JSON.stringify({

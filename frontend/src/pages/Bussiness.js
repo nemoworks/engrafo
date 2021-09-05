@@ -9,6 +9,7 @@ import { OutgoingReq,ContextReq } from "../requests";
 import MenuItem from "@material-ui/core/MenuItem";
 import Grid from '@material-ui/core/Grid';
 import { navigate } from "hookrouter";
+import CustomForm from "../components/CustomForm";
 
 var _ = require('lodash');
 
@@ -137,7 +138,7 @@ export default function FSInfo({id}) {
     return (
         <FixedHeightContainer height={800}>
             <Title>SchemaForm</Title>
-            <Form
+            <CustomForm
             onSubmit={({schema,uiSchema,formData}) => {
                 OutgoingReq.get(id).then(data=>{
                   const newData={...data,formdata:formData}

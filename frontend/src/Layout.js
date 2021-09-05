@@ -155,7 +155,7 @@ export default function Dashboard() {
   },[])
 
   return (
-    <div className={classes.root}>
+    <div  className={classes.root}>
       <CssBaseline />
       <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
         <Toolbar className={classes.toolbar}>
@@ -192,7 +192,7 @@ export default function Dashboard() {
                 open={Boolean(anchorEl)}
                 onClose={()=>setAnchorEl(null)}
               >
-                {accounts.map(account=>{
+                {accounts.length>0?accounts.map(account=>{
                   return(
                     <Link color="inherit" href={"/"}>
                     <MenuItem key={account.id+1000} 
@@ -202,7 +202,7 @@ export default function Dashboard() {
                     </MenuItem>
                     </Link>
                   )
-                })}
+                }):null}
                 <Link color="inherit" href={"/"}>
                     <MenuItem key={'logout'} 
                       onClick={()=>handleSelect({})}

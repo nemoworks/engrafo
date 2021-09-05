@@ -28,6 +28,7 @@ import Graph from "../components/Graph.js";
 import Select from "@material-ui/core/Select";
 import FixedHeightContainer from "../components/FixedHeightContainer";
 import { OutgoingReq,FStemplatesReq, LCtemplatesReq } from "../requests";
+import CustomForm from "../components/CustomForm";
 
 
 const graphOptions = {
@@ -150,7 +151,7 @@ export default observer(function BusinessList({ schemalist }) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {rows.length>0?rows.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell align="center">{row.id}</TableCell>
                     <TableCell align="center">{row.lifecycle.schema.fieldschema.title?row.lifecycle.schema.fieldschema.title:''}</TableCell>
@@ -195,7 +196,7 @@ export default observer(function BusinessList({ schemalist }) {
                       </IconButton>
                     </TableCell>
                   </TableRow>
-                ))}
+                )):null}
               </TableBody>
             </Table>
             <Button
@@ -216,7 +217,7 @@ export default observer(function BusinessList({ schemalist }) {
           <FixedHeightContainer height={800}>
             <Title>预览</Title>
             {preview.show ? (
-              <Form
+              <CustomForm
                 onSubmit={({ formData }) => alert(JSON.stringify(formData))}
                 schema={preview.schema}
                 uiSchema={preview.uischema}
@@ -363,7 +364,7 @@ export default observer(function BusinessList({ schemalist }) {
           <Grid item xs={6}>
             <FixedHeightContainer height={800}>
               <Title>SchemaForm</Title>
-              <Form
+              <CustomForm
                 onSubmit={({ formData }) => {
                   alert(
                     JSON.stringify({

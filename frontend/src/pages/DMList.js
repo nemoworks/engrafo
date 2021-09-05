@@ -22,6 +22,7 @@ import Title from "../components/Title";
 import Editor from "@monaco-editor/react";
 import Form from "@rjsf/material-ui";
 import FStemplates from "../requests/FStemplates";
+import CustomForm from "../components/CustomForm";
 
 //JSS格式样式表，使用makeStyle
 const useStyles = makeStyles((theme) => ({
@@ -84,7 +85,7 @@ export default function  DMList(){
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {rows.length>0?rows.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell align="center">{row.id}</TableCell>
                     <TableCell align="center">{row.formschema.fieldschema.title?row.formschema.fieldschema.title:''}</TableCell>
@@ -115,7 +116,7 @@ export default function  DMList(){
                       </IconButton>
                     </TableCell>
                   </TableRow>
-                ))}
+                )):null}
               </TableBody>
             </Table>
             <Button
@@ -199,14 +200,10 @@ export default function  DMList(){
           <Grid item xs={6}>
             <FixedHeightContainer height={800}>
               <Title>SchemaForm</Title>
-              <Form
+              <CustomForm
                 onSubmit={({ formData }) => {
                   alert(
-                    JSON.stringify({
-                      ...formData,
-                      schema: schema,
-                      uischema: uiSchema,
-                    })
+                    JSON.stringify( formData)
                   );
                 }}
                 schema={schema}
