@@ -1,5 +1,4 @@
 import axios from "axios";
-import { update } from "lodash";
 
 const HOST=process.env.NODE_ENV==="production"?'221.228.66.83:21081':'localhost:8080'
 
@@ -58,5 +57,13 @@ export default {
   async getFromAuth(auth){
     const { data } = await axios.get(api + "authedlist/" + auth);
     return data;
+  },
+  async downloadFile(filename) {
+    const {data} = await axios.request({
+      url: api+'file/'+filename, //your url
+      method: 'GET',
+      responseType: 'blob', // important
+    })
+    return data
   }
 };

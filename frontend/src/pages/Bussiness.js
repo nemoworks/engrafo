@@ -105,16 +105,16 @@ export default function FSInfo({id}) {
       const currentNode = data.lifecycle.enkrino.mirror.nodes.find(node=>node.id===currentId)
       if(currentNode.stack){
         if(currentNode.stack.length>0){
-          ContextReq.get(currentNode.stack[currentNode.stack.length-1]).then(data=>{
-            setContext(data)
-            setFormData(data.info.formdata?data.info.formdata:{})
+          ContextReq.get(currentNode.stack[currentNode.stack.length-1]).then(res=>{
+            setContext(res)
+            // setFormData(res.info.formdata?res.info.formdata:{})
           })
         }
       }
     }
 
-    OutgoingReq.nexts(id).then(data=>{
-      const {forwards,backwards}=data
+    OutgoingReq.nexts(id).then(res=>{
+      const {forwards,backwards}=res
       const edges=[...forwards?forwards:[],...backwards?backwards:[]]
       let newEdges=[]
       newEdges=edges.map(e=>{
@@ -150,7 +150,7 @@ export default function FSInfo({id}) {
             }}
             schema={schema}
             uiSchema={uiSchema}
-            formData={formData ? formData : {}}
+            formData={formData}
         />
             <div
                 style={{ height: "100px", width: "800px", marginTop: "20px" }}

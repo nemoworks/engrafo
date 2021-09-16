@@ -48,11 +48,7 @@ export default function Preview({id}){
               <CustomForm
                 onSubmit={({ formData }) => {
                   alert(
-                    JSON.stringify({
-                      ...formData,
-                      schema: schema,
-                      uischema: uiSchema,
-                    })
+                    JSON.stringify(formData)
                   );
                 }}
                 schema={schema}

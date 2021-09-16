@@ -27,9 +27,9 @@ import CustomFile from "./CumtomFile"
 
 export default function(props){
   const widgets={
-    "customDate":CustomDate,
-    "customMonth":CustomMonth,
-    "customFile":CustomFile
+    "year-month-date":CustomDate,
+    "month-date":CustomMonth,
+    "base64-file":CustomFile
   }
   return(
     <Form

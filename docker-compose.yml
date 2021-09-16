@@ -29,3 +29,15 @@ services:
     restart: unless-stopped
     ports:
       - 21080:80
+
+  minio:
+    image: minio/minio
+    hostname: "minio"
+    ports:
+      - 9000:9000 # api 端口
+      - 9001:9001 # 控制台端口
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    command: server --console-address ':9001' /data  #指定容器中的目录 /data
+    restart: unless-stopped

@@ -2,6 +2,7 @@ const express = require("express");
 const { outgoing, context, db } = require("../database");
 const LCengine = require("../LCengine");
 var router = express.Router();
+const {findFile,storeFile,downloadFile} = require('../utils')
 
 router.get("/list", async function (req, res) {
   db.any(outgoing.findAll)
@@ -177,6 +178,14 @@ router.post("/", async function (req, res) {
 
 router.put("/:id", async function (req, res) {
   const { formdata, lifecycle } = req.body;
+  const {schema:{uischema}}=lifecycle
+  for(const key in uischema){
+    if(Object.prototype.toString.call(uischema[key]==='[Object Object]')){
+      findFile(uischema[key],formdata,key)
+    }else if(key==='ui:widget'&&uischema[key]==='base64-file'){
+      formdata=storeFile(formdata)
+    }
+  }
   db.one(outgoing.update, [
     req.params.id,
     JSON.stringify(formdata),
@@ -187,6 +196,10 @@ router.put("/:id", async function (req, res) {
       console.error(err);
       res.send({ message: err.toString() });
     });
+});
+
+router.get("/file/:filename",async function(req,res){
+  downloadFile(res,req.params.filename)
 });
 
 router.get("/formdata/list", async function (req, res) {
