@@ -38,22 +38,22 @@ const storeFile = (base64Str,filename) => {
   const filestream = new Readable()
   filestream.push(buffer)   
   filestream.push(null) 
-  minioClient.bucketExists('jieshixin', function(err, exists) {
+  minioClient.bucketExists('engrafo', function(err, exists) {
     if (err) {
       return console.log(err)
     }
     if (exists) {
-      minioClient.putObject('jieshixin', filename, filestream, function(err, etag) {
+      minioClient.putObject('engrafo', filename, filestream, function(err, etag) {
         if(err){
           return console.log(err,etag)
         }
       })
     }else{
-      minioClient.makeBucket('jieshixin', 'us-east-1', function(err) {
+      minioClient.makeBucket('engrafo', 'us-east-1', function(err) {
         if (err){
           return console.log(err,etag)
         }
-        minioClient.putObject('jieshixin', filename, filestream, function(err, etag) {
+        minioClient.putObject('engrafo', filename, filestream, function(err, etag) {
           if(err) {
             return console.log(err,etag)
           }
@@ -68,7 +68,7 @@ var stream = require('stream');
 
 const downloadFile = (res,filename) => {
   const chunks = [];
-  minioClient.getObject('jieshixin', filename, function(err, dataStream) {
+  minioClient.getObject('engrafo', filename, function(err, dataStream) {
     if (err) {
       return console.log(err)
     }

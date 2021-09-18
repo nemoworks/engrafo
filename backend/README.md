@@ -1,4 +1,4 @@
-# backend for jieshixin project
+# backend for engrafo project
 based on expressjs, postgresql and swagger-ui
 
 ### file structure

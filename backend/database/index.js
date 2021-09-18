@@ -34,8 +34,8 @@ const cn = {
     host: dbhost,
     port: dbport,
     database: 'ticflow',
-    user: 'jieshixin',
-    password: 'jieshixin,.#',
+    user: 'engrafo',
+    password: 'engrafo,.#',
     max: 30 // use up to 30 connections
 
     // "types" - in case you want to set custom type parsers on the pool level
