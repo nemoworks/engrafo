@@ -8,6 +8,7 @@ import DMList from "./pages/DMList";
 import FMList from "./pages/FMList";
 import DMPreview from "./pages/DMPreview";
 import FMPreview from "./pages/FMPreview";
+import Login from "./pages/Login";
 
 const routes = {
   "/": () => <DMList />,
@@ -17,6 +18,7 @@ const routes = {
   "/fmlist/preview/:id": ({id}) => <FMPreview id={id}/>,
   "/businesslist": (schemalist) => <BusinessList schemalist={schemalist} />,
   "/business/:id": ({id}) => <Bussiness id={id}/>,
+  "/login": () => <Login/>
 };
 
 const Route = () => {

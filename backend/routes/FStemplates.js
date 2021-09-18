@@ -2,6 +2,18 @@ const express = require("express");
 const { FStemplates, db } = require("../database");
 var router = express.Router();
 
+const {authentication} = require('../utils/oauth')
+
+router.use(function(req,res,next){
+  // console.log(req)
+  authentication(req.get("Authorization")).then(data=>{
+    console.log(data)
+    next()
+  }).catch(err=>{
+    console.log(err)
+  })
+})
+
 /* FStemplatesList */
 router.get("/list", async function (_, res) {
   db.any(FStemplates.findAll)

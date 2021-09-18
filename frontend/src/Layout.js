@@ -20,7 +20,8 @@ import { mainListItems, secondaryListItems } from './listItems';
 import Route from './Route';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-
+import { Button } from '@material-ui/core';
+import axios from 'axios';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { AccountReq } from './requests';
 
@@ -123,14 +124,16 @@ export default function Dashboard() {
   const [open, setOpen] = React.useState(true);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [accounts,setAccounts]=React.useState([]);
+  // const [accounts,setAccounts]=React.useState([]);
 
   const [currentAccount,setCurrentAccount]=React.useState({})
 
-    React.useEffect(()=>{
-      const sessionStorage=window.sessionStorage.getItem("currentAccount")
-      setCurrentAccount(JSON.parse(sessionStorage?sessionStorage:'{}'))
-    },[])
+  const [loginModal,setLoginModal] = React.useState(false)
+
+    // React.useEffect(()=>{
+    //   const sessionStorage=window.sessionStorage.getItem("currentAccount")
+    //   setCurrentAccount(JSON.parse(sessionStorage?sessionStorage:'{}'))
+    // },[])
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -138,7 +141,7 @@ export default function Dashboard() {
   const handleSelect = (account) => {
     setAnchorEl(null);
     window.sessionStorage.setItem('currentAccount', JSON.stringify(account));
-    setCurrentAccount(account)
+    // setCurrentAccount(account)
   };
 
   const handleDrawerOpen = () => {
@@ -148,11 +151,11 @@ export default function Dashboard() {
     setOpen(false);
   };
   
-  React.useEffect(()=>{
-    AccountReq.getAll().then(data=>{
-      setAccounts(data)
-    })
-  },[])
+//  React.useEffect(()=>{
+//     AccountReq.getAll().then(data=>{
+//       setAccounts(data)
+//     })
+//   },[]) 
 
   return (
     <div  className={classes.root}>
@@ -176,7 +179,6 @@ export default function Dashboard() {
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          
           <IconButton
             color="inherit"
             onClick={handleMenu}
@@ -192,7 +194,7 @@ export default function Dashboard() {
                 open={Boolean(anchorEl)}
                 onClose={()=>setAnchorEl(null)}
               >
-                {accounts.length>0?accounts.map(account=>{
+                {/* {accounts.length>0?accounts.map(account=>{
                   return(
                     <Link color="inherit" href={"/"}>
                     <MenuItem key={account.id+1000} 
@@ -202,14 +204,21 @@ export default function Dashboard() {
                     </MenuItem>
                     </Link>
                   )
-                }):null}
+                }):null} */}
+                <Link color="inherit" href={"/login"}>
+                <MenuItem key={'login'} 
+                  onClick={()=>handleSelect({})}
+                >
+                  登录
+                </MenuItem>
+                </Link>
                 <Link color="inherit" href={"/"}>
                     <MenuItem key={'logout'} 
                       onClick={()=>handleSelect({})}
                     >
                       退出
                     </MenuItem>
-                    </Link>
+                </Link>
               </Menu>
         </Toolbar>
       </AppBar>
