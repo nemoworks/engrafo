@@ -85,7 +85,8 @@ export default function  DMList(){
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.length>0?rows.map((row) => (
+                {rows.length>0?rows.map(row => {
+                  return(
                   <TableRow key={row.id}>
                     <TableCell align="center">{row.id}</TableCell>
                     <TableCell align="center">{row.formschema.fieldschema.title?row.formschema.fieldschema.title:''}</TableCell>
@@ -116,7 +117,7 @@ export default function  DMList(){
                       </IconButton>
                     </TableCell>
                   </TableRow>
-                )):null}
+                )}):null}
               </TableBody>
             </Table>
             <Button

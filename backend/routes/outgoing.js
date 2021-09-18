@@ -7,15 +7,15 @@ const {findFile,storeFile,downloadFile} = require('../utils/minio')
 
 const {authentication} = require('../utils/oauth')
 
-router.use(function(req,res,next){
-  authentication(req.get("Authorization")).then(data=>{
-    console.log(data)
-    next()
-  }).catch(err=>{
-    // console.log(err)
-    res.status(401).send({message:err.response.data})
-  })
-})
+// router.use(function(req,res,next){
+//   authentication(req.get("Authorization")).then(data=>{
+//     console.log(data)
+//     next()
+//   }).catch(err=>{
+//     // console.log(err)
+//     res.status(401).send({message:err.response.data})
+//   })
+// })
 
 router.get("/list",async function (req, res) {
   db.any(outgoing.findAll)

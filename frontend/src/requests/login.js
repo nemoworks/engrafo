@@ -24,12 +24,12 @@ export default{
   }
 }
 
-const sessionStorage=window.sessionStorage.getItem("oauth2Token")
-const token=JSON.parse(sessionStorage?sessionStorage:'{}')
-axios.interceptors.request.use(function (config) {
-  const auth = token.accessToken
-  console.log(auth)
-  config.headers.Authorization =  auth;
+// const sessionStorage=window.sessionStorage.getItem("oauth2Token")
+// const token=JSON.parse(sessionStorage?sessionStorage:'{}')
+// axios.interceptors.request.use(function (config) {
+//   const auth = token.accessToken
+//   // console.log(auth)
+//   config.headers.Authorization =  auth;
 
-  return config;
-});
+//   return config;
+// });

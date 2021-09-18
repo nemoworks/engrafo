@@ -4,14 +4,14 @@ var router = express.Router();
 
 const {authentication} = require('../utils/oauth')
 
-router.use(function(req,res,next){
-  authentication(req.get("Authorization")).then(data=>{
-    console.log(data)
-    next()
-  }).catch(err=>{
-    console.log(err)
-  })
-})
+// router.use(function(req,res,next){
+//   authentication(req.get("Authorization")).then(data=>{
+//     console.log(data)
+//     next()
+//   }).catch(err=>{
+//     console.log(err)
+//   })
+// })
 
 /* contextList */
 router.get("/list", async function (_, res) {

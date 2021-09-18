@@ -28,7 +28,7 @@ function sql(file) {
 
 var dbhost = process.env.DBHOST || 'localhost';
 
-var dbport = process.env.DBPORT || 28432
+var dbport = process.env.DBPORT || 5432
 
 const cn = {
     host: dbhost,

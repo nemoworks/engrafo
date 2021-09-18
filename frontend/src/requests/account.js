@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const HOST=process.env.NODE_ENV==="production"?'221.228.66.83:21081':'localhost:8080'
+const HOST=process.env.NODE_ENV==="production"?'localhost:21081':'localhost:8080'
 
 const api=`http://${HOST}/api/account/`
 
