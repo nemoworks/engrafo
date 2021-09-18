@@ -1,0 +1,390 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 13.3 (Debian 13.3-1.pgdg100+1)
+-- Dumped by pg_dump version 13.3 (Debian 13.3-1.pgdg100+1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: role; Type: TYPE; Schema: public; Owner: jieshixin
+--
+
+CREATE TYPE public.role AS ENUM (
+    'manager',
+    'treasurer',
+    'saler'
+);
+
+
+ALTER TYPE public.role OWNER TO jieshixin;
+
+--
+-- Name: FStemplates_id_seq; Type: SEQUENCE; Schema: public; Owner: jieshixin
+--
+
+CREATE SEQUENCE public."FStemplates_id_seq"
+    START WITH 1001
+    INCREMENT BY 1
+    NO MINVALUE
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+ALTER TABLE public."FStemplates_id_seq" OWNER TO jieshixin;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: FStemplates; Type: TABLE; Schema: public; Owner: jieshixin
+--
+
+CREATE TABLE public."FStemplates" (
+    id integer DEFAULT nextval('public."FStemplates_id_seq"'::regclass) NOT NULL,
+    formschema jsonb NOT NULL
+);
+
+
+ALTER TABLE public."FStemplates" OWNER TO jieshixin;
+
+--
+-- Name: LCtemplates_id_seq; Type: SEQUENCE; Schema: public; Owner: jieshixin
+--
+
+CREATE SEQUENCE public."LCtemplates_id_seq"
+    START WITH 1001
+    INCREMENT BY 1
+    NO MINVALUE
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+ALTER TABLE public."LCtemplates_id_seq" OWNER TO jieshixin;
+
+--
+-- Name: LCtemplates; Type: TABLE; Schema: public; Owner: jieshixin
+--
+
+CREATE TABLE public."LCtemplates" (
+    id integer DEFAULT nextval('public."LCtemplates_id_seq"'::regclass) NOT NULL,
+    lifecycle jsonb NOT NULL
+);
+
+
+ALTER TABLE public."LCtemplates" OWNER TO jieshixin;
+
+--
+-- Name: account_id_seq; Type: SEQUENCE; Schema: public; Owner: jieshixin
+--
+
+CREATE SEQUENCE public.account_id_seq
+    START WITH 1001
+    INCREMENT BY 1
+    NO MINVALUE
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+ALTER TABLE public.account_id_seq OWNER TO jieshixin;
+
+--
+-- Name: account; Type: TABLE; Schema: public; Owner: jieshixin
+--
+
+CREATE TABLE public.account (
+    id integer DEFAULT nextval('public.account_id_seq'::regclass) NOT NULL,
+    username text NOT NULL,
+    password text NOT NULL,
+    role public.role NOT NULL
+);
+
+
+ALTER TABLE public.account OWNER TO jieshixin;
+
+--
+-- Name: context_id_seq; Type: SEQUENCE; Schema: public; Owner: jieshixin
+--
+
+CREATE SEQUENCE public.context_id_seq
+    START WITH 22
+    INCREMENT BY 1
+    NO MINVALUE
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+ALTER TABLE public.context_id_seq OWNER TO jieshixin;
+
+--
+-- Name: context; Type: TABLE; Schema: public; Owner: jieshixin
+--
+
+CREATE TABLE public.context (
+    id integer DEFAULT nextval('public.context_id_seq'::regclass) NOT NULL,
+    info jsonb NOT NULL
+);
+
+
+ALTER TABLE public.context OWNER TO jieshixin;
+
+--
+-- Name: outgoing_id_seq; Type: SEQUENCE; Schema: public; Owner: jieshixin
+--
+
+CREATE SEQUENCE public.outgoing_id_seq
+    START WITH 1001
+    INCREMENT BY 1
+    NO MINVALUE
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+ALTER TABLE public.outgoing_id_seq OWNER TO jieshixin;
+
+--
+-- Name: outgoing; Type: TABLE; Schema: public; Owner: jieshixin
+--
+
+CREATE TABLE public.outgoing (
+    id integer DEFAULT nextval('public.outgoing_id_seq'::regclass) NOT NULL,
+    formdata jsonb NOT NULL,
+    lifecycle jsonb NOT NULL
+);
+
+
+ALTER TABLE public.outgoing OWNER TO jieshixin;
+
+--
+-- Data for Name: FStemplates; Type: TABLE DATA; Schema: public; Owner: jieshixin
+--
+
+COPY public."FStemplates" (id, formschema) FROM stdin;
+1000	{"uischema": {"feedback": {"ui:widget": "textarea"}}, "fieldschema": {"type": "object", "title": "外派单", "properties": {"saler": {"enum": ["销售1", "销售2", "销售3"], "type": "string", "title": "销售员"}, "status": {"type": "boolean", "title": "工程师接单"}, "manager": {"enum": ["管理员1", "管理员2", "管理员3"], "type": "string", "title": "管理员"}, "feedback": {"type": "string", "title": "客户反馈"}, "treasurer": {"enum": ["财务1", "财务2", "财务3"], "type": "string", "title": "工程师"}}, "description": "外派单记录"}}
+1001	{"uischema": {"cash": {"ui:widget": "radio"}, "month": {"ui:widget": "customMonth"}, "appendix": {"ui:widget": "textarea"}}, "fieldschema": {"type": "object", "title": "财报", "properties": {"fee": {"enum": ["利润", "差旅费", "招待费", "投标费", "服务费", "其他"], "type": "string", "title": "项目"}, "cash": {"enum": ["是", "否"], "type": "string", "title": "是否为现金支出"}, "type": {"enum": ["毛利", "行政管理费用", "投标保证金", "总经办支出", "现金流水", "预存记录", "未确认款项"], "type": "string", "title": "类型"}, "month": {"type": "string", "title": "月份"}, "amount": {"type": "number", "title": "金额"}, "salers": {"enum": ["陆珺", "阮枫林", "钱昊", "许万羽", "苟家铭", "苏井", "王梦瀚", "王冬雨", "沈红扬", "李倍铭", "朱鸣", "周欢欢", "周坚", "刘丽君", "余文林1"], "type": "string", "title": "销售人员"}, "appendix": {"type": "string", "title": "备注"}}}}
+1002	{"uischema": {"order": {"ui:widget": "textarea"}, "fig_project": {"ui:widget": "customFile"}, "fig_contract": {"ui:widget": "customFile"}}, "fieldschema": {"type": "object", "title": "合同", "properties": {"order": {"type": "string", "title": "出库单号"}, "saler": {"enum": ["陆珺", "阮枫林", "钱昊", "许万羽", "苟家铭", "苏井", "王梦瀚", "王冬雨", "沈红扬", "李倍铭", "朱鸣", "周欢欢", "周坚", "刘丽君", "余文林1"], "type": "string", "title": "销售"}, "amount": {"type": "number", "title": "合同总金额(万元)"}, "detail": {"type": "string", "title": "合同明细"}, "customer": {"type": "string", "title": "客户名称"}, "turnback": {"type": "boolean", "title": "合同原件是否返还"}, "contactor": {"type": "string", "title": "联系人"}, "fig_project": {"type": "string", "title": "项目拍照上传"}, "fig_contract": {"type": "string", "title": "合同拍照上传"}}}}
+1003	{"uischema": {"payDate": {"ui:widget": "date"}, "appendix": {"ui:widget": "textarea"}, "applyDate": {"ui:widget": "date"}}, "fieldschema": {"type": "object", "title": "投标保证金", "properties": {"order": {"type": "string", "title": "编号"}, "saler": {"enum": ["陆珺", "阮枫林", "钱昊", "许万羽", "苟家铭", "苏井", "王梦瀚", "王冬雨", "沈红扬", "李倍铭", "朱鸣", "周欢欢", "周坚", "刘丽君", "余文林1"], "type": "string", "title": "销售"}, "amount": {"type": "number", "title": "金额"}, "payDate": {"type": "string", "title": "预计收回时间"}, "project": {"type": "string", "title": "项目名称"}, "appendix": {"type": "string", "title": "备注"}, "customer": {"type": "string", "title": "客户"}, "applyDate": {"type": "string", "title": "申请时间"}, "payCompany": {"enum": ["杰世欣", "骏岭", "其他"], "type": "string", "title": "付款单位"}, "recvCompany": {"type": "string", "title": "收款单位"}}}}
+1004	{"uischema": {"appendix": {"ui:widget": "textarea"}, "invoiceDate": {"ui:widget": "date"}}, "fieldschema": {"type": "object", "title": "发票", "properties": {"saler": {"type": "string", "title": "销售"}, "company": {"enum": ["杰世欣", "骏岭", "其他"], "type": "string", "title": "公司"}, "appendix": {"type": "string", "title": "备注"}, "invoiceDate": {"type": "string", "title": "开票日期"}, "invoiceType": {"enum": ["正常开票", "借票", "开票+借票"], "type": "string", "title": "开票类型", "default": "正常开票"}, "productName": {"type": "string", "title": "产品名称"}, "customerName": {"type": "string", "title": "客户姓名"}, "invoiceAmount": {"type": "number", "title": "开票金额"}, "invoiceNumber": {"type": "string", "title": "发票号码"}, "invoiceCompany": {"type": "string", "title": "开票单位"}}, "dependencies": {"invoiceType": {"oneOf": [{"properties": {"invoiceType": {"enum": ["正常开票", "借票"]}}}, {"properties": {"duebill": {"type": "object", "title": "借票部分", "properties": {"invoiceAmount": {"type": "number", "title": "开票金额"}}}, "invoiceType": {"enum": ["开票+借票"]}}}]}}}}
+1005	{"uischema": {}, "fieldschema": {"type": "object", "title": "投标", "properties": {"rate": {"enum": ["概率1"], "type": "string", "title": "中标概率预测"}, "cycle": {"type": "number", "title": "回款周期(天)"}, "phone": {"type": "string", "title": "联系方式"}, "saler": {"type": "string", "title": "销售"}, "budget": {"type": "number", "title": "项目预算(万元)"}, "server": {"type": "number", "title": "中标服务费"}, "interest": {"type": "number", "title": "投标毛利率(%)"}, "warranty": {"type": "number", "title": "质保金"}, "projectName": {"type": "string", "title": "项目名称"}, "customerName": {"type": "string", "title": "客户名称"}, "relationship": {"enum": ["关系1"], "type": "string", "title": "客户关系判断"}, "decisionMaker": {"type": "string", "title": "决策人"}}}}
+1006	{"uischema": {"biddingDate": {"ui:widget": "customDate"}}, "fieldschema": {"type": "object", "title": "项目", "properties": {"type": {"enum": ["类型1"], "type": "string", "title": "项目类型"}, "brand": {"type": "string", "title": "项目主推品牌"}, "phone": {"type": "string", "title": "联系方式"}, "saler": {"type": "string", "title": "销售"}, "budget": {"type": "number", "title": "项目预算(万元)"}, "result": {"enum": ["结果1"], "type": "string", "title": "项目结果"}, "customer": {"type": "string", "title": "客户名称"}, "biddingDate": {"type": "string", "title": "项目招标时间(年/月)"}, "biddingType": {"enum": ["类别1"], "type": "string", "title": "项目招标类别"}, "description": {"type": "array", "items": {"type": "string"}, "title": "项目推进描述"}, "projectName": {"type": "string", "title": "项目名称"}, "decisionMaker": {"type": "string", "title": "项目决策人"}}}}
+1007	{"uischema": {"cash": {"ui:widget": "radio"}, "month": {"ui:widget": "customMonth"}, "appendix": {"ui:widget": "textarea"}}, "fieldschema": {"type": "object", "title": "毛利", "properties": {"fee": {"enum": ["利润", "差旅费", "招待费", "投标费", "服务费", "其他"], "type": "string", "title": "项目"}, "cash": {"enum": ["是", "否"], "type": "string", "title": "是否为现金支出"}, "month": {"type": "string", "title": "月份"}, "amount": {"type": "number", "title": "金额"}, "salers": {"enum": ["陆珺", "阮枫林", "钱昊", "许万羽", "苟家铭", "苏井", "王梦瀚", "王冬雨", "沈红扬", "李倍铭", "朱鸣", "周欢欢", "周坚", "刘丽君", "余文林1"], "type": "string", "title": "销售人员"}, "appendix": {"type": "string", "title": "备注"}}}}
+1008	{"uischema": {"cash": {"ui:widget": "radio"}, "month": {"ui:widget": "customMonth"}, "appendix": {"ui:widget": "textarea"}}, "fieldschema": {"type": "object", "title": "行政管理费用", "properties": {"fee": {"enum": ["利润", "差旅费", "招待费", "投标费", "服务费", "其他"], "type": "string", "title": "项目"}, "cash": {"enum": ["是", "否"], "type": "string", "title": "是否为现金支出"}, "month": {"type": "string", "title": "月份"}, "amount": {"type": "number", "title": "金额"}, "appendix": {"type": "string", "title": "备注"}}}}
+1009	{"uischema": {"cash": {"ui:widget": "radio"}, "month": {"ui:widget": "customMonth"}, "appendix": {"ui:widget": "textarea"}}, "fieldschema": {"type": "object", "title": "总经办支出", "properties": {"cash": {"enum": ["是", "否"], "type": "string", "title": "是否为现金支出"}, "month": {"type": "string", "title": "月份"}, "usage": {"type": "string", "title": "用途"}, "amount": {"type": "number", "title": "金额"}, "appendix": {"type": "string", "title": "备注"}}}}
+1010	{"uischema": {"month": {"ui:widget": "customMonth"}, "appendix": {"ui:widget": "textarea"}}, "fieldschema": {"type": "object", "title": "现金流水", "properties": {"fee": {"enum": ["利润", "差旅费", "招待费", "投标费", "服务费", "其他"], "type": "string", "title": "项目"}, "month": {"type": "string", "title": "月份"}, "amount": {"type": "number", "title": "金额"}, "appendix": {"type": "string", "title": "备注"}}}}
+1011	{"uischema": {"date": {"ui:widget": "date"}, "appendix": {"ui:widget": "textarea"}}, "fieldschema": {"type": "object", "title": "预存记录", "properties": {"fee": {"enum": ["利润", "差旅费", "招待费", "投标费", "服务费", "其他"], "type": "string", "title": "项目"}, "date": {"type": "string", "title": "日期"}, "order": {"type": "string", "title": "发票号码/单号"}, "saler": {"enum": ["陆珺", "阮枫林", "钱昊", "许万羽", "苟家铭", "苏井", "王梦瀚", "王冬雨", "沈红扬", "李倍铭", "朱鸣", "周欢欢", "周坚", "刘丽君", "余文林1"], "type": "string", "title": "销售人员"}, "amount": {"type": "number", "title": "金额"}, "contact": {"type": "string", "title": "联系人"}, "appendix": {"type": "string", "title": "备注"}, "customer": {"type": "string", "title": "客户"}}}}
+1012	{"uischema": {"payDate": {"ui:widget": "date"}, "appendix": {"ui:widget": "textarea"}, "applyDate": {"ui:widget": "date"}}, "fieldschema": {"type": "object", "title": "财报:投标保证金", "properties": {"saler": {"enum": ["陆珺", "阮枫林", "钱昊", "许万羽", "苟家铭", "苏井", "王梦瀚", "王冬雨", "沈红扬", "李倍铭", "朱鸣", "周欢欢", "周坚", "刘丽君", "余文林1"], "type": "string", "title": "销售人员"}, "amount": {"type": "number", "title": "金额"}, "payDate": {"type": "string", "title": "预计收回时间"}, "project": {"type": "string", "title": "项目名称"}, "appendix": {"type": "string", "title": "备注"}, "customer": {"type": "string", "title": "客户"}, "applyDate": {"type": "string", "title": "申请时间"}, "payCompany": {"enum": ["杰世欣", "骏岭", "其他"], "type": "string", "title": "付款单位"}, "recvCompany": {"type": "string", "title": "收款单位"}}}}
+1013	{"uischema": {"appendix": {"ui:widget": "textarea"}, "tradeDate": {"ui:widget": "date"}}, "fieldschema": {"type": "object", "title": "未确认款项", "properties": {"amount": {"type": "number", "title": "到账金额(元)"}, "company": {"enum": ["杰世欣", "骏岭", "其他"], "type": "string", "title": "公司名称"}, "appendix": {"type": "string", "title": "备注"}, "customer": {"type": "string", "title": "客户单位"}, "tradeDate": {"type": "string", "title": "交易时间"}}}}
+\.
+
+
+--
+-- Data for Name: LCtemplates; Type: TABLE DATA; Schema: public; Owner: jieshixin
+--
+
+COPY public."LCtemplates" (id, lifecycle) FROM stdin;
+1000	{"schema": {"uischema": {"feedback": {"ui:widget": "textarea"}}, "fieldschema": {"type": "object", "title": "外派单", "properties": {"saler": {"enum": ["销售1", "销售2", "销售3"], "type": "string", "title": "销售员"}, "status": {"type": "boolean", "title": "工程师接单"}, "manager": {"enum": ["管理员1", "管理员2", "管理员3"], "type": "string", "title": "管理员"}, "feedback": {"type": "string", "title": "客户反馈"}, "treasurer": {"enum": ["财务1", "财务2", "财务3"], "type": "string", "title": "工程师"}}, "description": "外派单记录"}}, "enkrino": {"graph": {"edges": [{"to": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b", "from": "4fd27190-a751-415e-9dbd-8c9188860656", "spec": {"temporary": false}}, {"to": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9", "from": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b", "spec": {"temporary": false}}, {"to": "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb", "from": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9", "spec": {"token": 0, "temporary": false}}, {"to": "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2", "from": "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb", "spec": {"token": 0, "temporary": false}}], "nodes": [{"id": "4fd27190-a751-415e-9dbd-8c9188860656", "name": "选定销售员", "backward": 0}, {"id": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b", "name": "选定工程师", "backward": 0}, {"id": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9", "name": "工程师接单", "backward": 1}, {"id": "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb", "name": "填写客户反馈", "backward": 0}, {"id": "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2", "name": "管理员审核", "backward": 2}]}, "start": "4fd27190-a751-415e-9dbd-8c9188860656", "constraints": {"steps": {"21f2c4fc-8c4a-4181-a5ed-b8a370a244b2": {"auth": "@manager", "disable": ["manager", "saler", "treasurer", "status", "feedback"]}, "4fd27190-a751-415e-9dbd-8c9188860656": {"auth": "@manager", "disable": ["manager", "treasurer", "status", "feedback"]}, "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b": {"auth": "@saler", "disable": ["manager", "saler", "status", "feedback"]}, "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb": {"auth": "@treasurer", "disable": ["manager", "saler", "treasurer", "status"]}, "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9": {"auth": "@treasurer", "disable": ["manager", "saler", "treasurer", "feedback"]}}}}}
+1004	{"enkrino": {"graph": {"edges": [{"to": "f65679798-n6qql", "from": "5c7cf86c65-lp2mg", "spec": {"temporary": false}}], "nodes": [{"id": "5c7cf86c65-lp2mg", "name": "填写表单", "backward": 0}, {"id": "f65679798-n6qql", "name": "管理员审核", "backward": 1}]}, "start": "5c7cf86c65-lp2mg"}}
+\.
+
+
+--
+-- Data for Name: account; Type: TABLE DATA; Schema: public; Owner: jieshixin
+--
+
+COPY public.account (id, username, password, role) FROM stdin;
+1	管理员1	123456	manager
+2	管理员2	123456	manager
+3	财务1	123456	treasurer
+4	财务2	123456	treasurer
+5	销售1	123456	saler
+6	销售2	123456	saler
+7	管理员3	123456	manager
+8	财务3	123456	treasurer
+9	销售3	123456	saler
+1000	管理员3	123456	manager
+\.
+
+
+--
+-- Data for Name: context; Type: TABLE DATA; Schema: public; Owner: jieshixin
+--
+
+COPY public.context (id, info) FROM stdin;
+3	{"message": "start", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630160655909"}
+4	{"message": "4fd27190-a751-415e-9dbd-8c9188860656->dcd3f8bb-6611-428a-8f64-f1e8ece1a07b", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630160882945"}
+5	{"message": "start", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630161343740"}
+6	{"message": "4fd27190-a751-415e-9dbd-8c9188860656->dcd3f8bb-6611-428a-8f64-f1e8ece1a07b", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630161396428"}
+7	{"message": "start", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630161515433"}
+8	{"message": "4fd27190-a751-415e-9dbd-8c9188860656->4fd27190-a751-415e-9dbd-8c9188860656", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630161578626"}
+9	{"message": "4fd27190-a751-415e-9dbd-8c9188860656->dcd3f8bb-6611-428a-8f64-f1e8ece1a07b", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630161602503"}
+10	{"message": "start", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630161732798"}
+11	{"message": "4fd27190-a751-415e-9dbd-8c9188860656->dcd3f8bb-6611-428a-8f64-f1e8ece1a07b", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630161790269"}
+12	{"message": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b->e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630161807422"}
+13	{"message": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9->dcd3f8bb-6611-428a-8f64-f1e8ece1a07b", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630161823845"}
+14	{"message": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b->e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630161846293"}
+15	{"message": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9->e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630161856393"}
+16	{"message": "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb->21f2c4fc-8c4a-4181-a5ed-b8a370a244b2", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630161868391"}
+17	{"message": "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2->4fd27190-a751-415e-9dbd-8c9188860656", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630161903383"}
+18	{"message": "start", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630214881602"}
+19	{"message": "4fd27190-a751-415e-9dbd-8c9188860656->dcd3f8bb-6611-428a-8f64-f1e8ece1a07b", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630214964332"}
+20	{"message": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b->e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630214994908"}
+21	{"message": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9->dcd3f8bb-6611-428a-8f64-f1e8ece1a07b", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630215009277"}
+22	{"message": "start", "formdata": {}, "timestamp": "1630982594761"}
+23	{"message": "start", "formdata": {}, "timestamp": "1630982631284"}
+24	{"message": "start", "formdata": {}, "timestamp": "1630982691215"}
+25	{"message": "start", "formdata": {}, "timestamp": "1630982911476"}
+26	{"message": "start", "formdata": {}, "timestamp": "1630983089384"}
+27	{"message": "start", "formdata": {}, "timestamp": "1630983186720"}
+28	{"message": "start", "formdata": {}, "timestamp": "1630983638540"}
+29	{"message": "start", "formdata": {}, "timestamp": "1630984036891"}
+30	{"message": "1->2", "formdata": {}, "timestamp": "1630984056097"}
+31	{"message": "1->2", "formdata": {}, "timestamp": "1630984066090"}
+32	{"message": "start", "formdata": {}, "timestamp": "1630984067133"}
+33	{"message": "1->2", "formdata": {}, "timestamp": "1630984069612"}
+34	{"message": "start", "formdata": {}, "timestamp": "1630984210297"}
+35	{"message": "start", "formdata": {}, "timestamp": "1630984274997"}
+36	{"message": "start", "formdata": {}, "timestamp": "1630984492936"}
+37	{"message": "1->2", "formdata": {}, "timestamp": "1630984495010"}
+38	{"message": "1->2", "formdata": {}, "timestamp": "1630984497756"}
+39	{"message": "1->2", "formdata": {}, "timestamp": "1630984503948"}
+40	{"message": "1->2", "formdata": {}, "timestamp": "1630984511255"}
+41	{"message": "1->2", "formdata": {}, "timestamp": "1630984526487"}
+42	{"message": "1->2", "formdata": {}, "timestamp": "1630984530579"}
+43	{"message": "1->2", "formdata": {}, "timestamp": "1630984649261"}
+44	{"message": "1->2", "formdata": {}, "timestamp": "1630984656522"}
+45	{"message": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b->e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1630984830373"}
+46	{"message": "start", "formdata": {}, "timestamp": "1630984864408"}
+47	{"message": "start", "formdata": {}, "timestamp": "1630984864977"}
+48	{"message": "1->2", "formdata": {}, "timestamp": "1630984868794"}
+49	{"message": "1->2", "formdata": {}, "timestamp": "1630984961496"}
+50	{"message": "1->2", "formdata": {}, "timestamp": "1630985039091"}
+51	{"message": "1->2", "formdata": {}, "timestamp": "1630985119247"}
+52	{"message": "start", "formdata": {}, "timestamp": "1630985120857"}
+53	{"message": "start", "formdata": {}, "timestamp": "1630985121428"}
+54	{"message": "1->2", "formdata": {"feedback": "sds"}, "timestamp": "1630985132179"}
+55	{"message": "1->2", "formdata": {"feedback": "sds"}, "timestamp": "1630985144898"}
+56	{"message": "1->1", "formdata": {"feedback": "sds"}, "timestamp": "1630985158199"}
+57	{"message": "1->2", "formdata": {"feedback": "sds"}, "timestamp": "1630985159947"}
+58	{"message": "start", "formdata": {}, "timestamp": "1630989933887"}
+59	{"message": "start", "formdata": {}, "timestamp": "1630989987805"}
+60	{"message": "5c7cf86c65-lp2mg->f65679798-n6qql", "formdata": {}, "timestamp": "1630990005896"}
+61	{"message": "f65679798-n6qql->5c7cf86c65-lp2mg", "formdata": {}, "timestamp": "1630990009359"}
+62	{"message": "start", "formdata": {}, "timestamp": "1630990176733"}
+63	{"message": "1->2", "formdata": {}, "timestamp": "1631018270836"}
+64	{"message": "5c7cf86c65-lp2mg->f65679798-n6qql", "formdata": {}, "timestamp": "1631018312617"}
+65	{"message": "start", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1631018331205"}
+66	{"message": "start", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1631018332905"}
+67	{"message": "start", "formdata": {}, "timestamp": "1631018390452"}
+68	{"message": "5c7cf86c65-lp2mg->f65679798-n6qql", "formdata": {}, "timestamp": "1631018403633"}
+69	{"message": "4fd27190-a751-415e-9dbd-8c9188860656->dcd3f8bb-6611-428a-8f64-f1e8ece1a07b", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1631018606421"}
+70	{"message": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b->e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1631018711129"}
+71	{"message": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9->dcd3f8bb-6611-428a-8f64-f1e8ece1a07b", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1631018787320"}
+72	{"message": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b->e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1631018796660"}
+73	{"message": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9->e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1631018801364"}
+74	{"message": "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb->21f2c4fc-8c4a-4181-a5ed-b8a370a244b2", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1631018806259"}
+75	{"message": "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2->4fd27190-a751-415e-9dbd-8c9188860656", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1631018812328"}
+76	{"message": "4fd27190-a751-415e-9dbd-8c9188860656->21f2c4fc-8c4a-4181-a5ed-b8a370a244b2", "formdata": {"saler": "销售2", "status": true, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}, "timestamp": "1631018832913"}
+\.
+
+
+--
+-- Data for Name: outgoing; Type: TABLE DATA; Schema: public; Owner: jieshixin
+--
+
+COPY public.outgoing (id, formdata, lifecycle) FROM stdin;
+1000	{"saler": "销售2", "status": false, "manager": "管理员1", "feedback": "windows系统无法安装office，已修复", "treasurer": "财务2"}	{"schema": {"uischema": {"feedback": {"ui:widget": "textarea"}}, "fieldschema": {"type": "object", "title": "外派单", "properties": {"saler": {"enum": ["销售1", "销售2", "销售3"], "type": "string", "title": "销售员"}, "status": {"type": "boolean", "title": "工程师接单"}, "manager": {"enum": ["管理员1", "管理员2", "管理员3"], "type": "string", "title": "管理员"}, "feedback": {"type": "string", "title": "客户反馈"}, "treasurer": {"enum": ["财务1", "财务2", "财务3"], "type": "string", "title": "工程师"}}, "description": "外派单记录"}}, "enkrino": {"graph": {"edges": [{"to": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b", "from": "4fd27190-a751-415e-9dbd-8c9188860656", "spec": {"temporary": false}}, {"to": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9", "from": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b", "spec": {"temporary": false}}, {"to": "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb", "from": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9", "spec": {"token": 0, "temporary": false}}, {"to": "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2", "from": "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb", "spec": {"token": 0, "temporary": false}}, {"to": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9", "from": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b", "spec": {"temporary": true}}, {"to": "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2", "from": "4fd27190-a751-415e-9dbd-8c9188860656", "spec": {"temporary": true}}], "nodes": [{"id": "4fd27190-a751-415e-9dbd-8c9188860656", "auth": "manager", "name": "选定销售员", "backward": 0}, {"id": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b", "auth": "saler", "name": "选定工程师", "backward": 0}, {"id": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9", "auth": "treasurer", "name": "工程师接单", "backward": 1}, {"id": "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb", "auth": "treasurer", "name": "填写客户反馈", "backward": 0}, {"id": "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2", "auth": "manager", "name": "管理员审核", "backward": 2}]}, "start": "4fd27190-a751-415e-9dbd-8c9188860656", "mirror": {"edges": [{"to": "4fd27190-a751-415e-9dbd-8c9188860656", "from": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b"}, {"to": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b", "from": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9"}, {"to": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9", "from": "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb"}, {"to": "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb", "from": "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2"}, {"to": "4fd27190-a751-415e-9dbd-8c9188860656", "from": "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2"}], "nodes": [{"id": "4fd27190-a751-415e-9dbd-8c9188860656", "auth": "manager", "name": "选定销售员", "stack": [66, 75], "backward": 0}, {"id": "dcd3f8bb-6611-428a-8f64-f1e8ece1a07b", "auth": "saler", "name": "选定工程师", "stack": [69, 71], "backward": 0}, {"id": "e8ca1aa2-ac7f-4c28-85fb-6efd44a028f9", "auth": "treasurer", "name": "工程师接单", "stack": [70, 72], "backward": 1}, {"id": "e59e01f5-53cc-4bc5-bd4d-b4a0a6899cdb", "auth": "treasurer", "name": "填写客户反馈", "stack": [73], "backward": 0}, {"id": "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2", "auth": "manager", "name": "管理员审核", "stack": [74, 76], "backward": 2}]}, "status": "running", "current": "21f2c4fc-8c4a-4181-a5ed-b8a370a244b2", "currentAuth": "manager"}}
+1011	{}	{"schema": {"uischema": {"cash": {"ui:widget": "radio"}, "month": {"ui:widget": "customMonth"}, "appendix": {"ui:widget": "textarea"}}, "fieldschema": {"type": "object", "title": "财报", "properties": {"fee": {"enum": ["利润", "差旅费", "招待费", "投标费", "服务费", "其他"], "type": "string", "title": "项目"}, "cash": {"enum": ["是", "否"], "type": "string", "title": "是否为现金支出"}, "type": {"enum": ["毛利", "行政管理费用", "投标保证金", "总经办支出", "现金流水", "预存记录", "未确认款项"], "type": "string", "title": "类型"}, "month": {"type": "string", "title": "月份"}, "amount": {"type": "number", "title": "金额"}, "salers": {"enum": ["陆珺", "阮枫林", "钱昊", "许万羽", "苟家铭", "苏井", "王梦瀚", "王冬雨", "沈红扬", "李倍铭", "朱鸣", "周欢欢", "周坚", "刘丽君", "余文林1"], "type": "string", "title": "销售人员"}, "appendix": {"type": "string", "title": "备注"}}}}, "enkrino": {"graph": {"edges": [{"to": "f65679798-n6qql", "from": "5c7cf86c65-lp2mg", "spec": {"temporary": false}}], "nodes": [{"id": "5c7cf86c65-lp2mg", "name": "填写表单", "backward": 0}, {"id": "f65679798-n6qql", "name": "管理员审核", "backward": 1}]}, "start": "5c7cf86c65-lp2mg", "mirror": {"edges": [], "nodes": [{"id": "5c7cf86c65-lp2mg", "name": "填写表单", "stack": [58], "backward": 0}, {"id": "f65679798-n6qql", "name": "管理员审核", "stack": [], "backward": 1}]}, "status": "running", "current": "5c7cf86c65-lp2mg"}}
+1014	{}	{"schema": {"uischema": {"appendix": {"ui:widget": "textarea"}, "invoiceDate": {"ui:widget": "date"}}, "fieldschema": {"type": "object", "title": "发票", "properties": {"saler": {"type": "string", "title": "销售"}, "company": {"enum": ["杰世欣", "骏岭", "其他"], "type": "string", "title": "公司"}, "appendix": {"type": "string", "title": "备注"}, "invoiceDate": {"type": "string", "title": "开票日期"}, "invoiceType": {"enum": ["正常开票", "借票", "开票+借票"], "type": "string", "title": "开票类型", "default": "正常开票"}, "productName": {"type": "string", "title": "产品名称"}, "customerName": {"type": "string", "title": "客户姓名"}, "invoiceAmount": {"type": "number", "title": "开票金额"}, "invoiceNumber": {"type": "string", "title": "发票号码"}, "invoiceCompany": {"type": "string", "title": "开票单位"}}, "dependencies": {"invoiceType": {"oneOf": [{"properties": {"invoiceType": {"enum": ["正常开票", "借票"]}}}, {"properties": {"duebill": {"type": "object", "title": "借票部分", "properties": {"invoiceAmount": {"type": "number", "title": "开票金额"}}}, "invoiceType": {"enum": ["开票+借票"]}}}]}}}}, "enkrino": {"graph": {"edges": [{"to": "f65679798-n6qql", "from": "5c7cf86c65-lp2mg", "spec": {"temporary": false}}], "nodes": [{"id": "5c7cf86c65-lp2mg", "auth": "saler", "name": "填写表单", "backward": 0}, {"id": "f65679798-n6qql", "auth": "manager", "name": "管理员审核", "backward": 1}]}, "start": "5c7cf86c65-lp2mg", "mirror": {"edges": [{"to": "5c7cf86c65-lp2mg", "from": "f65679798-n6qql"}], "nodes": [{"id": "5c7cf86c65-lp2mg", "auth": "saler", "name": "填写表单", "stack": [67], "backward": 0}, {"id": "f65679798-n6qql", "auth": "manager", "name": "管理员审核", "stack": [68], "backward": 1}]}, "status": "running", "current": "f65679798-n6qql", "currentAuth": "manager"}}
+\.
+
+
+--
+-- Name: FStemplates_id_seq; Type: SEQUENCE SET; Schema: public; Owner: jieshixin
+--
+
+SELECT pg_catalog.setval('public."FStemplates_id_seq"', 1013, true);
+
+
+--
+-- Name: LCtemplates_id_seq; Type: SEQUENCE SET; Schema: public; Owner: jieshixin
+--
+
+SELECT pg_catalog.setval('public."LCtemplates_id_seq"', 1004, true);
+
+
+--
+-- Name: account_id_seq; Type: SEQUENCE SET; Schema: public; Owner: jieshixin
+--
+
+SELECT pg_catalog.setval('public.account_id_seq', 1001, false);
+
+
+--
+-- Name: context_id_seq; Type: SEQUENCE SET; Schema: public; Owner: jieshixin
+--
+
+SELECT pg_catalog.setval('public.context_id_seq', 76, true);
+
+
+--
+-- Name: outgoing_id_seq; Type: SEQUENCE SET; Schema: public; Owner: jieshixin
+--
+
+SELECT pg_catalog.setval('public.outgoing_id_seq', 1014, true);
+
+
+--
+-- Name: FStemplates FStemplates_pkey; Type: CONSTRAINT; Schema: public; Owner: jieshixin
+--
+
+ALTER TABLE ONLY public."FStemplates"
+    ADD CONSTRAINT "FStemplates_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: LCtemplates LCtemplates_pkey; Type: CONSTRAINT; Schema: public; Owner: jieshixin
+--
+
+ALTER TABLE ONLY public."LCtemplates"
+    ADD CONSTRAINT "LCtemplates_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: account account_pkey; Type: CONSTRAINT; Schema: public; Owner: jieshixin
+--
+
+ALTER TABLE ONLY public.account
+    ADD CONSTRAINT account_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: context context_pkey; Type: CONSTRAINT; Schema: public; Owner: jieshixin
+--
+
+ALTER TABLE ONLY public.context
+    ADD CONSTRAINT context_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: outgoing outgoing_pkey; Type: CONSTRAINT; Schema: public; Owner: jieshixin
+--
+
+ALTER TABLE ONLY public.outgoing
+    ADD CONSTRAINT outgoing_pkey PRIMARY KEY (id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

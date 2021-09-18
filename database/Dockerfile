@@ -1,3 +1,5 @@
 FROM postgres:12-alpine3.14
 
-COPY ./init.sql /docker-entrypoint-initdb.d/init.sql
+COPY ./bkdata /bkdata
+
+# CMD ["psql --dbname=postgresql://jieshixin:jieshixin,.#@localhost:5432/ticflow < /bkdata"]
