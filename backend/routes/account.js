@@ -2,6 +2,17 @@ const express = require("express");
 const { account, db } = require("../database");
 var router = express.Router();
 
+const {authentication} = require('../utils/oauth')
+
+router.use(function(req,res,next){
+  authentication(req.get("Authorization")).then(data=>{
+    console.log(data)
+    next()
+  }).catch(err=>{
+    console.log(err)
+  })
+})
+
 router.get("/list", async function (req, res) {
   db.any(account.findAll).then(
     data => res.send(data)

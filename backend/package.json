@@ -8,11 +8,14 @@
     "dev": "PORT=8080 node-dev ./bin/www"
   },
   "dependencies": {
+    "axios": "^0.21.4",
     "buffer": "^6.0.3",
+    "connect-ensure-login": "^0.1.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "enkrino": "^1.0.0",
     "express": "~4.16.1",
+    "express-session": "^1.17.2",
     "http-errors": "~1.6.3",
     "minio": "^7.0.19",
     "morgan": "~1.9.1",

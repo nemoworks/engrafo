@@ -1,10 +1,23 @@
+const { ensureLoggedIn } = require("connect-ensure-login");
 const express = require("express");
 const { outgoing, context, db } = require("../database");
 const LCengine = require("../LCengine");
 var router = express.Router();
-const {findFile,storeFile,downloadFile} = require('../utils')
+const {findFile,storeFile,downloadFile} = require('../utils/minio')
 
-router.get("/list", async function (req, res) {
+const {authentication} = require('../utils/oauth')
+
+router.use(function(req,res,next){
+  authentication(req.get("Authorization")).then(data=>{
+    console.log(data)
+    next()
+  }).catch(err=>{
+    // console.log(err)
+    res.status(401).send({message:err.response.data})
+  })
+})
+
+router.get("/list",async function (req, res) {
   db.any(outgoing.findAll)
     .then((data) => res.send(data))
     .catch((err) => {

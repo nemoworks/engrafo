@@ -66,7 +66,7 @@ const storeFile = (base64Str,filename) => {
 const fs = require('fs');
 var stream = require('stream');
 
-async function downloadFile(res,filename){
+const downloadFile = (res,filename) => {
   const chunks = [];
   minioClient.getObject('jieshixin', filename, function(err, dataStream) {
     if (err) {
