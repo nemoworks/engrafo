@@ -6,8 +6,8 @@ services:
     image: enhydrawgc/sddm-database
     restart: unless-stopped
     environment:
-      POSTGRES_USER: jieshixin
-      POSTGRES_PASSWORD: jieshixin,.#
+      POSTGRES_USER: engrafo
+      POSTGRES_PASSWORD: engrafo,.#
       POSTGRES_DB: ticflow
     ports:
       - 5432:5432
