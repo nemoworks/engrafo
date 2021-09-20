@@ -105,7 +105,7 @@ export default observer(function BusinessList({ schemalist }) {
   },[])
 
   React.useEffect(()=>{
-    const sessionStorage=window.sessionStorage.getItem("currentAccount")
+    const sessionStorage=window.sessionStorage.getItem("oauth2Token")
     setCurrentAccount(JSON.parse(sessionStorage?sessionStorage:'{}'))
   },[])
 
@@ -114,9 +114,9 @@ export default observer(function BusinessList({ schemalist }) {
   },[currentAccount])
 
   const getRows = () => {
-    if(currentAccount.role){
-      const {role:currentAuth}=currentAccount
-      OutgoingReq.getFromAuth(currentAuth).then(getFromAuthRes=>{
+    if(currentAccount.accessToken){
+      const {user:{username}}=currentAccount
+      OutgoingReq.getFromAuth(username).then(getFromAuthRes=>{
         setRows(getFromAuthRes)
       })
     }
@@ -204,7 +204,7 @@ export default observer(function BusinessList({ schemalist }) {
               color="primary"
               onClick={handleClickOpen}
             >
-              <AddIcon fontSize="default" />
+              <AddIcon fontSize="medium" />
             </Button>
             <div className={classes.seeMore}>
               <Link color="primary" href="#" onClick={preventDefault}>

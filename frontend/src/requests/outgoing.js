@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from './axiosConfig'
 
 const HOST=process.env.NODE_ENV==="production"?'localhost:21081':'localhost:8080'
 
@@ -55,7 +55,7 @@ export default {
     })
   },
   async getFromAuth(auth){
-    const { data } = await axios.get(api + "authedlist/" + auth);
+    const { data } = await axios.get(api + "authedlist/v2/" + auth);
     return data;
   },
   async downloadFile(filename) {

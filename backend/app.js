@@ -10,7 +10,9 @@ var LCtemplates = require("./routes/LCtemplates");
 var FStemplates = require("./routes/FStemplates");
 var context = require("./routes/context");
 var app = express();
+var cors = require('cors')
 
+app.use(cors()) 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.all('*', function(req, res, next) {
@@ -62,5 +64,10 @@ app.use(function (err, req, res, next) {
     message: "error"
   });
 });
+
+app.use('/',function(req,res,next){
+  console.log('hello')
+  next()
+})
 
 module.exports = app;

@@ -61,7 +61,8 @@ module.exports = {
         delete: sql('sql/account/delete.sql'),
         update: sql('sql/account/update.sql'),
         find: sql('sql/account/find.sql'),
-        findAll: sql('sql/account/findAll.sql')
+        findAll: sql('sql/account/findAll.sql'),
+        findByUsername: sql('sql/account/findByUsername.sql'),
     },
     LCtemplates: {
         insert: sql('sql/LCtemplates/insert.sql'),

@@ -1,29 +1,55 @@
 const { ensureLoggedIn } = require("connect-ensure-login");
 const express = require("express");
-const { outgoing, context, db } = require("../database");
+const { outgoing, context, account, db } = require("../database");
 const LCengine = require("../LCengine");
 var router = express.Router();
 const {findFile,storeFile,downloadFile} = require('../utils/minio')
 
 const {authentication} = require('../utils/oauth')
 
-// router.use(function(req,res,next){
-//   authentication(req.get("Authorization")).then(data=>{
-//     console.log(data)
-//     next()
-//   }).catch(err=>{
-//     // console.log(err)
-//     res.status(401).send({message:err.response.data})
-//   })
-// })
+router.use(function(req,res,next){
+  const auth=req.get("Authorization")
+  if(auth==undefined) res.status(401).send({message:'no authorization'})
+  else{
+    authentication(auth).then(data=>{
+      console.log(data)
+      next()
+    }).catch(err=>{
+      res.status(401).send(err.response.data)
+    })
+  }
+})
 
 router.get("/list",async function (req, res) {
   db.any(outgoing.findAll)
     .then((data) => res.send(data))
     .catch((err) => {
       console.error(err);
-      res.send({ message: err.toString() });
+      res.send({ message: err.toString()});
     });
+});
+
+router.get("/authedlist/v2/:username", async function (req, res) {
+  db.one(account.findByUsername, req.params.username).then(
+    data => {
+      db.any(
+        outgoing.findByJsonb,
+        JSON.stringify({
+          enkrino: {
+            currentAuth: data.role,
+          },
+        })
+      )
+      .then((data) => res.send(data))
+      .catch((err) => {
+        console.error(err);
+        res.send({ message: err.toString() });
+      });
+    }
+  ).catch(
+    err => { console.error(err); res.send({ message: err.toString() }) }
+  )
+  
 });
 
 router.get("/authedlist/:auth", async function (req, res) {

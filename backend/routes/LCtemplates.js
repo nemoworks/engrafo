@@ -4,14 +4,18 @@ var router = express.Router();
 
 const {authentication} = require('../utils/oauth')
 
-// router.use(function(req,res,next){
-//   authentication(req.get("Authorization")).then(data=>{
-//     console.log(data)
-//     next()
-//   }).catch(err=>{
-//     console.log(err)
-//   })
-// })
+router.use(function(req,res,next){
+  const auth=req.get("Authorization")
+  if(auth==undefined) res.status(401).send({message:'no authorization'})
+  else{
+    authentication(auth).then(data=>{
+      console.log(data)
+      next()
+    }).catch(err=>{
+      res.status(401).send(err.response.data)
+    })
+  }
+})
 
 /* LCtemplatesList */
 router.get("/list", async function (_, res) {

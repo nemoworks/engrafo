@@ -61,7 +61,7 @@ export default function BasicTable() {
         color="primary"
         onClick={() => { }}
       >
-        <AddIcon fontSize="default" />
+        <AddIcon fontSize="medium" />
       </Button>
     </FixedHeightContainer>
   );

@@ -3,7 +3,8 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import {LoginReq} from "../requests";
+import {Oauth2Req} from "../requests";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,6 +16,11 @@ export default function(){
   const classes = useStyles();
   const [username,setUsername] = React.useState('')
   const [password,setPassword] = React.useState('')
+
+  React.useEffect(()=>{
+    const token=window.sessionStorage.getItem("oauth2Token")
+    console.log(token)
+  },[])
 
   return(
     <Grid container spacing={2} direction="column" justifyContent="center" alignItems="center">
@@ -35,7 +41,7 @@ export default function(){
           type="password"
           autoComplete="current-password"
           variant="outlined"
-          onChange={(e)=>{
+          onChange={(event)=>{
             setPassword(event.target.value)
           }}
         />
@@ -45,9 +51,11 @@ export default function(){
           variant="contained" 
           color="primary"
           onClick={()=>{
-            LoginReq.login(username,password).then(data=>{
-              console.log(data)
-              window.sessionStorage.setItem('oauth2Token', JSON.stringify(data));
+            Oauth2Req.login(username,password).then(data=>{
+              // console.log(data)
+              if(data.accessToken!=undefined){
+                window.sessionStorage.setItem('oauth2Token', JSON.stringify(data));
+              }
             })
           }}
         >

@@ -3,6 +3,6 @@ import AccountReq from "./account"
 import FStemplatesReq from "./FStemplates";
 import LCtemplatesReq from "./LCtemplates";
 import ContextReq from "./context"
-import LoginReq from './login'
+import Oauth2Req from './oauth2'
 
-export {OutgoingReq,AccountReq,FStemplatesReq,LCtemplatesReq,ContextReq,LoginReq}
+export {OutgoingReq,AccountReq,FStemplatesReq,LCtemplatesReq,ContextReq,Oauth2Req}

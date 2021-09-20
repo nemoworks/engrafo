@@ -24,6 +24,7 @@ import { Button } from '@material-ui/core';
 import axios from 'axios';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { AccountReq } from './requests';
+import { Base64 } from 'js-base64';
 
 function Copyright() {
   return (
@@ -128,20 +129,22 @@ export default function Dashboard() {
 
   const [currentAccount,setCurrentAccount]=React.useState({})
 
-  const [loginModal,setLoginModal] = React.useState(false)
-
-    // React.useEffect(()=>{
-    //   const sessionStorage=window.sessionStorage.getItem("currentAccount")
-    //   setCurrentAccount(JSON.parse(sessionStorage?sessionStorage:'{}'))
-    // },[])
+  React.useEffect(()=>{
+    const sessionStorage=window.sessionStorage.getItem("oauth2Token")
+    const newAccount=JSON.parse(sessionStorage?sessionStorage:'{}')
+    if(newAccount.accessToken){
+      newAccount['username']=newAccount.user.username
+    }
+    setCurrentAccount(newAccount)
+  },[])
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleSelect = (account) => {
+  const handleLogout = () => {
     setAnchorEl(null);
-    window.sessionStorage.setItem('currentAccount', JSON.stringify(account));
-    // setCurrentAccount(account)
+    window.sessionStorage.setItem('oauth2Token', '');
+    setCurrentAccount({})
   };
 
   const handleDrawerOpen = () => {
@@ -184,7 +187,7 @@ export default function Dashboard() {
             onClick={handleMenu}
           >
             <AccountCircle />
-            {currentAccount.username?currentAccount.username+'('+currentAccount.role+')':'未登录'}
+            {currentAccount.username?currentAccount.username:'未登录'}
           </IconButton>
           
           <Menu
@@ -205,16 +208,19 @@ export default function Dashboard() {
                     </Link>
                   )
                 }):null} */}
-                <Link color="inherit" href={"/login"}>
-                <MenuItem key={'login'} 
-                  onClick={()=>handleSelect({})}
-                >
-                  登录
-                </MenuItem>
-                </Link>
+                {currentAccount.accessToken?null
+                  :<Link color="inherit" href={"/login"}>
+                      <MenuItem key={'login'} 
+                        onClick={()=>handleSelect({})}
+                      >
+                        登录
+                      </MenuItem>
+                    </Link>
+                }
+                
                 <Link color="inherit" href={"/"}>
                     <MenuItem key={'logout'} 
-                      onClick={()=>handleSelect({})}
+                      onClick={()=>handleLogout({})}
                     >
                       退出
                     </MenuItem>

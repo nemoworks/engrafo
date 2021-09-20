@@ -125,7 +125,7 @@ export default function  DMList(){
               color="primary"
               onClick={handleClickOpen}
             >
-              <AddIcon fontSize="default" />
+              <AddIcon fontSize="medium" />
             </Button>
             </FixedHeightContainer>
       <Dialog fullScreen open={open} onClose={handleClose}>

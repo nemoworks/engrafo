@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from './axiosConfig'
 
 const HOST=process.env.NODE_ENV==="production"?'localhost:21081':'localhost:8080'
 
