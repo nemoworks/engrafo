@@ -24,7 +24,7 @@ import { Button } from '@material-ui/core';
 import axios from 'axios';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { AccountReq } from './requests';
-import { Base64 } from 'js-base64';
+import {getUsernameFromAccessToken} from './utils/decode'
 
 function Copyright() {
   return (
@@ -125,7 +125,6 @@ export default function Dashboard() {
   const [open, setOpen] = React.useState(true);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
-  // const [accounts,setAccounts]=React.useState([]);
 
   const [currentAccount,setCurrentAccount]=React.useState({})
 
@@ -133,7 +132,7 @@ export default function Dashboard() {
     const sessionStorage=window.sessionStorage.getItem("oauth2Token")
     const newAccount=JSON.parse(sessionStorage?sessionStorage:'{}')
     if(newAccount.accessToken){
-      newAccount['username']=newAccount.user.username
+      newAccount['username']=getUsernameFromAccessToken(newAccount.accessToken)
     }
     setCurrentAccount(newAccount)
   },[])
@@ -141,6 +140,7 @@ export default function Dashboard() {
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleLogout = () => {
     setAnchorEl(null);
     window.sessionStorage.setItem('oauth2Token', '');
@@ -153,12 +153,6 @@ export default function Dashboard() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  
-//  React.useEffect(()=>{
-//     AccountReq.getAll().then(data=>{
-//       setAccounts(data)
-//     })
-//   },[]) 
 
   return (
     <div  className={classes.root}>
@@ -197,27 +191,14 @@ export default function Dashboard() {
                 open={Boolean(anchorEl)}
                 onClose={()=>setAnchorEl(null)}
               >
-                {/* {accounts.length>0?accounts.map(account=>{
-                  return(
-                    <Link color="inherit" href={"/"}>
-                    <MenuItem key={account.id+1000} 
-                      onClick={()=>handleSelect(account)}
-                    >
-                      {account.username+'('+account.role+')'}
-                    </MenuItem>
-                    </Link>
-                  )
-                }):null} */}
                 {currentAccount.accessToken?null
                   :<Link color="inherit" href={"/login"}>
-                      <MenuItem key={'login'} 
-                        onClick={()=>handleSelect({})}
+                      <MenuItem key={'login'}
                       >
                         登录
                       </MenuItem>
                     </Link>
                 }
-                
                 <Link color="inherit" href={"/"}>
                     <MenuItem key={'logout'} 
                       onClick={()=>handleLogout({})}

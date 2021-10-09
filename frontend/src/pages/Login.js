@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import {Oauth2Req} from "../requests";
-import axios from "axios";
+import sha256 from 'crypto-js/sha256';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,11 +16,6 @@ export default function(){
   const classes = useStyles();
   const [username,setUsername] = React.useState('')
   const [password,setPassword] = React.useState('')
-
-  React.useEffect(()=>{
-    const token=window.sessionStorage.getItem("oauth2Token")
-    console.log(token)
-  },[])
 
   return(
     <Grid container spacing={2} direction="column" justifyContent="center" alignItems="center">
@@ -42,7 +37,7 @@ export default function(){
           autoComplete="current-password"
           variant="outlined"
           onChange={(event)=>{
-            setPassword(event.target.value)
+            setPassword(sha256(event.target.value).toString())
           }}
         />
       </Grid>

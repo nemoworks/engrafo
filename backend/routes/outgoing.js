@@ -4,6 +4,7 @@ const { outgoing, context, account, db } = require("../database");
 const LCengine = require("../LCengine");
 var router = express.Router();
 const {findFile,storeFile,downloadFile} = require('../utils/minio')
+const {getUsernameFromAccessToken} = require('../utils/oauth')
 
 const {authentication} = require('../utils/oauth')
 
@@ -29,8 +30,10 @@ router.get("/list",async function (req, res) {
     });
 });
 
-router.get("/authedlist/v2/:username", async function (req, res) {
-  db.one(account.findByUsername, req.params.username).then(
+router.get("/authedlist", async function (req, res) {
+  const accessToken = req.get("Authorization").replace('Bearer ','')
+  const username = getUsernameFromAccessToken(accessToken)
+  db.one(account.findByUsername, username).then(
     data => {
       db.any(
         outgoing.findByJsonb,

@@ -35,6 +35,12 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="流程模型" />
     </ListItemLink>
+    <ListItemLink href="/datasheet">
+      <ListItemIcon>
+        <DashboardIcon />
+      </ListItemIcon>
+      <ListItemText primary="表格" />
+    </ListItemLink>
     
     {/* <ListItemLink>
       <ListItemIcon>

@@ -54,8 +54,8 @@ export default {
       data:newData
     })
   },
-  async getFromAuth(auth){
-    const { data } = await axios.get(api + "authedlist/v2/" + auth);
+  async getFromAuth(){
+    const { data } = await axios.get(api + 'authedlist');
     return data;
   },
   async downloadFile(filename) {
