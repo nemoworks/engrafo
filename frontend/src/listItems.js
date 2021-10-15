@@ -39,7 +39,7 @@ export const mainListItems = (
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
-      <ListItemText primary="表格" />
+      <ListItemText primary="DataSheet" />
     </ListItemLink>
     
     {/* <ListItemLink>
