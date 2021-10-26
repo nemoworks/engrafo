@@ -1,0 +1,148 @@
+@startuml online
+class 销售人员{
+  
+}
+
+class 未确认款项{
+  string 公司
+  string 备注
+  string 客户单位
+  string 交易时间
+}
+class 财报投标保证金{
+  string 销售人员
+  string 预计收回时间
+  string 项目名称
+  string 客户
+  string 申请时间
+  string 付款单位
+  string 收款单位
+}
+class 预存记录{
+  string 发票号码单号
+  string 销售人员
+  string 联系人
+  string 客户
+}
+class 现金流水{
+}
+class 总经办支出{
+  string 用途
+}
+class 行政管理费用{
+}
+class 毛利{
+  string 销售人员
+}
+class 项目{
+  string 项目类型
+  string 项目主推品牌
+  string 销售人员
+  string 项目结果
+  string 项目招标时间
+  string 项目招标类别
+  string 项目推进描述
+}
+class 投标{
+  string 中标概率预测
+  string 回款周期
+  string 销售人员
+  string 中标服务费
+  string 投标毛利率
+  string 质保金
+  string 客户关系判断
+}
+class 发票{
+  string 销售人员
+  string 公司
+  string 备注
+  string 开票日期
+  string 开票类型
+  string 产品名称
+  string 客户姓名
+  float 开票金额
+  string 发票号码
+  string 开票单位
+  float 借票开票金额
+}
+class 投标保证金{
+  string 编号
+  string 销售人员
+  string 预计收回时间
+  string 项目名称
+  string 客户
+  string 申请时间
+  string 付款单位
+  string 收款单位
+}
+class 合同{
+  string 出库单号
+  string 销售人员
+  float 合同总金额
+  string 合同明细
+  string 客户名称
+  boolean 合同原件是否返还
+  string 联系人
+  string 项目拍照上传
+  string 合同拍照上传
+}
+class 财报{
+  string 类型
+  string 销售人员
+}
+class 外派单{
+  string 销售人员
+  boolean 工程师接单
+  string 管理员
+  string 工程师
+  string 客户反馈
+}
+
+
+
+财报投标保证金 *-- 销售人员
+预存记录 *-- 销售人员
+毛利 *-- 销售人员
+项目 *-- 销售人员
+投标 *-- 销售人员
+发票 *-- 销售人员
+投标保证金 *-- 销售人员
+合同 *-- 销售人员
+财报 *-- 销售人员
+外派单 *-- 销售人员
+
+未确认款项 *-- 公司
+财报投标保证金 *-- 公司
+发票 *-- 公司
+投标保证金 *-- 公司
+
+class 费用{
+  float 金额
+  string 备注
+  enum 费用类型
+  string 日期
+}
+财报投标保证金 ---|> 费用
+投标保证金 ---|> 费用
+预存记录 ---|> 费用
+现金流水 ---|> 费用
+支出方式 ---|> 费用
+
+class 支出方式{
+  string 是否为现金支出
+}
+总经办支出 --|> 支出方式
+行政管理费用 --|> 支出方式
+毛利 --|> 支出方式
+财报 --|> 支出方式
+
+class 项目相关{
+  string 联系方式
+  string 项目预算
+  string 客户名称
+  string 项目名称
+  string 决策人
+}
+项目 ---|> 项目相关
+投标 ---|> 项目相关
+@enduml

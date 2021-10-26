@@ -54,7 +54,8 @@ const traverse = (path, title, schema, uiSchema, items, parent) => {
         title: schema.title ? schema.title : title,
         path,
         child: [],
-        parent
+        parent,
+        uiSchema
       }) - 1
       if (parent > -1) items[parent].child.push(index)
       var childUiSchema = null
@@ -240,40 +241,17 @@ const initializeGrid = (typeTree, currentNode, grid, setStatus, setNewAddItems, 
     if (newItemsRow.length > 0) {
       if (currentNode.hasOwnProperty('descendantDataTree')) {
         const { typeTreeIndex } = currentNode.descendantDataTree[0]
-        console.log('typeTreeIndex', typeTreeIndex)
         const { uiSchema: itemUiSchema } = typeTree[typeTreeIndex]
         if (itemUiSchema) {
           if (itemUiSchema.hasOwnProperty('ui:location') && itemUiSchema.hasOwnProperty('ui:span')) {
             const { row, col } = itemUiSchema['ui:location']
             const { rowSpan, colSpan } = itemUiSchema['ui:span']
-            console.log(row, col, rowSpan, colSpan)
-            var currentRow = row
-            var currentCol = col
-            for (var item of newItemsRow) {
-              if (currentCol - col + 1 > colSpan) {
-                currentRow++
-                currentCol = col
-              }
-              if (currentRow - row + 1 <= rowSpan) {
-                console.log(currentRow, currentCol, item)
-                if (grid.length < currentRow) {
-                  const l = grid.length
-                  for (var i = 1; i <= currentRow - l; i++) {
-                    grid.push([{ ...cellOptions }])
-                  }
-                }
-                if (grid[currentRow - 1].length < currentCol) {
-                  const l = grid[currentRow - 1].length
-                  for (var i = 1; i <= currentCol - l; i++) {
-                    grid[currentRow - 1].push({ ...cellOptions })
-                  }
-                }
-                grid[currentRow - 1][currentCol - 1] = item
-                currentCol++
-              } else {
-                break
-              }
+            var startCol=col
+            for(var i=row;i<row+rowSpan;i++){
+              if(grid.length<i) break
+              if(grid[i-1].length>startCol) startCol=grid[i-1].length+2
             }
+            addItems(grid, newItemsRow, { row, col:startCol, rowSpan, colSpan })
           } else {
             grid.push(newItemsRow)
           }
@@ -281,6 +259,35 @@ const initializeGrid = (typeTree, currentNode, grid, setStatus, setNewAddItems, 
           grid.push(newItemsRow)
         }
       }
+    }
+  }
+}
+
+const addItems = (grid, itemsRow, { row, col, rowSpan, colSpan }) => {
+  var currentRow = row
+  var currentCol = col
+  for (var item of itemsRow) {
+    if (currentCol - col + 1 > colSpan) {
+      currentRow++
+      currentCol = col
+    }
+    if (currentRow - row + 1 <= rowSpan) {
+      if (grid.length < currentRow) {
+        const l = grid.length
+        for (var i = 1; i <= currentRow - l; i++) {
+          grid.push([{ ...cellOptions }])
+        }
+      }
+      if (grid[currentRow - 1].length < currentCol) {
+        const l = grid[currentRow - 1].length
+        for (var i = 1; i <= currentCol - l; i++) {
+          grid[currentRow - 1].push({ ...cellOptions })
+        }
+      }
+      grid[currentRow - 1][currentCol - 1] = item
+      currentCol++
+    } else {
+      break
     }
   }
 }
