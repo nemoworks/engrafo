@@ -1,37 +1,62 @@
-const { ensureLoggedIn } = require("connect-ensure-login");
 const express = require("express");
-const { outgoing, context, account, db } = require("../database");
+const { outgoing, context, account, db, FStemplates } = require("../database");
 const LCengine = require("../LCengine");
 var router = express.Router();
-const {findFile,storeFile,downloadFile} = require('../utils/minio')
-const {getUsernameFromAccessToken} = require('../utils/oauth')
+const { findFile, storeFile, downloadFile } = require('../utils/minio')
+const { getUsernameFromAccessToken } = require('../utils/oauth')
 
-const {authentication} = require('../utils/oauth')
+const { authentication } = require('../utils/oauth')
+const { traverse, findPosition } = require('../utils/link')
 
-router.use(function(req,res,next){
-  const auth=req.get("Authorization")
-  if(auth==undefined) res.status(401).send({message:'no authorization'})
-  else{
-    authentication(auth).then(data=>{
+router.use(function (req, res, next) {
+  const auth = req.get("Authorization")
+  if (auth == undefined) res.status(401).send({ message: 'no authorization' })
+  else {
+    authentication(auth).then(data => {
       console.log(data)
       next()
-    }).catch(err=>{
+    }).catch(err => {
       res.status(401).send(err.response.data)
     })
   }
 })
 
-router.get("/list",async function (req, res) {
+router.get("/list", async function (req, res) {
   db.any(outgoing.findAll)
     .then((data) => res.send(data))
     .catch((err) => {
       console.error(err);
-      res.send({ message: err.toString()});
+      res.send({ message: err.toString() });
     });
 });
 
+router.get("/listOfFStemplates/:id", async function (req, res) {
+  db.one(FStemplates.find, req.params.id).then(data => {
+    const { fieldschema: { title } } = data.formschema
+    console.log(title)
+    db.any(
+      outgoing.findByJsonb,
+      JSON.stringify({
+        schema: {
+          fieldschema: {
+            title
+          }
+        }
+      })
+    )
+      .then((data) => res.send(data))
+      .catch((err) => {
+        console.error(err);
+        res.send({ message: err.toString() });
+      });
+  }).catch((err) => {
+    console.error(err);
+    res.send({ message: err.toString() });
+  });
+});
+
 router.get("/authedlist", async function (req, res) {
-  const accessToken = req.get("Authorization").replace('Bearer ','')
+  const accessToken = req.get("Authorization").replace('Bearer ', '')
   const username = getUsernameFromAccessToken(accessToken)
   db.one(account.findByUsername, username).then(
     data => {
@@ -43,16 +68,16 @@ router.get("/authedlist", async function (req, res) {
           },
         })
       )
-      .then((data) => res.send(data))
-      .catch((err) => {
-        console.error(err);
-        res.send({ message: err.toString() });
-      });
+        .then((data) => res.send(data))
+        .catch((err) => {
+          console.error(err);
+          res.send({ message: err.toString() });
+        });
     }
   ).catch(
     err => { console.error(err); res.send({ message: err.toString() }) }
   )
-  
+
 });
 
 router.get("/authedlist/:auth", async function (req, res) {
@@ -73,7 +98,27 @@ router.get("/authedlist/:auth", async function (req, res) {
 
 router.get("/:id", async function (req, res) {
   db.one(outgoing.find, req.params.id)
-    .then((data) => res.send(data))
+    .then((data) => {
+      res.send(data)
+      // const { lifecycle: { schema: { fieldschema } } } = data
+      // var links = []
+      // traverse(fieldschema, links)
+      // console.log(JSON.stringify(links))
+      // links.forEach((value,index)=>{
+      //   const {title,path}=value
+      //   db.one(FStemplates.findByJsonb, JSON.stringify({ fieldschema: { title } }))
+      //     .then(FStemplatesData => {
+      //       findPosition(fieldschema,path,0,FStemplatesData.formschema.fieldschema)
+      //       if(index===links.length-1) {
+      //         data.lifecycle.schema.fieldschema=fieldschema
+      //         res.send(data)
+      //       }
+      //     })
+      //     .catch((err) => {
+      //       console.error(err);
+      //     });
+      // })
+    })
     .catch((err) => {
       console.error(err);
       res.send({ message: err.toString() });
@@ -220,12 +265,12 @@ router.post("/", async function (req, res) {
 
 router.put("/:id", async function (req, res) {
   const { formdata, lifecycle } = req.body;
-  const {schema:{uischema}}=lifecycle
-  for(const key in uischema){
-    if(Object.prototype.toString.call(uischema[key]==='[Object Object]')){
-      findFile(uischema[key],formdata,key)
-    }else if(key==='ui:widget'&&uischema[key]==='base64-file'){
-      formdata=storeFile(formdata)
+  const { schema: { uischema } } = lifecycle
+  for (const key in uischema) {
+    if (Object.prototype.toString.call(uischema[key] === '[Object Object]')) {
+      findFile(uischema[key], formdata, key)
+    } else if (key === 'ui:widget' && uischema[key] === 'base64-file') {
+      formdata = storeFile(formdata)
     }
   }
   db.one(outgoing.update, [
@@ -240,8 +285,8 @@ router.put("/:id", async function (req, res) {
     });
 });
 
-router.get("/file/:filename",async function(req,res){
-  downloadFile(res,req.params.filename)
+router.get("/file/:filename", async function (req, res) {
+  downloadFile(res, req.params.filename)
 });
 
 router.get("/formdata/list", async function (req, res) {

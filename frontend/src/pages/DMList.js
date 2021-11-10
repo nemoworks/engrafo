@@ -22,7 +22,7 @@ import Title from "../components/Title";
 import Editor from "@monaco-editor/react";
 import Form from "@rjsf/material-ui";
 import FStemplates from "../requests/FStemplates";
-import CustomForm from "../components/CustomForm";
+import CustomForm from "../components//Form/CustomForm";
 
 //JSS格式样式表，使用makeStyle
 const useStyles = makeStyles((theme) => ({
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function  DMList(){
+export default function DMList() {
   const [open, setOpen] = React.useState(false);
   const [schema, setSchema] = React.useState({});
   const [uiSchema, setUiSchema] = React.useState({});
@@ -56,78 +56,79 @@ export default function  DMList(){
   const editorRef = React.useRef(null);
   const uiEditorRef = React.useRef(null);
 
-  const [rows,setRows]=React.useState([])
-  
+  const [rows, setRows] = React.useState([])
+
   const classes = useStyles();
-  
-  React.useEffect(()=>{
-    FStemplates.getAll().then(data=>{
+
+  React.useEffect(() => {
+    FStemplates.getAll().then(data => {
       setRows(data)
     })
-  },[])
+  }, [])
 
-    const handleClickOpen = () => {
-      setOpen(true);
-    };
-  
-    const handleClose = () => {
-      setOpen(false);
-    };
-    return(
-      <>
-        <FixedHeightContainer height={800}>
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  return (
+    <>
+      <FixedHeightContainer height={800}>
         <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center">ID</TableCell>
-                  <TableCell align="center">模型名称</TableCell>
-                  <TableCell align="center">操作</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.length>0?rows.map(row => {
-                  return(
-                  <TableRow key={row.id}>
-                    <TableCell align="center">{row.id}</TableCell>
-                    <TableCell align="center">{row.formschema.fieldschema.title?row.formschema.fieldschema.title:''}</TableCell>
-                    <TableCell align="center">
-                      <Link color="inherit" href={"/dmlist/preview/"+row.id}>
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">ID</TableCell>
+              <TableCell align="center">模型名称</TableCell>
+              <TableCell align="center">操作</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.length > 0 ? rows.map(row => {
+              return (
+                <TableRow key={row.id}>
+                  <TableCell align="center">{row.id}</TableCell>
+                  <TableCell align="center">{row.formschema.fieldschema.title ? row.formschema.fieldschema.title : ''}</TableCell>
+                  <TableCell align="center">
+                    <Link color="inherit" href={"/dmlist/preview/" + row.id}>
                       <IconButton
                         aria-label="preview"
                         color="primary"
                         className={classes.margin}
                         onClick={() => {
-                          
+
                         }}
                       >
                         <VisibilityIcon fontSize="small" />
                       </IconButton>
-                      </Link>
-                      <IconButton
-                        aria-label="delete"
-                        color="secondary"
-                        className={classes.margin}
-                        onClick={() => {
-                          FStemplates.delete(row.id).then(data=>{
-                            setRows(rows.filter(r=>r.id!=row.id))
-                          })
-                        }}
-                      >
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                )}):null}
-              </TableBody>
-            </Table>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleClickOpen}
-            >
-              <AddIcon fontSize="medium" />
-            </Button>
-            </FixedHeightContainer>
+                    </Link>
+                    <IconButton
+                      aria-label="delete"
+                      color="secondary"
+                      className={classes.margin}
+                      onClick={() => {
+                        FStemplates.delete(row.id).then(data => {
+                          setRows(rows.filter(r => r.id != row.id))
+                        })
+                      }}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              )
+            }) : null}
+          </TableBody>
+        </Table>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleClickOpen}
+        >
+          <AddIcon fontSize="medium" />
+        </Button>
+      </FixedHeightContainer>
       <Dialog fullScreen open={open} onClose={handleClose}>
         <AppBar className={classes.appBar}>
           <Toolbar>
@@ -146,8 +147,8 @@ export default function  DMList(){
               autoFocus
               color="inherit"
               onClick={() => {
-                FStemplates.create({fieldschema:schema,uischema:uiSchema}).then(data=>{
-                  FStemplates.getAll().then(data=>{
+                FStemplates.create({ fieldschema: schema, uischema: uiSchema }).then(data => {
+                  FStemplates.getAll().then(data => {
                     setRows(data)
                   })
                 })
@@ -158,7 +159,7 @@ export default function  DMList(){
             </Button>
           </Toolbar>
         </AppBar>
-        <Grid container spacing={3} justify="center" alignItems="center">
+        <Grid container spacing={3} justifyContent="center" alignItems="center">
           <Grid item xs={6}>
             <FixedHeightContainer height={800}>
               <Title>SchemaEditor</Title>
@@ -171,7 +172,7 @@ export default function  DMList(){
                 onMount={(editor, monaco) => {
                   editorRef.current = editor;
                 }}
-                onChange={(value, event) => {}}
+                onChange={(value, event) => { }}
               />
               <p>ui:schema</p>
               <Editor
@@ -180,7 +181,7 @@ export default function  DMList(){
                 onMount={(editor, monaco) => {
                   uiEditorRef.current = editor;
                 }}
-                onChange={(value, event) => {}}
+                onChange={(value, event) => { }}
               />
               <div>
                 {/* 点击apply将schema与uischema传入state，通过editor的ref读取编辑器中的内容 */}
@@ -204,17 +205,17 @@ export default function  DMList(){
               <CustomForm
                 onSubmit={({ formData }) => {
                   alert(
-                    JSON.stringify( formData)
+                    JSON.stringify(formData)
                   );
                 }}
                 schema={schema}
                 uiSchema={uiSchema}
               />
-              
+
             </FixedHeightContainer>
           </Grid>
         </Grid>
       </Dialog>
-        </>
-    )
+    </>
+  )
 }

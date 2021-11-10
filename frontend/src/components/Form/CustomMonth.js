@@ -50,7 +50,7 @@ export default function(props){
           onChange={handleChange}
         >
           {months.map(m=>{
-            return <MenuItem value={m.value}>{m.label}</MenuItem>
+            return <MenuItem key={m.value} value={m.value}>{m.label}</MenuItem>
           })}
         </Select>
       </FormControl>

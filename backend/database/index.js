@@ -76,7 +76,8 @@ module.exports = {
         delete: sql('sql/FStemplates/delete.sql'),
         update: sql('sql/FStemplates/update.sql'),
         find: sql('sql/FStemplates/find.sql'),
-        findAll: sql('sql/FStemplates/findAll.sql')
+        findAll: sql('sql/FStemplates/findAll.sql'),
+        findByJsonb: sql('sql/FStemplates/findByJsonb.sql'),
     },
     context: {
         insert: sql('sql/context/insert.sql'),
@@ -85,5 +86,8 @@ module.exports = {
         find: sql('sql/context/find.sql'),
         findAll: sql('sql/context/findAll.sql')
     },
+    dataset: {
+        findByAuth: sql('sql/dataset/findByAuth.sql')
+    }
 };
 

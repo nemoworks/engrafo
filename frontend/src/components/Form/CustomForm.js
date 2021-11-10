@@ -3,6 +3,7 @@ import React from "react";
 import CustomDate from "./CustomDate";
 import CustomMonth from "./CustomMonth";
 import CustomFile from "./CumtomFile"
+import Link from "./Link";
 
 {/**usage
 
@@ -25,13 +26,18 @@ import CustomFile from "./CumtomFile"
 
 */}
 
-export default function(props){
-  const widgets={
-    "year-month-date":CustomDate,
-    "month-date":CustomMonth,
-    "base64-file":CustomFile
+export default function (props) {
+  const widgets = {
+    "year-month-date": CustomDate,
+    "month-date": CustomMonth,
+    "base64-file": CustomFile,
+    "link": Link,
   }
-  return(
+
+  const field={
+
+  }
+  return (
     <Form
       onSubmit={props.onSubmit}
       schema={props.schema}

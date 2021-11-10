@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import Button from '@mui/material/Button';
 import { makeStyles } from "@material-ui/styles";
 import _, { set } from "lodash";
 import Checkbox from '@mui/material/Checkbox';
+import ArrayDataSheet from "./ArrayDataSheet";
+import AddButton from "./AddButton";
+import DeleteButton from "./DeleteButton";
+import ArrayValueRender from "./ArrayValueRender";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -99,36 +103,36 @@ function Check(props) {
   )
 }
 
-function AddButton(props) {
-  const { path, setNewAddItems } = props
-  return (
-    <Button
-      variant="contained"
-      onClick={() => {
-        setNewAddItems({ path })
-      }}
-      style={{ width: '80%', height: '80%', margin: '5px' }}
-    >
-      AddButton
-    </Button>
-  )
-}
+// function AddButton(props) {
+//   const { path, setNewAddItems } = props
+//   return (
+//     <Button
+//       variant="contained"
+//       onClick={() => {
+//         setNewAddItems({ path })
+//       }}
+//       style={{ width: '80%', height: '80%', margin: '5px' }}
+//     >
+//       AddButton
+//     </Button>
+//   )
+// }
 
-function DeleteButton(props) {
-  const { path, setDeleteItems } = props
-  return (
-    <Button
-      variant="contained"
-      color='error'
-      onClick={() => {
-        setDeleteItems(path)
-      }}
-      style={{ width: '80%', height: '80%', margin: '5px' }}
-    >
-      DeleteButton
-    </Button>
-  )
-}
+// function DeleteButton(props) {
+//   const { path, setDeleteItems } = props
+//   return (
+//     <Button
+//       variant="contained"
+//       color='error'
+//       onClick={() => {
+//         setDeleteItems(path)
+//       }}
+//       style={{ width: '80%', height: '80%', margin: '5px' }}
+//     >
+//       DeleteButton
+//     </Button>
+//   )
+// }
 
 const updateComponent = (type, location, setStatus, value) => {
   if (type === 'boolean') {
@@ -155,6 +159,24 @@ const getDataTree = (current, typeTree, dataTree) => {
     dataTree[dataTreeIndex] = { ..._.cloneDeep(dataTree[dataTreeIndex]), items: [] }
   }
 
+}
+
+const gerDataJSONTree = (current, typeTree, parent, parentTitle) => {
+  const { type } = typeTree[current]
+  parent[parentTitle] = { typeTreeIndex: current }
+  const findType = basicTypes.find(element => element === type)
+  if (findType !== undefined) {
+
+  } else if (type === objectType) {
+    parent[parentTitle].properties = {}
+    for (var i of typeTree[current].child) {
+      const { title } = typeTree[i]
+      parent[parentTitle].properties[title] = null
+      gerDataJSONTree(i, typeTree, parent[parentTitle].properties, title)
+    }
+  } else if (type === arrayType) {
+    parent[parentTitle].items = []
+  }
 }
 
 const getMaxRowCol = (currentNode, typeTree, max) => {
@@ -189,7 +211,67 @@ const init = (max) => {
   return newGrid
 }
 
-const initializeGrid = (typeTree, currentNode, grid, setStatus, setNewAddItems, setDeleteItems, path = [0], itemsRow = [], isArrayDescendant = false) => {
+const initializeGrid = (typeTree, currentNode, grid, setStatus, setArrayStatus, setNewAddItems, setDeleteItems, path = [0], itemsRow = [], isArrayDescendant = false) => {
+  const { type, title, uiSchema } = typeTree[currentNode.typeTreeIndex]
+  const findType = basicTypes.find(element => element === type)
+  if (findType !== undefined) {
+    const node = { ...cellOptions, value: null, type, title, path: [...path] }
+    if (!isArrayDescendant) {
+      if (uiSchema !== undefined && uiSchema !== null) {
+        if (uiSchema.hasOwnProperty('ui:location')) {
+          const { row, col } = uiSchema['ui:location']
+          grid[row - 1][col - 1] = {
+            ...grid[row - 1][col - 1],
+            ...node
+          }
+        }
+      }
+    } else {
+      itemsRow.push({ ...node })
+    }
+  } else if (type === objectType) {
+    const { child } = currentNode
+    child.forEach((value, i) => {
+      initializeGrid(typeTree, value, grid, setStatus, setArrayStatus, setNewAddItems, setDeleteItems, [...path, i], itemsRow, isArrayDescendant)
+    })
+  } else if (type === arrayType) {
+    const node = {
+      ...cellOptions, type, title, value: null,
+      path: [...path],
+      setNewAddItems,
+      setArrayStatus,
+    }
+    if (!isArrayDescendant) {
+      // grid.push([{ ...node }])
+    } else {
+      itemsRow.push({ ...node })
+    }
+    const { items } = currentNode
+    const newItemsRow = []
+    items.forEach((value, i) => {
+      initializeGrid(typeTree, value[0], grid, setStatus, setArrayStatus, setNewAddItems, setDeleteItems, [...path, i], newItemsRow, true)
+      newItemsRow.push({
+        ...cellOptions,
+        value: null,
+        type: 'delete',
+        title: 'delete',
+        path: [...path, i],
+        component:
+          <DeleteButton path={[...path, i]} setDeleteItems={setDeleteItems} />
+      })
+    })
+    const { uiSchema: arrayUiSchema } = typeTree[currentNode.typeTreeIndex]
+    if (arrayUiSchema) {
+      if (arrayUiSchema.hasOwnProperty('ui:location') && arrayUiSchema.hasOwnProperty('ui:span')) {
+        const { row, col } = arrayUiSchema['ui:location']
+        const { rowSpan, colSpan } = arrayUiSchema['ui:span']
+        addItems(grid, { array: { ...node, location: { row, col } }, items: newItemsRow, itemsNumPerGroup: newItemsRow.length / items.length }, { row, col, rowSpan, colSpan })
+      }
+    }
+  }
+}
+
+const initializeNewGrid = (typeTree, currentNode, grid, setStatus, setNewAddItems, setDeleteItems, path = [0], itemsRow = [], isArrayDescendant = false) => {
   const { type, title, uiSchema } = typeTree[currentNode.typeTreeIndex]
   const findType = basicTypes.find(element => element === type)
   if (findType !== undefined) {
@@ -216,18 +298,17 @@ const initializeGrid = (typeTree, currentNode, grid, setStatus, setNewAddItems, 
     const node = {
       ...cellOptions, type, title, value: null,
       path: [...path],
-      component:
-        <AddButton path={[...path]} setNewAddItems={setNewAddItems} />
+      setNewAddItems,
     }
     if (!isArrayDescendant) {
-      grid.push([{ ...node }])
+      // grid.push([{ ...node }])
     } else {
       itemsRow.push({ ...node })
     }
     const { items } = currentNode
     const newItemsRow = []
     items.forEach((value, i) => {
-      initializeGrid(typeTree, value[0], grid, setStatus, setNewAddItems, setDeleteItems, [...path, i], newItemsRow, true)
+      initializeGrid(typeTree, value[0], grid, setStatus, setArrayStatus, setNewAddItems, setDeleteItems, [...path, i], newItemsRow, true)
       newItemsRow.push({
         ...cellOptions,
         value: null,
@@ -238,120 +319,91 @@ const initializeGrid = (typeTree, currentNode, grid, setStatus, setNewAddItems, 
           <DeleteButton path={[...path, i]} setDeleteItems={setDeleteItems} />
       })
     })
-    if (newItemsRow.length > 0) {
-      if (currentNode.hasOwnProperty('descendantDataTree')) {
-        const { typeTreeIndex } = currentNode.descendantDataTree[0]
-        const { uiSchema: itemUiSchema } = typeTree[typeTreeIndex]
-        if (itemUiSchema) {
-          if (itemUiSchema.hasOwnProperty('ui:location') && itemUiSchema.hasOwnProperty('ui:span')) {
-            const { row, col } = itemUiSchema['ui:location']
-            const { rowSpan, colSpan } = itemUiSchema['ui:span']
-            var startCol=col
-            for(var i=row;i<row+rowSpan;i++){
-              if(grid.length<i) break
-              if(grid[i-1].length>startCol) startCol=grid[i-1].length+2
-            }
-            addItems(grid, newItemsRow, { row, col:startCol, rowSpan, colSpan })
-          } else {
-            grid.push(newItemsRow)
-          }
-        } else {
-          grid.push(newItemsRow)
-        }
+    const { uiSchema: arrayUiSchema } = typeTree[currentNode.typeTreeIndex]
+    if (arrayUiSchema) {
+      if (arrayUiSchema.hasOwnProperty('ui:location') && arrayUiSchema.hasOwnProperty('ui:span')) {
+        const { row, col } = arrayUiSchema['ui:location']
+        const { rowSpan, colSpan } = arrayUiSchema['ui:span']
+        addItems(grid, { array: { ...node }, items: newItemsRow, itemsNumPerGroup: newItemsRow.length / items.length }, { row, col, rowSpan, colSpan })
       }
     }
   }
 }
 
-const addItems = (grid, itemsRow, { row, col, rowSpan, colSpan }) => {
-  var currentRow = row
-  var currentCol = col
-  for (var item of itemsRow) {
-    if (currentCol - col + 1 > colSpan) {
-      currentRow++
-      currentCol = col
-    }
-    if (currentRow - row + 1 <= rowSpan) {
-      if (grid.length < currentRow) {
-        const l = grid.length
-        for (var i = 1; i <= currentRow - l; i++) {
-          grid.push([{ ...cellOptions }])
-        }
-      }
-      if (grid[currentRow - 1].length < currentCol) {
-        const l = grid[currentRow - 1].length
-        for (var i = 1; i <= currentCol - l; i++) {
-          grid[currentRow - 1].push({ ...cellOptions })
-        }
-      }
-      grid[currentRow - 1][currentCol - 1] = item
-      currentCol++
-    } else {
-      break
-    }
+const addItems = (grid, context, { row, col, rowSpan, colSpan }) => {
+  var l = grid.length + 1
+  for (var i = l; i <= row; i++) {
+    grid.push([{ ...cellOptions }])
+  }
+  l = grid[row - 1].length + 1
+  for (var i = l; i <= col; i++) {
+    grid[row - 1].push({ ...cellOptions })
+  }
+  const { array: { type, title, value } } = context
+  grid[row - 1][col - 1] = {
+    ...grid[row - 1][col - 1],
+    type, title, value,
+    rowSpan,
+    colSpan,
+    context,
+    component:
+      <ArrayDataSheet context={context} />
   }
 }
 
-// const initializeGrid = (typeTree, currentNode, grid, setStatus, setNewAddItems, setDeleteItems, path = [0], itemsRow = [], isArrayDescendant = false) => {
-//   const { type, title, uiSchema } = typeTree[currentNode.typeTreeIndex]
-//   const findType = basicTypes.find(element => element === type)
-//   if (findType !== undefined) {
-//     const node = { ...cellOptions, value: null, type, title, path: [...path] }
-//     if (uiSchema !== undefined && uiSchema !== null) {
-//       if (uiSchema.hasOwnProperty('ui:location')) {
-//         const { row, col } = uiSchema['ui:location']
-//         grid[row - 1][col - 1] = {
-//           ...grid[row - 1][col - 1],
-//           ...node
-//         }
-//         // if(uiSchema.hasOwnProperty('ui:span')){
-//         //   const {rowSpan,colSpan}=uiSchema['ui:span']
-//         //   grid[row - 1][col - 1] = {
-//         //     ...grid[row - 1][col - 1],
-//         //     rowSpan,
-//         //     colSpan
-//         //   }
-//         // }
-//       } else {
-//         itemsRow.push(node)
-//       }
-//     }
-//   } else if (type === objectType) {
-//     const { child } = currentNode
-//     child.forEach((value, i) => {
-//       initializeGrid(typeTree, value, grid, setStatus, setNewAddItems, setDeleteItems, [...path, i], itemsRow, isArrayDescendant)
-//     })
-//   } else if (type === arrayType) {
-//     const node = {
-//       ...cellOptions, type, title, value: null,
-//       path: [...path],
-//       component:
-//         <AddButton path={[...path]} setNewAddItems={setNewAddItems} />
-//     }
-//     if (!isArrayDescendant) {
-//       grid.push([{ ...node }])
-//     } else {
-//       itemsRow.push({ ...node })
-//     }
-//     const { items } = currentNode
-//     const newItemsRow = []
-//     items.forEach((value, i) => {
-//       initializeGrid(typeTree, value[0], grid, setStatus, setNewAddItems, setDeleteItems, [...path, i], newItemsRow, true)
-//       newItemsRow.push({
-//         ...cellOptions,
-//         value: null,
-//         type: 'delete',
-//         title: 'delete',
-//         path: [...path, i],
-//         component:
-//           <DeleteButton path={[...path, i]} setDeleteItems={setDeleteItems} />
-//       })
-//     })
-//     if (newItemsRow.length > 0) {
-//       grid.push(newItemsRow)
-//     }
-//   }
-// }
+const completeGrid = (grid) => {
+  var rowSize = 0
+  // var colSize = 0
+  for (var i = 1; i <= grid.length; i++) {
+    for (var j = 1; j <= grid[i - 1].length; j++) {
+      var currentMaxRow = 0
+      // var currentMaxCol = 0
+      if (grid[i - 1][j - 1].hasOwnProperty('rowSpan') && grid[i - 1][j - 1].hasOwnProperty('colSpan')) {
+        const { rowSpan, colSpan } = grid[i - 1][j - 1]
+        currentMaxRow = i + rowSpan - 1
+        // currentMaxCol = j + colSpan - 1
+      } else {
+        currentMaxRow = i
+        // currentMaxCol = j
+      }
+      if (rowSize < currentMaxRow) rowSize = currentMaxRow
+      // if (colSize < currentMaxCol) colSize = currentMaxCol
+    }
+  }
+  var cellNum = []
+  for (var i = 1; i <= rowSize; i++) {
+    cellNum.push(0)
+  }
+  for (var i = 1; i <= grid.length; i++) {
+    for (var j = 1; j <= grid[i - 1].length; j++) {
+      if (grid[i - 1][j - 1].hasOwnProperty('rowSpan') && grid[i - 1][j - 1].hasOwnProperty('colSpan')) {
+        const { rowSpan, colSpan } = grid[i - 1][j - 1]
+        for (var t = 1; t <= rowSpan; t++) {
+          cellNum[i + t - 2] += colSpan
+        }
+      } else {
+        cellNum[i - 1]++
+      }
+    }
+  }
+  var max = 0
+  for (var i = 1; i <= rowSize; i++) {
+    if (cellNum[i - 1] > max) max = cellNum[i - 1]
+  }
+
+  for (var i = grid.length + 1; i <= rowSize; i++) {
+    if (max > cellNum[i - 1]) {
+      grid.push([{ ...cellOptions }])
+      cellNum[i - 1]++
+    }
+  }
+  for (var i = 1; i <= rowSize; i++) {
+    for (var j = cellNum[i - 1] + 1; j <= max; j++) {
+      grid[i - 1].push({ ...cellOptions })
+    }
+  }
+
+}
 
 const addComponents = (grid, setStatus) => {
   for (var i = 0; i < grid.length; i++) {
@@ -499,12 +551,16 @@ const getDataStructure = (currentNode, typeTree, root, isArrayDescendant = false
 export default function ({ schema, uiSchema }) {
   const classes = useStyles()
   const [grid, setGrid] = React.useState([])
+  const [gridContext, setGriContext] = React.useState({ rowSize: 0, colSize: 0 })
   const [status, setStatus] = React.useState({ location: { row: -1, col: -1 }, value: null })
+  const [arrayStatus, setArrayStatus] = React.useState({ location: { row: -1, col: -1 }, value: null, index: -1 })
   const [newAddItems, setNewAddItems] = React.useState(null)
   const [deleteItems, setDeleteItems] = React.useState(null)
 
   const [typeTree, setTypeTree] = React.useState([])
   const [dataTree, setDataTree] = React.useState([])
+
+  const [dataJSONTree, setDataJSONTrees] = useState(null)
 
   React.useEffect(() => {
     const tTree = []
@@ -514,6 +570,10 @@ export default function ({ schema, uiSchema }) {
       const dTree = []
       getDataTree(0, tTree, dTree)
       setDataTree(_.cloneDeep(dTree))
+      // var dt = { root: null }
+      // gerDataJSONTree(0, tTree, dt, 'root')
+      // setDataJSONTrees(_.cloneDeep(dt))
+      // console.log(tTree, dt)
     }
   }, [schema, uiSchema])
 
@@ -530,6 +590,16 @@ export default function ({ schema, uiSchema }) {
     }
   }, [status])
 
+  useEffect(() => {
+    var { location: { row, col }, value, index } = arrayStatus
+    if (row >= 0 && col >= 0 && index >= 0) {
+      var newGrid = _.cloneDeep(grid)
+      console.log(arrayStatus)
+      newGrid[row-1][col-1].context.items[index].value=value
+      setGrid(newGrid)
+    }
+  }, [arrayStatus])
+
   React.useEffect(() => {
     if (newAddItems) {
       const { path } = newAddItems
@@ -544,12 +614,21 @@ export default function ({ schema, uiSchema }) {
       var max = { row: 0, col: 0 }
       getMaxRowCol(dataTree[0], typeTree, max)
       var newGrid = init(max)
-      initializeGrid(typeTree, dataTree[0], newGrid, setStatus, setNewAddItems, setDeleteItems)
+      initializeGrid(typeTree, dataTree[0], newGrid, setStatus, setArrayStatus, setNewAddItems, setDeleteItems)
       addComponents(newGrid, setStatus)
+      completeGrid(newGrid)
       setGrid(newGrid)
       console.log(typeTree, dataTree, newGrid)
     }
   }, [dataTree])
+
+  useEffect(() => {
+    if (dataJSONTree) {
+      var newGrid = []
+      initializeNewGrid(typeTree, dataJSONTree.root, newGrid, setStatus, setNewAddItems, setDeleteItems)
+      console.log(newGrid)
+    }
+  }, [dataJSONTree])
 
   React.useEffect(() => {
     if (deleteItems) {
@@ -563,11 +642,13 @@ export default function ({ schema, uiSchema }) {
     <>
       <ReactDataSheet
         data={grid}
-        valueRenderer={cell => {
+        valueRenderer={(cell, row, col) => {
           var { title, value, type } = cell
           title = title ? title : ''
           if (type === 'boolean') {
             value = ': ' + value
+          } else if (type === arrayType) {
+            return <ArrayValueRender context={grid[row][col].context} />
           } else {
             value = value ? ': ' + value : ''
           }

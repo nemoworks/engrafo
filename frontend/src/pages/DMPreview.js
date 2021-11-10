@@ -5,7 +5,7 @@ import Editor from "@monaco-editor/react";
 import FixedHeightContainer from "../components/FixedHeightContainer";
 import FStemplates from "../requests/FStemplates";
 var _ = require('lodash');
-import CustomForm from "../components/CustomForm";
+import CustomForm from "../components/Form/CustomForm";
 
 export default function Preview({id}){
 
@@ -23,7 +23,7 @@ export default function Preview({id}){
 
     return (
         <div>
-        <Grid container spacing={3} justify="center" alignItems="center">
+        <Grid container spacing={3} justifyContent="center" alignItems="center">
           <Grid item xs={6}>
             <FixedHeightContainer height={800}>
               <Title>SchemaEditor</Title>

@@ -9,17 +9,19 @@ var accountRouter = require("./routes/account");
 var LCtemplates = require("./routes/LCtemplates");
 var FStemplates = require("./routes/FStemplates");
 var context = require("./routes/context");
+var dataset = require("./routes/dataset");
+var link = require("./routes/link")
 var app = express();
 var cors = require('cors')
 
-app.use(cors()) 
+app.use(cors())
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
-app.all('*', function(req, res, next) {
+app.all('*', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-  res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
-  res.header("X-Powered-By",' 3.2.1')
+  res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+  res.header("X-Powered-By", ' 3.2.1')
   res.header("Content-Type", "application/json;charset=utf-8");
   next();
 });
@@ -29,8 +31,8 @@ app.use(logger("dev"));
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({limit: '50mb',extended: false }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: false }));
 // app.use(express.static(path.join(__dirname, "../frontend/build", "index.html")));
 
 // app.use("/", (req, res) => {
@@ -44,6 +46,8 @@ app.use("/api/account", accountRouter);
 app.use("/api/LCtemplates", LCtemplates);
 app.use("/api/FStemplates", FStemplates);
 app.use("/api/context", context);
+app.use("/api/dataset", dataset);
+app.use("/api/link", link);
 // app.use("/swagger-ui", express.static("../swagger-ui"));
 
 
@@ -65,7 +69,7 @@ app.use(function (err, req, res, next) {
   });
 });
 
-app.use('/',function(req,res,next){
+app.use('/', function (req, res, next) {
   console.log('hello')
   next()
 })

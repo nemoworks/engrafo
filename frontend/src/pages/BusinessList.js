@@ -28,7 +28,7 @@ import Graph from "../components/Graph.js";
 import Select from "@material-ui/core/Select";
 import FixedHeightContainer from "../components/FixedHeightContainer";
 import { OutgoingReq,FStemplatesReq, LCtemplatesReq } from "../requests";
-import CustomForm from "../components/CustomForm";
+import CustomForm from "../components/Form/CustomForm";
 
 
 const graphOptions = {
@@ -292,8 +292,8 @@ export default observer(function BusinessList({ schemalist }) {
                         }));
                     setGraph(newGraph)
                 }else{
-                  setGraphEdit({ nodes: [], edges: [] })
-                  setGraph({graph:{ nodes: [], edges: [] },start:''})
+                  setGraph({ nodes: [], edges: [] })
+                  setGraphEdit({graph:{ nodes: [], edges: [] },start:''})
                 }
               }}
               inputProps={{

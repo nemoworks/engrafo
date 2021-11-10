@@ -162,7 +162,7 @@ export default function  FMList(){
             </Button>
           </Toolbar>
         </AppBar>
-        <Grid container spacing={3} justify="center" alignItems="center">
+        <Grid container spacing={3} justifyContent="center" alignItems="center">
           <Grid item xs={6}>
             <FixedHeightContainer height={800}>
               <Title>FlowEditor</Title>

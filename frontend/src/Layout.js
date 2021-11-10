@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -25,6 +26,8 @@ import axios from 'axios';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { AccountReq } from './requests';
 import {getUsernameFromAccessToken} from './utils/decode'
+import NestedList from './list';
+import { DatasetReq } from './requests';
 
 function Copyright() {
   return (
@@ -127,6 +130,7 @@ export default function Dashboard() {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const [currentAccount,setCurrentAccount]=React.useState({})
+  // const [titleList, setTitleList] = useState([])
 
   React.useEffect(()=>{
     const sessionStorage=window.sessionStorage.getItem("oauth2Token")
@@ -222,9 +226,10 @@ export default function Dashboard() {
           </IconButton>
         </div>
         <Divider />
-        <List>{mainListItems}</List>
+        {/* <List>{mainListItems}</List>
         <Divider />
-        <List>{secondaryListItems}</List>
+        <List>{secondaryListItems}</List> */}
+        <NestedList open={open}/>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />

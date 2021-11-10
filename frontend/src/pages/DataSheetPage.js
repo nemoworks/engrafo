@@ -5,7 +5,7 @@ import Title from "../components/Title";
 import Editor from "@monaco-editor/react";
 import CustomForm from "../components/CustomForm";
 import Button from "@material-ui/core/Button";
-import DateSheet from "../components/DateSheet";
+import DataSheet from "../components/DataSheet/DataSheet";
 
 export default function () {
   const [schema, setSchema] = React.useState({});
@@ -15,7 +15,7 @@ export default function () {
   const uiEditorRef = React.useRef(null);
 
   return (
-    <Grid container spacing={3} justify="center" alignItems="center">
+    <Grid container spacing={3} justifyContent="center" alignItems="center">
       <Grid item xs={6}>
         <FixedHeightContainer height={700}>
           <Title>SchemaEditor</Title>
@@ -71,7 +71,7 @@ export default function () {
       <Grid item xs={12}>
         <FixedHeightContainer height={700}>
           <Title>DataSheet</Title>
-          <DateSheet schema={schema} uiSchema={uiSchema} />
+          <DataSheet schema={schema} uiSchema={uiSchema} />
         </FixedHeightContainer>
       </Grid>
     </Grid>

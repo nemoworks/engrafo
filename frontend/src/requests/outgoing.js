@@ -65,5 +65,9 @@ export default {
       responseType: 'blob', // important
     })
     return data
-  }
+  },
+  async getListByFStempaltesId(id) {
+    const { data } = await axios.get(api + "listOfFStemplates/"+id);
+    return data;
+  },
 };

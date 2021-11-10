@@ -1,0 +1,94 @@
+{
+  "title": "项目",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "项目名称"
+    },
+    "id": {
+      "type": "string",
+      "title": "项目编号"
+    },
+    "introduction": {
+      "type": "string"
+    },
+    "person": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "starttime": {
+      "type": "string"
+    },
+    "endtime": {
+      "type": "string"
+    },
+    "train": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "box": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "modelu": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "parentname": {
+                        "type": "string"
+                      },
+                      "parentid": {
+                        "type": "string"
+                      },
+                      "flow": {
+                        "type": "string"
+                      },
+                      "component": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "befor": {
+                              "type": "string"
+                            },
+                            "after": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
