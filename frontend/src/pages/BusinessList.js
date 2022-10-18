@@ -27,7 +27,7 @@ import Form from "@rjsf/material-ui";
 import Graph from "../components/Graph.js";
 import Select from "@material-ui/core/Select";
 import FixedHeightContainer from "../components/FixedHeightContainer";
-import { OutgoingReq,FStemplatesReq, LCtemplatesReq } from "../requests";
+import { OutgoingReq, FStemplatesReq, LCtemplatesReq } from "../requests";
 import CustomForm from "../components/Form/CustomForm";
 
 
@@ -80,46 +80,49 @@ export default observer(function BusinessList({ schemalist }) {
     uischema: {},
   });
   const [rows, setRows] = React.useState([]);
-  const [dataModels,setDataModels] = React.useState([])
-  const [flowModels,setFlowModels] = React.useState([])
-  const [graph,setGraph]= React.useState({ nodes: [], edges: [] });
-  const [graphEdit,setGraphEdit]= React.useState({graph:{ nodes: [], edges: [] },start:''});
+  const [dataModels, setDataModels] = React.useState([])
+  const [flowModels, setFlowModels] = React.useState([])
+  const [graph, setGraph] = React.useState({ nodes: [], edges: [] });
+  const [graphEdit, setGraphEdit] = React.useState({ graph: { nodes: [], edges: [] }, start: '' });
   const graphEditorRef = React.useRef(null);
 
-  const [currentAccount,setCurrentAccount]=React.useState({})
+  const [currentAccount, setCurrentAccount] = React.useState({})
 
   // React.useEffect(() => {
   //   OutgoingReq.getList().then((res) => setRows(res));
   // }, []);
 
-  React.useEffect(()=>{
-    FStemplatesReq.getAll().then(data=>{
+  React.useEffect(() => {
+    FStemplatesReq.getAll().then(data => {
       setDataModels(data)
     })
-  },[])
+  }, [])
 
-  React.useEffect(()=>{
-    LCtemplatesReq.getAll().then(data=>{
+  React.useEffect(() => {
+    LCtemplatesReq.getAll().then(data => {
       setFlowModels(data)
     })
-  },[])
+  }, [])
 
-  React.useEffect(()=>{
-    const sessionStorage=window.sessionStorage.getItem("oauth2Token")
-    setCurrentAccount(JSON.parse(sessionStorage?sessionStorage:'{}'))
-  },[])
+  React.useEffect(() => {
+    const sessionStorage = window.sessionStorage.getItem("oauth2Token")
+    setCurrentAccount(JSON.parse(sessionStorage ? sessionStorage : '{}'))
+  }, [])
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     getRows()
-  },[currentAccount])
+  }, [currentAccount])
 
   const getRows = () => {
-    if(currentAccount.accessToken){
-      const {user:{username}}=currentAccount
-      OutgoingReq.getFromAuth(username).then(getFromAuthRes=>{
-        setRows(getFromAuthRes)
-      })
-    }
+    // if (currentAccount.accessToken) {
+    //   const { user: { username } } = currentAccount
+    //   OutgoingReq.getFromAuth(username).then(getFromAuthRes => {
+    //     setRows(getFromAuthRes)
+    //   })
+    // }
+    OutgoingReq.getList().then(getFromAuthRes => {
+      setRows(getFromAuthRes)
+    })
   }
 
   const handleClickOpen = () => {
@@ -151,10 +154,10 @@ export default observer(function BusinessList({ schemalist }) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.length>0?rows.map((row) => (
+                {rows.length > 0 ? rows.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell align="center">{row.id}</TableCell>
-                    <TableCell align="center">{row.lifecycle.schema.fieldschema.title?row.lifecycle.schema.fieldschema.title:''}</TableCell>
+                    <TableCell align="center">{row.lifecycle.schema.fieldschema.title ? row.lifecycle.schema.fieldschema.title : ''}</TableCell>
                     <TableCell align="center">
                       <Link color="inherit" href={"/business/" + row.id}>
                         <IconButton
@@ -185,9 +188,9 @@ export default observer(function BusinessList({ schemalist }) {
                         className={classes.margin}
                         onClick={() => {
                           setPreview({
-                            schema: row.lifecycle.schema.fieldschema?row.lifecycle.schema.fieldschema:{},
-                            uischema: row.lifecycle.schema.uischema?row.lifecycle.schema.uischema:{},
-                            formData: row.formdata?row.formdata:{},
+                            schema: row.lifecycle.schema.fieldschema ? row.lifecycle.schema.fieldschema : {},
+                            uischema: row.lifecycle.schema.uischema ? row.lifecycle.schema.uischema : {},
+                            formData: row.formdata ? row.formdata : {},
                             show: true,
                           });
                         }}
@@ -196,7 +199,7 @@ export default observer(function BusinessList({ schemalist }) {
                       </IconButton>
                     </TableCell>
                   </TableRow>
-                )):null}
+                )) : null}
               </TableBody>
             </Table>
             <Button
@@ -248,12 +251,12 @@ export default observer(function BusinessList({ schemalist }) {
             </span>
             <Select
               native
-              onChange={(e)=>{
-                const dataModel=dataModels.find(dataModel=>dataModel.id==e.target.value)
-                if(dataModel){
+              onChange={(e) => {
+                const dataModel = dataModels.find(dataModel => dataModel.id == e.target.value)
+                if (dataModel) {
                   setSchema(dataModel.formschema.fieldschema)
                   setUischema(dataModel.formschema.uischema)
-                }else{
+                } else {
                   setSchema({})
                   setUischema({})
                 }
@@ -264,9 +267,9 @@ export default observer(function BusinessList({ schemalist }) {
               }}
             >
               <option aria-label="None" value="" />
-              {dataModels.map(dataModel=>{
-                const {id:dataModelId,formschema:{fieldschema:{title:dataModelTitle}}}=dataModel
-                return (<option value={dataModelId}>{dataModelTitle?dataModelTitle:dataModelId}</option>)
+              {dataModels.length > 0 && dataModels.map(dataModel => {
+                const { id: dataModelId, formschema: { fieldschema: { title: dataModelTitle } } } = dataModel
+                return (<option value={dataModelId}>{dataModelTitle ? dataModelTitle : dataModelId}</option>)
               })}
             </Select>
             <span
@@ -276,24 +279,24 @@ export default observer(function BusinessList({ schemalist }) {
             </span>
             <Select
               native
-              onChange={(e)=>{
-                const flowModel=flowModels.find(flowModel=>flowModel.id==e.target.value)
-                if(flowModel){
-                  const {lifecycle:{enkrino:{graph:selectedGraph,start}}}=flowModel
-                  setGraphEdit({graph:{...selectedGraph},start})
-                  let newGraph={...selectedGraph}
-                    newGraph.nodes = newGraph.nodes.map((item) =>({ 
-                      ...item, label: item.name, color: "#CCFFFF" 
-                    }));
-                    newGraph.edges = newGraph.edges.map((item) => ({
-                            from: item.from,
-                            to: item.to,
-                            arrows: "to",
-                        }));
-                    setGraph(newGraph)
-                }else{
+              onChange={(e) => {
+                const flowModel = flowModels.find(flowModel => flowModel.id == e.target.value)
+                if (flowModel) {
+                  const { lifecycle: { enkrino: { graph: selectedGraph, start } } } = flowModel
+                  setGraphEdit({ graph: { ...selectedGraph }, start })
+                  let newGraph = { ...selectedGraph }
+                  newGraph.nodes = newGraph.nodes.map((item) => ({
+                    ...item, label: item.name, color: "#CCFFFF"
+                  }));
+                  newGraph.edges = newGraph.edges.map((item) => ({
+                    from: item.from,
+                    to: item.to,
+                    arrows: "to",
+                  }));
+                  setGraph(newGraph)
+                } else {
                   setGraph({ nodes: [], edges: [] })
-                  setGraphEdit({graph:{ nodes: [], edges: [] },start:''})
+                  setGraphEdit({ graph: { nodes: [], edges: [] }, start: '' })
                 }
               }}
               inputProps={{
@@ -302,8 +305,8 @@ export default observer(function BusinessList({ schemalist }) {
               }}
             >
               <option aria-label="None" value="" />
-              {flowModels.map(flowModel=>{
-                const {id:flowModelId}=flowModel
+              {flowModels.length > 0 && flowModels.map(flowModel => {
+                const { id: flowModelId } = flowModel
                 return (<option value={flowModelId}>{flowModelId}</option>)
               })}
             </Select>
@@ -312,20 +315,20 @@ export default observer(function BusinessList({ schemalist }) {
               autoFocus
               color="inherit"
               onClick={() => {
-                const business={formdata:{},lifecycle:{schema:{uischema:uischema,fieldschema:schema},enkrino:graphEdit}}
-                OutgoingReq.create(business).then(createReq=>{
-                  if(createReq.id){
-                    OutgoingReq.start(createReq.id).then(startRes=>{
-                      if(startRes.id){
+                const business = { formdata: {}, lifecycle: { schema: { uischema: uischema, fieldschema: schema }, enkrino: graphEdit } }
+                OutgoingReq.create(business).then(createReq => {
+                  if (createReq.id) {
+                    OutgoingReq.start(createReq.id).then(startRes => {
+                      if (startRes.id) {
                         getRows()
-                      }else{
-                        OutgoingReq.delete(createReq.id).then(deleteRes=>{
+                      } else {
+                        OutgoingReq.delete(createReq.id).then(deleteRes => {
 
                         })
                       }
                     })
                   }
-                  
+
                 })
                 handleClose();
               }}
@@ -334,7 +337,7 @@ export default observer(function BusinessList({ schemalist }) {
             </Button>
           </Toolbar>
         </AppBar>
-        <Grid container spacing={3} justify="center" alignItems="center">
+        <Grid container spacing={3} justifyContent="center" alignItems="center">
           <Grid item xs={6}>
             <FixedHeightContainer height={800}>
               <Title>SchemaEditor</Title>
@@ -344,18 +347,18 @@ export default observer(function BusinessList({ schemalist }) {
                 title="Schema"
                 language="json"
                 value={JSON.stringify(schema, null, "\t")}
-                onChange={(value, event) => {}}
+                onChange={(value, event) => { }}
                 options={{
-                  readOnly:true
+                  readOnly: true
                 }}
               />
               <p>ui:schema</p>
               <Editor
                 language="json"
                 value={JSON.stringify(uischema, null, "\t")}
-                onChange={(value, event) => {}}
+                onChange={(value, event) => { }}
                 options={{
-                  readOnly:true
+                  readOnly: true
                 }}
               />
             </FixedHeightContainer>
@@ -391,7 +394,7 @@ export default observer(function BusinessList({ schemalist }) {
                 onMount={(editor, monaco) => {
                   graphEditorRef.current = editor;
                 }}
-                onChange={(value, event) => {}}
+                onChange={(value, event) => { }}
               />
               <div>
                 {/* 点击apply将schema与uischema传入state，通过editor的ref读取编辑器中的内容 */}
@@ -400,15 +403,15 @@ export default observer(function BusinessList({ schemalist }) {
                   color="primary"
                   onClick={() => {
                     setGraphEdit(JSON.parse(graphEditorRef.current.getValue()))
-                    let newGraph=JSON.parse(graphEditorRef.current.getValue()).graph
-                    newGraph.nodes = newGraph.nodes.map((item) =>({ 
-                      ...item, label: item.name, color: "#CCFFFF" 
+                    let newGraph = JSON.parse(graphEditorRef.current.getValue()).graph
+                    newGraph.nodes = newGraph.nodes.map((item) => ({
+                      ...item, label: item.name, color: "#CCFFFF"
                     }));
                     newGraph.edges = newGraph.edges.map((item) => ({
-                            from: item.from,
-                            to: item.to,
-                            arrows: "to",
-                        }));
+                      from: item.from,
+                      to: item.to,
+                      arrows: "to",
+                    }));
                     setGraph(newGraph)
                   }}
                 >
@@ -422,10 +425,10 @@ export default observer(function BusinessList({ schemalist }) {
             <FixedHeightContainer height={800}>
               <Title>graph</Title>
               <Graph
-                  identifier={"customed-flow-graph-demo"}
-                  graph={graph}
-                  options={graphOptions}
-                />
+                identifier={"customed-flow-graph-demo"}
+                graph={graph}
+                options={graphOptions}
+              />
             </FixedHeightContainer>
           </Grid>
         </Grid>

@@ -5,10 +5,10 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker'
 
 export default function(props){
+  console.log(props)
   const {schema:{title},label:name,value:formData}=props
   const label=title?title:(name?name:'')
   const [value, setValue] = React.useState(formData?new Date(formData+'-01T00:00:00'):null);
-  console.log(props)
 
   return(
     <LocalizationProvider dateAdapter={AdapterDateFns}>

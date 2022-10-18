@@ -44,6 +44,12 @@ export default function (props) {
       uiSchema={props.uiSchema}
       formData={props.formData}
       widgets={widgets}
+      onChange={(e,err)=>{
+        console.log(e,err)
+      }}
+      onBlur={(id,value)=>{
+        console.log(id,value)
+      }}
     />
   )
 }

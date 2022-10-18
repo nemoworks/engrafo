@@ -28,6 +28,7 @@ const months=[
 ]
 
 export default function(props){
+  console.log(props)
   const classes = useStyles();
   const {schema:{title},label:name,value:formData}=props
   const label=title?title:(name?name:'')

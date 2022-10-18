@@ -4,19 +4,19 @@ var router = express.Router();
 
 const {authentication} = require('../utils/oauth')
 
-router.use(function(req,res,next){
-  const auth=req.get("Authorization")
-  // console.log(req)
-  if(auth==undefined) res.status(401).send({message:'no authorization'})
-  else{
-    authentication(auth).then(data=>{
-      console.log(data)
-      next()
-    }).catch(err=>{
-      res.status(401).send(err.response.data)
-    })
-  }
-})
+// router.use(function(req,res,next){
+//   const auth=req.get("Authorization")
+//   // console.log(req)
+//   if(auth==undefined) res.status(401).send({message:'no authorization'})
+//   else{
+//     authentication(auth).then(data=>{
+//       console.log(data)
+//       next()
+//     }).catch(err=>{
+//       res.status(401).send(err.response.data)
+//     })
+//   }
+// })
 
 /* FStemplatesList */
 router.get("/list", async function (_, res) {

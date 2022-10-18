@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import FixedHeightContainer from "../components/FixedHeightContainer";
 import Title from "../components/Title";
 import Editor from "@monaco-editor/react";
-import CustomForm from "../components/CustomForm";
+import CustomForm from "../components/Form/CustomForm";
 import Button from "@material-ui/core/Button";
 import DataSheet from "../components/DataSheet/DataSheet";
 

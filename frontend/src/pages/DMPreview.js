@@ -4,8 +4,9 @@ import Grid from "@material-ui/core/Grid";
 import Editor from "@monaco-editor/react";
 import FixedHeightContainer from "../components/FixedHeightContainer";
 import FStemplates from "../requests/FStemplates";
-var _ = require('lodash');
 import CustomForm from "../components/Form/CustomForm";
+
+var _ = require('lodash');
 
 export default function Preview({id}){
 

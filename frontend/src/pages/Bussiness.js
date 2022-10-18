@@ -218,7 +218,7 @@ export default function FSInfo({ id }) {
           options={graphOptions}
         />
       </div>
-      <Grid container spacing={1} justify="center" alignItems="center">
+      <Grid container spacing={1} justifyContent="center" alignItems="center">
         <Grid item xs={6}>
 
         </Grid>

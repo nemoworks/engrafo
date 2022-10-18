@@ -8,18 +8,18 @@ const { getUsernameFromAccessToken } = require('../utils/oauth')
 const { authentication } = require('../utils/oauth')
 const { traverse, findPosition } = require('../utils/link')
 
-router.use(function (req, res, next) {
-  const auth = req.get("Authorization")
-  if (auth == undefined) res.status(401).send({ message: 'no authorization' })
-  else {
-    authentication(auth).then(data => {
-      console.log(data)
-      next()
-    }).catch(err => {
-      res.status(401).send(err.response.data)
-    })
-  }
-})
+// router.use(function (req, res, next) {
+//   const auth = req.get("Authorization")
+//   if (auth == undefined) res.status(401).send({ message: 'no authorization' })
+//   else {
+//     authentication(auth).then(data => {
+//       console.log(data)
+//       next()
+//     }).catch(err => {
+//       res.status(401).send(err.response.data)
+//     })
+//   }
+// })
 
 router.get("/list", async function (req, res) {
   db.any(outgoing.findAll)

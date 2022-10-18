@@ -35,17 +35,17 @@ export default function NestedList({ open: drawerOpen }) {
   const [datasetChildOpen, setDatasetChildOpen] = useState(false)
   const [titleList, setTitleList] = useState([])
 
-  useEffect(() => {
-    DatasetReq.get().then(data => {
-      var newTitleList = []
-      for (var i = 0; i < data.length; i++) {
-        var { formschema: { fieldschema: { title } }, id } = data[i]
-        title = title ? title : id
-        newTitleList.push({ title, id })
-      }
-      setTitleList(newTitleList)
-    })
-  }, [])
+  // useEffect(() => {
+  //   DatasetReq.get().then(data => {
+  //     var newTitleList = []
+  //     for (var i = 0; i < data.length; i++) {
+  //       var { formschema: { fieldschema: { title } }, id } = data[i]
+  //       title = title ? title : id
+  //       newTitleList.push({ title, id })
+  //     }
+  //     setTitleList(newTitleList)
+  //   })
+  // }, [])
 
   useEffect(() => {
     if (!drawerOpen) {
@@ -92,13 +92,13 @@ export default function NestedList({ open: drawerOpen }) {
         <ListItemText primary="业务数据" />
       </ListItemLink>
 
-      <ListItem button onClick={() => { if (drawerOpen) setDatasetChildOpen(!datasetChildOpen); }}>
+      {/* <ListItem button onClick={() => { if (drawerOpen) setDatasetChildOpen(!datasetChildOpen); }}>
         <ListItemIcon>
           <InboxIcon />
         </ListItemIcon>
         <ListItemText primary="数据集合" />
         {datasetChildOpen ? <ExpandLess /> : <ExpandMore />}
-      </ListItem>
+      </ListItem> */}
       <Collapse in={datasetChildOpen} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           {titleList ? titleList.map(value => {
